@@ -10,15 +10,16 @@ export default function HomeJumbotron() {
           <h1 className="font-paytone mt-12 text-3xl font-bold uppercase md:leading-[72px] lg:-mt-24 lg:text-5xl">
             <span>Platform Edukasi</span>
             <span className="from-primary to-secondary inline-block bg-gradient-to-r bg-clip-text text-4xl text-transparent md:text-6xl">
-              Dialisis Connect Edu
+              iHealth Edu
             </span>
           </h1>
           <p className="text-md">
-            Website ini menyediakan informasi terpercaya tentang terapi
-            pengganti ginjal, seperti dialisis dan transplantasi, untuk pasien,
-            keluarga, dan masyarakat. Dengan konten berbasis ilmu keperawatan
-            yang mudah dipahami, kami bertujuan meningkatkan kesadaran,
-            pengetahuan, dan kepatuhan dalam perawatan gagal ginjal kronis.
+            iHealth Edu adalah website edukasi kesehatan yang menyediakan informasi
+            terpercaya mengenai Hipertensi, Diabetes Melitus, dan Kesehatan Mental.
+            Konten kami disusun berbasis ilmu keperawatan dan psikologi agar mudah
+            dipahami oleh pasien, keluarga, dan masyarakat luas. Kami bertujuan untuk
+            meningkatkan kesadaran, pengetahuan, dan kepedulian terhadap kesehatan
+            secara menyeluruh.
           </p>
           <div>
             <Link href={"/login"}>
@@ -31,7 +32,7 @@ export default function HomeJumbotron() {
         <div className="hidden w-full md:block lg:w-1/2">
           <Image
             src={"/images/assets/bg-hero.png"}
-            alt="Hero"
+            alt="Hero iHealth Edu"
             width={1024}
             height={1024}
           />

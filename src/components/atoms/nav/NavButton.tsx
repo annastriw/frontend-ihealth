@@ -60,11 +60,11 @@ export default function NavButton({ links }: NavHeaderProps) {
               <Link href={"/"} className="flex items-center gap-2">
                 <Image
                   src={"/images/assets/bg-about-us.png"}
-                  alt="Dialisis Connect"
-                  width={75}
-                  height={75}
+                  alt="iHealth Edu"
+                  width={37}
+                  height={37}
                 />
-                <h1 className="font-bold">Dialisis Connect</h1>
+                <h1 className="font-bold">iHealth Edu</h1>
               </Link>
             </div>
             {session ? (

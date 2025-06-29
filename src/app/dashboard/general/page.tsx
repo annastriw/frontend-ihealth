@@ -6,7 +6,7 @@ export default function GeneralPage() {
     <section>
       <DashboardTitle
         head="Penjelasan Umum"
-        body="Menampikan penjelasan umum tentang Kesehatan Ginjal"
+        body=""
       />
       <DashboardGeneral />
     </section>

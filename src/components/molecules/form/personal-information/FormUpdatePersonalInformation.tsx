@@ -338,37 +338,32 @@ export default function FormUpdatePersonalInformation() {
                 )}
               />
               <FormField
-                control={form.control}
-                name="patient_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Anda saat ini sedang terdiagnosis penyakit apa?
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Jenis Diagnosis" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Jenis Pasien</SelectLabel>
-                            <SelectItem value="DM">
-                              Diabetes Melitus
-                            </SelectItem>
-                            <SelectItem value="HT">
-                              Hipertensi
-                            </SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+  control={form.control}
+  name="patient_type"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Anda saat ini sedang terdiagnosis penyakit apa?
+      </FormLabel>
+      <FormControl>
+        <Select onValueChange={field.onChange} value={field.value}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Jenis Diagnosis" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Jenis Diagnosis</SelectLabel>
+              <SelectItem value="DM">Diabetes Melitus</SelectItem>
+              <SelectItem value="HT">Hipertensi</SelectItem>
+              <SelectItem value="ALL">Diabetes Melitus dan Hipertensi</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </FormControl>
+    </FormItem>
+  )}
+/>
+
               <FormField
                 control={form.control}
                 name="disease_duration"

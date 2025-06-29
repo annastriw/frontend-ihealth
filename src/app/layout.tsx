@@ -20,11 +20,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dialisis Connect Edu",
+  title: "iHealth Edu",
   description:
-    "Website ini menyediakan informasi terpercaya tentang terapi pengganti ginjal, seperti dialisis dan transplantasi, untuk pasien, keluarga, dan masyarakat. Dengan konten berbasis ilmu keperawatan yang mudah dipahami, kami bertujuan meningkatkan kesadaran, pengetahuan, dan kepatuhan dalam perawatan gagal ginjal kronis.",
+    "iHealth Edu adalah website yang menyediakan informasi terpercaya tentang edukasi Hipertensi, Diabetes Melitus, dan Kesehatan Mental. Dengan konten berbasis ilmu keperawatan dan psikologi yang mudah dipahami, website ini bertujuan untuk meningkatkan kesadaran, pengetahuan, dan kepatuhan masyarakat terhadap pencegahan dan pengelolaan kondisi kesehatan tersebut.",
   keywords:
-    "dialisis, dialisis connect edu, hemodialisis, penelitian ginjal, universitas diponegoro, terapi ginjal, transplantasi ginjal, gagal ginjal, edukasi kesehatan, edukasi dialisis, edukasi transplantasi, edukasi ginjal, edukasi kesehatan ginjal, edukasi gagal ginjal, edukasi hemodialisis, edukasi peritoneal dialisis",
+    "iHealth Edu, edukasi hipertensi, edukasi diabetes melitus, edukasi kesehatan mental, tekanan darah tinggi, manajemen stres, kesehatan jiwa, edukasi keperawatan, edukasi psikologi, pengendalian gula darah, gaya hidup sehat, edukasi pasien, edukasi keluarga, perawatan mandiri, informasi kesehatan terpercaya",
   icons: [
     { rel: "icon", url: "/images/icons/favicon.ico", sizes: "16x16" },
     { rel: "icon", url: "/images/icons/favicon-32x32.png", sizes: "32x32" },
@@ -52,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="id">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${paytoneOne.variable} antialiased`}
       >

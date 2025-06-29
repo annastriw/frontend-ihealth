@@ -10,12 +10,12 @@ export default function NavL() {
             <div className="flex items-center">
               <Image
                 src={"/images/assets/bg-about-us.png"}
-                alt="Dialisis Connect"
-                width={75}
-                height={75}
+                alt="iHealth Edu"
+                width={37}
+                height={37}
               />
             </div>
-            <h1 className="font-bold">Dialisis Connect Edu</h1>
+            <h1 className="font-bold">iHealth Edu</h1>
           </Link>
         </div>
       </div>

@@ -25,19 +25,19 @@ export default function RegisterWrapperContent() {
           <Link href={"/"} className="flex items-center gap-2">
             <Image
               src={"/images/assets/bg-about-us.png"}
-              alt="Dialisis Connect"
-              width={75}
-              height={75}
+              alt="iHealth Edu"
+              width={37}
+              height={37}
             />
             <h1 className="font-semibold tracking-tight">
-              Dialisis Connect Edu
+              iHealth Edu
             </h1>
           </Link>
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="max-w-md text-lg">
-              Website Edukatif Penyakit Ginjal Kronis
+              Platform edukasi kesehatan untuk Hipertensi, Diabetes Melitus, dan Kesehatan Mental
             </p>
           </blockquote>
         </div>

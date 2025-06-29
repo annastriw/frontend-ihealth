@@ -36,7 +36,7 @@ export default function DialogAgreementRegister({
             <div>
               Dengan ini saya menyatakan bahwa saya setuju untuk ikut
               berpartisipasi dalam penelitian berbasis website ini
-              &quot;Dialisis Connect Edu&quot; dengan penuh kesadaran dan tanpa
+              &quot;iHealth Edu&quot; dengan penuh kesadaran dan tanpa
               ada paksaan dari siapapun dengan kondisi:
             </div>
             <ol className="ml-4 list-decimal space-y-1">

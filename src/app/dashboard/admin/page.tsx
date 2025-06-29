@@ -3,7 +3,7 @@ import DashboardAdminWrapper from "@/components/organisms/dashboard/admin/Dashbo
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashboard Admin | Dialisis Connect Edu",
+  title: "Dashboard Admin | iHealth Edu",
 };
 
 export default function DashboardAdminPage() {
@@ -11,7 +11,7 @@ export default function DashboardAdminPage() {
     <>
       <DashboardTitle
         head="Beranda Admin"
-        body="Selamat datang di halaman beranda admin Dialisis Connect Edu"
+        body="Selamat datang di halaman beranda admin iHealth Edu"
       />
       <DashboardAdminWrapper />
     </>

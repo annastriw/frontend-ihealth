@@ -6,7 +6,7 @@ export default function MedicalDashboardPage() {
     <section>
       <DashboardTitle
         head="Beranda Nakes"
-        body="Selamat datang di halaman beranda Nakes Dialisis Connect Edu"
+        body="Selamat datang di halaman beranda Nakes iHealth Edu"
       />
       <DashboardMedicalWrapper />
     </section>

@@ -7,21 +7,21 @@ export default function HomeIntroduction() {
       <SectionTitle title="Penjelasan Secara Umum" />
       <div className="flex grid grid-cols-1 place-items-center items-center justify-center">
         <CardIntroduction
-          title="Penyakit Ginjal Kronik"
-          description="Penyakit ginjal kronik (PGK) adalah kondisi di mana kerusakan ginjal berlangsung lama dan mengurangi kemampuan ginjal untuk menyaring darah (LFG). Banyak pasien PGK tidak menunjukkan gejala hingga fungsi ginjal menurun di bawah 15%.(1) PGK bersifat progresif dan irreversible, sering memerlukan terapi penggantian ginjal seperti dialisis atau transplantasi. "
-          href="/general/penyakit-ginjal-kronik"
+          title="Hipertensi"
+          description="Hipertensi atau tekanan darah tinggi adalah kondisi ketika tekanan darah terhadap dinding arteri meningkat secara kronis. Jika tidak dikendalikan, hipertensi dapat meningkatkan risiko penyakit jantung, stroke, dan komplikasi lainnya. Pencegahan dapat dilakukan dengan pola makan sehat, olahraga, dan manajemen stres."
+          href="/general/hipertensi"
         />
       </div>
       <div className="flex grid grid-cols-1 place-items-center items-center justify-center gap-10 md:grid-cols-2">
         <CardIntroduction
-          title="CAPD"
-          description="Pada perawatan CAPD, pasien penyakit ginjal kronik dipasangkan kateter melalui sayatan kecil di bawah umbilikus. Pemasangan kateter CAPD dilakukan dengan cara memasukkan cairan dialisis dan mengeluarkan effluent, serta keberhasilan perawatan CAPD bergantung pada pencegahan infeksi, kelancaran aliran, dan ketiadaan kebocoran kateter. "
-          href="/general/capd"
+          title="Diabetes Melitus"
+          description="Diabetes Melitus adalah gangguan metabolik yang ditandai dengan kadar gula darah yang tinggi akibat gangguan produksi atau kerja insulin. Jika tidak terkontrol, diabetes dapat menyebabkan komplikasi serius pada jantung, ginjal, mata, dan saraf. Edukasi dan pengelolaan gaya hidup sangat penting dalam penanganannya."
+          href="/general/diabetes-melitus"
         />
         <CardIntroduction
-          title="Hemodialisis"
-          description="Terapi hemodialisis adalah prosedur medis yang membantu menggantikan fungsi ginjal pada pasien penyakit ginjal kronik dengan menyaring darah menggunakan mesin dialisis. Proses ini membersihkan darah dari zat sisa seperti ureum dan kreatinin, serta mengontrol kadar cairan dan elektrolit dalam tubuh. Hemodialisis biasanya dilakukan 2-3 kali seminggu di unit khusus dengan durasi sekitar 4-5 jam per sesi."
-          href="/general/hemodialisis"
+          title="Kesehatan Mental"
+          description="Kesehatan mental mencakup kondisi emosional, psikologis, dan sosial seseorang. Gangguan seperti stres berat, depresi, dan kecemasan dapat memengaruhi kualitas hidup. Penting untuk mengenali tanda-tandanya dan mencari bantuan profesional ketika dibutuhkan. Dukungan keluarga dan lingkungan juga berperan besar."
+          href="/general/kesehatan-mental"
         />
       </div>
     </div>

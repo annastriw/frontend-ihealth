@@ -88,12 +88,12 @@ const isCompleted =
               <Link href="/dashboard" className="flex items-center gap-2">
                 <Image
                   src={"/images/assets/bg-about-us.png"}
-                  alt="Dialisis Connect"
-                  width={60}
-                  height={60}
+                  alt="iHealth Edu"
+                  width={37}
+                  height={37}
                 />
                 <h1 className="font-semibold tracking-tight">
-                  Dialisis Connect Edu
+                  iHealth Edu
                 </h1>
               </Link>
             </div>

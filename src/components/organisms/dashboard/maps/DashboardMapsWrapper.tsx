@@ -164,7 +164,7 @@ const fullAddress = alamatLengkap;
         type="text"
         value={alamatLengkap}
         onChange={(e) => setAlamatLengkap(e.target.value)}
-        placeholder="Alamat lengkap (jl, RT RW, kecamatan, kota/kab)"
+        placeholder="Masukkan alamat lengkap: Jalan, RT/RW, Kelurahan, Kecamatan, Kota atau Kabupaten"
         className="w-full"
       />
 

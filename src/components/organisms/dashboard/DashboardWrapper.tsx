@@ -29,7 +29,7 @@ export default function DashboardWrapper() {
     <>
       <DashboardTitle
         head="Beranda"
-        body="Selamat datang di halaman beranda Dialisis Connect Edu"
+        body="Selamat datang di halaman beranda iHealth Edu"
       />
     </>
   );
