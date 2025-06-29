@@ -1,0 +1,174 @@
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import {
+  subModuleSchema,
+  SubModuleType,
+} from "@/validators/sub-modules/sub-modules-validator";
+import { useAddNewSubModules } from "@/http/sub-modules/create-sub-modules";
+import { useGetAllModules } from "@/http/modulels/get-all-modules";
+
+interface DialogCreateSubModulesProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+export default function DialogCreateSubModules({
+  open,
+  setOpen,
+}: DialogCreateSubModulesProps) {
+  const form = useForm<SubModuleType>({
+    resolver: zodResolver(subModuleSchema),
+    defaultValues: {
+      module_id: "",
+      name: "",
+      description: "",
+    },
+    mode: "onChange",
+  });
+
+  const queryClient = useQueryClient();
+
+  const { mutate: addNewSubModulesHandler, isPending } = useAddNewSubModules({
+    onError: () => {
+      toast.error("Gagal menambahkan materi baru!");
+    },
+    onSuccess: () => {
+      toast.success("Berhasil menambahkan materi baru!");
+      queryClient.invalidateQueries({
+        queryKey: ["sub-modules"],
+      });
+      setOpen(false);
+    },
+  });
+
+  const onSubmit = (body: SubModuleType) => {
+    addNewSubModulesHandler(body);
+  };
+
+  const { data: session, status } = useSession();
+  const { data } = useGetAllModules(session?.access_token as string, {
+    enabled: status === "authenticated",
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Tambah Materi</DialogTitle>
+        </DialogHeader>
+        <ScrollArea className="max-h-[80vh]">
+          <Form {...form}>
+            <form
+              className="space-y-5 pt-4"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <FormField
+                control={form.control}
+                name="module_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Modul <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih modul yang tersedia" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Modul</SelectLabel>
+                            {data?.data.map((module) => (
+                              <SelectItem key={module.id} value={module.id}>
+                                {module.name}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Nama Materi <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Ketidaknyamanan"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Deskripsi</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Masukkan deskripsi"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end">
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? "Loading..." : "Tambahkan"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+  );
+}
