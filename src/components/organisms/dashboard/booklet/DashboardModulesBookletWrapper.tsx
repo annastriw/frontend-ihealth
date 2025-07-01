@@ -26,6 +26,11 @@ export default function DashboardModulesBookletWrapper({
       enabled: status === "authenticated",
     },
   );
+
+  const filePath = data?.data.file_path
+    ? `${BASE_URL}/storage/${data.data.file_path}`
+    : "";
+
   return (
     <>
       <DashboardTitleBold head={data?.data.name ?? ""} />
@@ -47,21 +52,22 @@ export default function DashboardModulesBookletWrapper({
           <TabsContent value="module-contents">
             <div className="space-y-4">
               <AlertDetailBookletModule />
-              <div>
-                <Link
-                  href={`${BASE_URL}/public/public/${data?.data.file_path}`}
-                  target="_blank"
-                >
-                  <Button>
-                    <ArrowDownToLine /> Download Booklet
-                  </Button>
-                </Link>
-              </div>
-              <iframe
-                src={`https://docs.google.com/gview?url=${BASE_URL}/public/public/${data?.data.file_path}&embedded=true`}
-                className="h-[500px] w-full rounded border md:h-[800px] md:rounded-xl"
-                loading="lazy"
-              />
+              {filePath && (
+                <>
+                  <div>
+                    <Link href={filePath} target="_blank" rel="noopener noreferrer">
+                      <Button>
+                        <ArrowDownToLine className="mr-2" /> Download Booklet
+                      </Button>
+                    </Link>
+                  </div>
+                  <iframe
+                    src={`https://docs.google.com/gview?url=${filePath}&embedded=true`}
+                    className="h-[500px] w-full rounded border md:h-[800px] md:rounded-xl"
+                    loading="lazy"
+                  />
+                </>
+              )}
             </div>
           </TabsContent>
         </Tabs>

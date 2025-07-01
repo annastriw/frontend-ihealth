@@ -4,7 +4,12 @@ import { ReactNode } from "react";
 import { useGetCheckPersonalInformation } from "@/http/personal-information/get-check-personal-information";
 import { useGetCheckMapsUser } from "@/http/users/get-check-maps-users";
 import DashboardPersonalInformationWrapper from "../dashboard/DashboardPersonalInformationWrapper";
-import SimpleMapTest from "../dashboard/maps/DashboardMapsWrapper";
+import dynamic from "next/dynamic";
+
+// ✅ Solusi: Import dinamis Leaflet map agar tidak kena SSR error
+const SimpleMapTest = dynamic(() => import("../dashboard/maps/DashboardMapsWrapper"), {
+  ssr: false,
+});
 
 export default function ClientDashboardWrapper({
   accessToken,
@@ -31,7 +36,7 @@ export default function ClientDashboardWrapper({
     data: mapsData,
     isLoading: isMapsLoading,
   } = useGetCheckMapsUser(accessToken, {
-    enabled: canFetch && personalInfoCompleted, 
+    enabled: canFetch && personalInfoCompleted,
   });
 
   const mapsCompleted = mapsData?.data.is_completed ?? false;

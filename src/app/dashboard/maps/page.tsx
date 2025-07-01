@@ -1,7 +1,10 @@
-import DashboardMapsWrapper from "@/components/organisms/dashboard/maps/DashboardMapsWrapper";
+import dynamic from "next/dynamic";
 
-export default function DashboardMapsPage(){
-    return(
-        <DashboardMapsWrapper/>
-    )
+const DashboardMapsWrapper = dynamic(
+  () => import("@/components/organisms/dashboard/maps/DashboardMapsWrapper"),
+  { ssr: false }
+);
+
+export default function DashboardMapsPage() {
+  return <DashboardMapsWrapper />;
 }
