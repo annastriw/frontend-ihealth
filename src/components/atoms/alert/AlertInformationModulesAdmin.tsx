@@ -8,8 +8,8 @@ export default function AlertInformationModulesAdmin() {
       <AlertTitle>Informasi</AlertTitle>
       <AlertDescription>
         <div>
-          Tambahkan modul CAPD dan HD saja. Untuk materi seperti booklet pdf,
-          video dll silahkan tambahkan di menu materi.
+          Tambahkan modul HT (Hipertensi), DM (Diabetes Melitus), dan KM (Kesehatan Mental) saja.
+          Untuk materi seperti booklet PDF, video, dll silakan tambahkan di menu materi.
         </div>
       </AlertDescription>
     </Alert>

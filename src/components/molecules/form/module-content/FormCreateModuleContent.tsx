@@ -57,7 +57,7 @@ export default function FormCreateModuleContent() {
     },
   );
 
-  const { mutate: addHDHandler, isPending } = useAddNewModuleContent({
+  const { mutate: addHTHandler, isPending } = useAddNewModuleContent({
     onError: () => {
       toast.error("Gagal menambahkan konten materi!");
     },
@@ -68,7 +68,7 @@ export default function FormCreateModuleContent() {
   });
 
   const onSubmit = (body: ModuleContentType) => {
-    addHDHandler(body);
+    addHTHandler(body);
   };
   return (
     <Card>
@@ -111,31 +111,33 @@ export default function FormCreateModuleContent() {
               )}
             />
             <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Tipe <span className="text-red-500">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Pilih tipe" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Tipe</SelectLabel>
-                          <SelectItem value="hd">HD</SelectItem>
-                          <SelectItem value="capd">CAPD</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+  control={form.control}
+  name="type"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Tipe <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Select onValueChange={field.onChange} value={field.value}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Pilih tipe" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Tipe</SelectLabel>
+              <SelectItem value="ht">Hipertensi</SelectItem>
+              <SelectItem value="dm">Diabetes Melitus</SelectItem>
+              <SelectItem value="km">Kesehatan Mental</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
 
             <FormField
               control={form.control}

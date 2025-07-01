@@ -8,6 +8,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,73 +29,58 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
+import QuillEditor from "../quill/QuillEditor";
+import { useGetAllModules } from "@/http/modulels/get-all-modules";
 import { useSession } from "next-auth/react";
-import {
-  preTestSchema,
-  PreTestType,
-} from "@/validators/test/pre-test-validator";
-import { useAddNewPreTest } from "@/http/test/create-pre-test";
-import { useGetAllQuestionBanks } from "@/http/question-banks/get-all-question-bank";
-import { useGetAllSubModulesNoCategory } from "@/http/sub-modules/get-all-sub-modules-no-category";
+import { htSchema, HTType } from "@/validators/sub-modules/ht-validator";
+import { useAddNewHT } from "@/http/sub-modules/create-ht";
 
-interface DialogCreateArticleProps {
+interface DialogCreateHTProps {
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
-export default function DialogCreatePreTest({
-  open,
-  setOpen,
-}: DialogCreateArticleProps) {
-  const form = useForm<PreTestType>({
-    resolver: zodResolver(preTestSchema),
+export default function DialogCreateSubModuleHT({ open, setOpen }: DialogCreateHTProps) {
+  const form = useForm<HTType>({
+    resolver: zodResolver(htSchema),
     defaultValues: {
-      sub_module_id: "",
-      question_set_id: "",
+      module_id: "",
+      file_path: undefined,
       name: "",
+      content: "",
     },
     mode: "onChange",
   });
 
   const queryClient = useQueryClient();
 
-  const { mutate: addDMHandler, isPending } = useAddNewPreTest({
+  const { mutate: addHTHandler, isPending } = useAddNewHT({
     onError: () => {
-      toast.error("Gagal menambahkan pre test!");
+      toast.error("Gagal menambahkan sub materi HT!");
     },
     onSuccess: () => {
-      toast.success("Berhasil menambahkan pre test!");
+      toast.success("Berhasil menambahkan sub materi HT!");
       queryClient.invalidateQueries({
-        queryKey: ["pre-test-list"],
+        queryKey: ["ht-list"],
       });
       setOpen(false);
     },
   });
 
-  const onSubmit = (body: PreTestType) => {
-    addDMHandler(body);
+  const onSubmit = (body: HTType) => {
+    addHTHandler(body);
   };
 
   const { data: session, status } = useSession();
-  const { data } = useGetAllSubModulesNoCategory(
-    session?.access_token as string,
-    {
-      enabled: status === "authenticated",
-    },
-  );
-
-  const { data: questionBank } = useGetAllQuestionBanks(
-    session?.access_token as string,
-    {
-      enabled: status === "authenticated",
-    },
-  );
+  const { data } = useGetAllModules(session?.access_token as string, {
+    enabled: status === "authenticated",
+  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Tambah Pre Test</DialogTitle>
+          <DialogTitle>Tambah Sub Materi HT</DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[80vh]">
           <Form {...form}>
@@ -104,7 +90,7 @@ export default function DialogCreatePreTest({
             >
               <FormField
                 control={form.control}
-                name="sub_module_id"
+                name="module_id"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Materi</FormLabel>
@@ -119,42 +105,9 @@ export default function DialogCreatePreTest({
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Materi</SelectLabel>
-                            {data?.data.map((module) => (
+                            {data?.map((module) => (
                               <SelectItem key={module.id} value={module.id}>
                                 {module.name}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="question_set_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bank Soal</FormLabel>
-                    <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Pilih bank soal yang tersedia" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Bank Soal</SelectLabel>
-                            {questionBank?.data.map((questionBank) => (
-                              <SelectItem
-                                key={questionBank.id}
-                                value={questionBank.id}
-                              >
-                                {questionBank.name}
                               </SelectItem>
                             ))}
                           </SelectGroup>
@@ -170,11 +123,11 @@ export default function DialogCreatePreTest({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nama Pre Test</FormLabel>
+                    <FormLabel>Nama Sub Materi</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Pre Test Anatomi Ginjal"
+                        placeholder="Masukkan nama sub materi"
                         {...field}
                       />
                     </FormControl>
@@ -182,6 +135,47 @@ export default function DialogCreatePreTest({
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="file_path"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>File Materi (PDF)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          field.onChange(file);
+                        }}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      * File wajib berformat pdf dan maksimal 5 MB
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Konten</FormLabel>
+                    <FormControl>
+                      <QuillEditor
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <div className="flex justify-end">
                 <Button type="submit" disabled={isPending}>
                   {isPending ? "Loading..." : "Tambahkan"}

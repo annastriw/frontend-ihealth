@@ -73,7 +73,7 @@ export default function MessageDiscussion({ id }: MessageDiscussionProps) {
   };
   const queryClient = useQueryClient();
 
-  const { mutate: addHDHandler, isPending } = useAddNewDiscussionMesagge({
+  const { mutate: addHTHandler, isPending } = useAddNewDiscussionMesagge({
     onError: () => {
       toast.error("Gagal mengirim pesan!");
     },
@@ -93,7 +93,7 @@ export default function MessageDiscussion({ id }: MessageDiscussionProps) {
       medical_id: body.is_private ? body.medical_id : null,
     };
 
-    addHDHandler(payload);
+    addHTHandler(payload);
   };
 
   return (

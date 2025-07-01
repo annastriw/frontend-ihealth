@@ -39,8 +39,9 @@ export default function ReportSearchAndFilter({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Semua</SelectItem>
-            <SelectItem value="capd">CAPD</SelectItem>
-            <SelectItem value="hd">HD</SelectItem>
+            <SelectItem value="ht">Hipertensi</SelectItem>
+            <SelectItem value="dm">Diabetes Melitus</SelectItem>
+            <SelectItem value="km">Kesehatan Mental</SelectItem>
           </SelectContent>
         </Select>
       )}

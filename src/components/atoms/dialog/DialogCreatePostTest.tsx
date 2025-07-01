@@ -58,7 +58,7 @@ export default function DialogCreatePostTest({
 
   const queryClient = useQueryClient();
 
-  const { mutate: addCAPDHandler, isPending } = useAddNewPostTest({
+  const { mutate: addDMHandler, isPending } = useAddNewPostTest({
     onError: () => {
       toast.error("Gagal menambahkan post test!");
     },
@@ -72,7 +72,7 @@ export default function DialogCreatePostTest({
   });
 
   const onSubmit = (body: PostTestType) => {
-    addCAPDHandler(body);
+    addDMHandler(body);
   };
 
   const { data: session, status } = useSession();

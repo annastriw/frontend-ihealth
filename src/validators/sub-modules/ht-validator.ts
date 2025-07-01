@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const hdSchema = z.object({
+export const htSchema = z.object({
   module_id: z.string().nonempty(),
   content: z.string().nonempty(),
   name: z.string().nonempty(),
@@ -16,4 +16,4 @@ export const hdSchema = z.object({
     .optional(),
 });
 
-export type HDType = z.infer<typeof hdSchema>;
+export type HTType = z.infer<typeof htSchema>;

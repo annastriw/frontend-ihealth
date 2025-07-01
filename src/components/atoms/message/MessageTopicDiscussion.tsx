@@ -31,7 +31,7 @@ export default function MessageTopicDiscussion() {
 
   const queryClient = useQueryClient();
 
-  const { mutate: addHDHandler, isPending } = useAddNewDiscussion({
+  const { mutate: addHTHandler, isPending } = useAddNewDiscussion({
     onError: () => {
       toast.error("Gagal menambahkan topik diskusi!");
     },
@@ -45,7 +45,7 @@ export default function MessageTopicDiscussion() {
   });
 
   const onSubmit = (body: DiscussionType) => {
-    addHDHandler(body);
+    addHTHandler(body);
   };
 
   return (

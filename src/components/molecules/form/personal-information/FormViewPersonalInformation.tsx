@@ -311,35 +311,7 @@ export default function FormViewPersonalInformation({
               </FormItem>
             )}
           />
-          {/* <FormField
-            control={form.control}
-            name="patient_type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Anda termasuk pasien apa?</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    disabled
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Jenis Pasien" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Jenis Pasien</SelectLabel>
-                        <SelectItem value="hd">Hemodialisis (HD)</SelectItem>
-                        <SelectItem value="capd">
-                          Continuous Ambulatory Peritonial Dialysis (CAPD)
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
-            )}
-          /> */}
+        
           <FormField
             control={form.control}
             name="disease_duration"

@@ -32,17 +32,17 @@ import { toast } from "sonner";
 import QuillEditor from "../quill/QuillEditor";
 import { useGetAllModules } from "@/http/modulels/get-all-modules";
 import { useSession } from "next-auth/react";
-import { hdSchema, HDType } from "@/validators/sub-modules/hd-validator";
-import { useAddNewHD } from "@/http/sub-modules/create-hd";
+import { kmSchema, KMType } from "@/validators/sub-modules/km-validator";
+import { useAddNewKM } from "@/http/sub-modules/create-km";
 
-interface DialogCreateHDProps {
+interface DialogCreateKMProps {
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
-export default function DialogCreateHD({ open, setOpen }: DialogCreateHDProps) {
-  const form = useForm<HDType>({
-    resolver: zodResolver(hdSchema),
+export default function DialogCreateSubModuleKM({ open, setOpen }: DialogCreateKMProps) {
+  const form = useForm<KMType>({
+    resolver: zodResolver(kmSchema),
     defaultValues: {
       module_id: "",
       file_path: undefined,
@@ -54,21 +54,21 @@ export default function DialogCreateHD({ open, setOpen }: DialogCreateHDProps) {
 
   const queryClient = useQueryClient();
 
-  const { mutate: addHDHandler, isPending } = useAddNewHD({
+  const { mutate: addKMHandler, isPending } = useAddNewKM({
     onError: () => {
-      toast.error("Gagal menambahkan sub materi HD!");
+      toast.error("Gagal menambahkan sub materi KM!");
     },
     onSuccess: () => {
-      toast.success("Berhasil menambahkan sub materi HD!");
+      toast.success("Berhasil menambahkan sub materi KM!");
       queryClient.invalidateQueries({
-        queryKey: ["hd-list"],
+        queryKey: ["km-list"],
       });
       setOpen(false);
     },
   });
 
-  const onSubmit = (body: HDType) => {
-    addHDHandler(body);
+  const onSubmit = (body: KMType) => {
+    addKMHandler(body);
   };
 
   const { data: session, status } = useSession();
@@ -80,14 +80,11 @@ export default function DialogCreateHD({ open, setOpen }: DialogCreateHDProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Tambah Sub Materi HD</DialogTitle>
+          <DialogTitle>Tambah Sub Materi KM</DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[80vh]">
           <Form {...form}>
-            <form
-              className="space-y-5 pt-4"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+            <form className="space-y-5 pt-4" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="module_id"
@@ -95,17 +92,14 @@ export default function DialogCreateHD({ open, setOpen }: DialogCreateHDProps) {
                   <FormItem>
                     <FormLabel>Materi</FormLabel>
                     <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
+                      <Select value={field.value} onValueChange={field.onChange}>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Pilih materi yang tersedia" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Materi</SelectLabel>
-                            {data?.data.map((module) => (
+                            {data?.map((module) => (
                               <SelectItem key={module.id} value={module.id}>
                                 {module.name}
                               </SelectItem>
@@ -166,10 +160,7 @@ export default function DialogCreateHD({ open, setOpen }: DialogCreateHDProps) {
                   <FormItem>
                     <FormLabel>Konten</FormLabel>
                     <FormControl>
-                      <QuillEditor
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
+                      <QuillEditor value={field.value} onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

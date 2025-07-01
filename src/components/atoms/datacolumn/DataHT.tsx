@@ -6,75 +6,71 @@ import { id } from "date-fns/locale";
 import Link from "next/link";
 import { Eye, FileText, SquarePen, Trash2 } from "lucide-react";
 import ActionButton from "@/components/molecules/datatable/ActionButton";
-import { HD } from "@/types/sub-modules/sub-modules";
+import { HT } from "@/types/sub-modules/sub-modules";
 
-export const hdColumns: ColumnDef<HD>[] = [
+export const htColumns: ColumnDef<HT>[] = [
   {
     accessorKey: "index",
     header: "No",
-    cell: ({ row }) => {
-      return <p suppressHydrationWarning>{row.index + 1}</p>;
-    },
+    cell: ({ row }) => (
+      <p suppressHydrationWarning>{row.index + 1}</p>
+    ),
   },
   {
-    accessorKey: "title",
+    accessorKey: "name",
     header: "Nama",
-    cell: ({ row }) => {
-      const data = row.original;
-      return (
-        <p suppressHydrationWarning className="line-clamp-1 md:line-clamp-2">
-          {data.name}
-        </p>
-      );
-    },
+    cell: ({ row }) => (
+      <p suppressHydrationWarning className="line-clamp-1 md:line-clamp-2">
+        {row.original.name}
+      </p>
+    ),
   },
   {
     accessorKey: "file_path",
     header: "File PDF",
-    cell: () => {
-      return (
-        <div
-          suppressHydrationWarning
-          className="line-clamp-1 cursor-pointer md:line-clamp-2"
+    cell: ({ row }) => {
+      const filePath = row.original.file_path;
+      return filePath ? (
+        <a
+          href={filePath}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 text-blue-600 hover:underline"
         >
           <FileText className="h-5 w-5" />
-        </div>
+          Lihat
+        </a>
+      ) : (
+        <span className="text-muted-foreground">-</span>
       );
     },
   },
   {
     accessorKey: "created_at",
     header: "Tanggal Dibuat",
-    cell: ({ row }) => {
-      const data = row.original;
-      return (
-        <p suppressHydrationWarning>
-          {format(new Date(data.created_at), "EEEE, d MMMM yyyy, HH:mm", {
-            locale: id,
-          })}
-        </p>
-      );
-    },
+    cell: ({ row }) => (
+      <p suppressHydrationWarning>
+        {format(new Date(row.original.created_at), "EEEE, d MMMM yyyy, HH:mm", {
+          locale: id,
+        })}
+      </p>
+    ),
   },
   {
     accessorKey: "updated_at",
     header: "Terakhir Diubah",
-    cell: ({ row }) => {
-      const data = row.original;
-      return (
-        <p suppressHydrationWarning>
-          {format(new Date(data.updated_at), "EEEE, d MMMM yyyy, HH:mm", {
-            locale: id,
-          })}
-        </p>
-      );
-    },
+    cell: ({ row }) => (
+      <p suppressHydrationWarning>
+        {format(new Date(row.original.updated_at), "EEEE, d MMMM yyyy, HH:mm", {
+          locale: id,
+        })}
+      </p>
+    ),
   },
   {
     id: "actions",
     cell: ({ row }) => {
       const data = row.original;
-
       return (
         <ActionButton>
           <Link
@@ -92,7 +88,7 @@ export const hdColumns: ColumnDef<HD>[] = [
             <span className="ml-2">Edit</span>
           </Link>
           <Link
-            href={`/dashboard/admin/modules/${data.id}/edit`}
+            href={`/dashboard/admin/modules/${data.id}/delete`}
             className="flex items-center text-red-600 hover:text-red-800 hover:underline"
           >
             <Trash2 className="h-4 w-4" />

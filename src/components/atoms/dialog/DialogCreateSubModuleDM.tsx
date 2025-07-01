@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,8 +31,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
-import { capdSchema, CAPDType } from "@/validators/sub-modules/capd-validator";
-import { useAddNewCAPD } from "@/http/sub-modules/create-capd";
+import { dmSchema, DMType } from "@/validators/sub-modules/dm-validator";
+import { useAddNewDM } from "@/http/sub-modules/create-dm";
 import QuillEditor from "../quill/QuillEditor";
 import { useGetAllModules } from "@/http/modulels/get-all-modules";
 import { useSession } from "next-auth/react";
@@ -40,12 +42,12 @@ interface DialogCreateArticleProps {
   setOpen: (open: boolean) => void;
 }
 
-export default function DialogCreateCAPD({
+export default function DialogCreateSubModuleDM({
   open,
   setOpen,
 }: DialogCreateArticleProps) {
-  const form = useForm<CAPDType>({
-    resolver: zodResolver(capdSchema),
+  const form = useForm<DMType>({
+    resolver: zodResolver(dmSchema),
     defaultValues: {
       module_id: "",
       video_url: "",
@@ -57,20 +59,20 @@ export default function DialogCreateCAPD({
 
   const queryClient = useQueryClient();
 
-  const { mutate: addCAPDHandler, isPending } = useAddNewCAPD({
+  const { mutate: addDMHandler, isPending } = useAddNewDM({
     onError: () => {
-      toast.error("Gagal menambahkan sub materi CAPD!");
+      toast.error("Gagal menambahkan sub materi Diabetes Melitus!");
     },
     onSuccess: () => {
-      toast.success("Berhasil menambahkan sub materi CAPD!");
+      toast.success("Berhasil menambahkan sub materi Diabetes Melitus!");
       queryClient.invalidateQueries({
-        queryKey: ["capd-list"],
+        queryKey: ["dm-list"],
       });
     },
   });
 
-  const onSubmit = (body: CAPDType) => {
-    addCAPDHandler(body);
+  const onSubmit = (body: DMType) => {
+    addDMHandler(body);
     setOpen(false);
   };
 
@@ -83,7 +85,7 @@ export default function DialogCreateCAPD({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Tambah Sub Materi CAPD</DialogTitle>
+          <DialogTitle>Tambah Sub Materi Diabetes Melitus</DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[80vh]">
           <Form {...form}>
@@ -108,7 +110,7 @@ export default function DialogCreateCAPD({
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Materi</SelectLabel>
-                            {data?.data.map((module) => (
+                            {data?.map((module) => (
                               <SelectItem key={module.id} value={module.id}>
                                 {module.name}
                               </SelectItem>
@@ -149,7 +151,7 @@ export default function DialogCreateCAPD({
                     </FormControl>
                     <FormDescription>
                       * https://www.youtube.com/watch?v=V3DRb9d6eQM, yang diisi
-                      V3DRb9d6eQM
+                      hanya <code>V3DRb9d6eQM</code>
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

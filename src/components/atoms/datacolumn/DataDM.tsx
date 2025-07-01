@@ -6,9 +6,9 @@ import { id } from "date-fns/locale";
 import Link from "next/link";
 import { Eye, FileVideo, SquarePen, Trash2 } from "lucide-react";
 import ActionButton from "@/components/molecules/datatable/ActionButton";
-import { CAPD } from "@/types/sub-modules/sub-modules";
+import { DM } from "@/types/sub-modules/sub-modules";
 
-export const capdColumns: ColumnDef<CAPD>[] = [
+export const dmColumns: ColumnDef<DM>[] = [
   {
     accessorKey: "index",
     header: "No",

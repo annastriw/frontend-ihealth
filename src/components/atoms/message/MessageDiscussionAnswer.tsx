@@ -54,7 +54,7 @@ export default function MessageDiscussionAnswer({
   };
   const queryClient = useQueryClient();
 
-  const { mutate: addHDHandler, isPending } = useAddNewDiscussionMessageAnswer({
+  const { mutate: addHTHandler, isPending } = useAddNewDiscussionMessageAnswer({
     onError: () => {
       toast.error("Gagal mengirim pesan!");
     },
@@ -69,7 +69,7 @@ export default function MessageDiscussionAnswer({
   });
 
   const onSubmit = (body: DiscussionMessageAnswerType) => {
-    addHDHandler(body);
+    addHTHandler(body);
   };
 
   return (

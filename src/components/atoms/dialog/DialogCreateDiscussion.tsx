@@ -44,7 +44,7 @@ export default function DialogCreateDiscussion({
 
   const queryClient = useQueryClient();
 
-  const { mutate: addCAPDHandler, isPending } = useAddNewDiscussion({
+  const { mutate: addDMHandler, isPending } = useAddNewDiscussion({
     onError: () => {
       toast.error("Gagal menambahkan topik disuksi baru!");
     },
@@ -58,7 +58,7 @@ export default function DialogCreateDiscussion({
   });
 
   const onSubmit = (body: DiscussionType) => {
-    addCAPDHandler(body);
+    addDMHandler(body);
   };
 
   return (
