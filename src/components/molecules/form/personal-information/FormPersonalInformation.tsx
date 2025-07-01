@@ -55,7 +55,7 @@ export default function FormCreatePersonalInformation() {
       last_education: "",
       origin_disease: "",
       is_married: false,
-      patient_type: undefined,
+      // patient_type: undefined,
       disease_duration: "",
       history_therapy: "nothing",
     },
@@ -338,7 +338,7 @@ export default function FormCreatePersonalInformation() {
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="patient_type"
                 render={({ field }) => (
@@ -374,7 +374,7 @@ export default function FormCreatePersonalInformation() {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
               <FormField
                 control={form.control}
                 name="disease_duration"

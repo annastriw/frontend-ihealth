@@ -163,12 +163,12 @@ export default function DashboardAdminDetailUsersWrapper({
                     </div>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <div className="text-muted-foreground md:w-4/12">
+                    {/* <div className="text-muted-foreground md:w-4/12">
                       Tipe Pasien
                     </div>
                     <div className="uppercase md:w-8/12">
                       {personal?.data.patient_type}
-                    </div>
+                    </div> */}
                   </div>
                   <div className="flex flex-col gap-1">
                     <div className="text-muted-foreground md:w-4/12">

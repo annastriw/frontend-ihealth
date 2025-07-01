@@ -110,7 +110,7 @@ export default function DialogCreateSubModules({
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Modul</SelectLabel>
-                            {data?.data.map((module) => (
+                            {data?.map((module) => (
                               <SelectItem key={module.id} value={module.id}>
                                 {module.name}
                               </SelectItem>

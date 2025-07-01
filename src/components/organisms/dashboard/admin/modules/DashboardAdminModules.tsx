@@ -18,7 +18,7 @@ export default function DashboardAdminModulesWrapper() {
     <div className="space-y-4">
       <AlertInformationModulesAdmin />
       <DataTable
-        data={data?.data ?? []}
+        data={data ?? []}
         columns={modulesColumns}
         isLoading={isPending}
       />

@@ -58,7 +58,7 @@ export default function FormViewPersonalInformation({
       work: "",
       last_education: "",
       origin_disease: "",
-      patient_type: "",
+      // patient_type: "",
       disease_duration: "",
     },
   });
@@ -78,7 +78,7 @@ export default function FormViewPersonalInformation({
         work: data.data.work,
         last_education: data.data.last_education,
         origin_disease: data.data.origin_disease,
-        patient_type: data.data.patient_type,
+        // patient_type: data.data.patient_type,
         disease_duration: data.data.disease_duration,
       });
     }
@@ -311,7 +311,7 @@ export default function FormViewPersonalInformation({
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="patient_type"
             render={({ field }) => (
@@ -339,7 +339,7 @@ export default function FormViewPersonalInformation({
                 </FormControl>
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             control={form.control}
             name="disease_duration"

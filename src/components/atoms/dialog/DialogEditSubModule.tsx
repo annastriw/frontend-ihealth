@@ -124,7 +124,7 @@ export default function DialogEditSubModule({
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Modul</SelectLabel>
-                            {modules?.data.map((module) => (
+                            {modules?.map((module) => (
                               <SelectItem key={module.id} value={module.id}>
                                 {module.name}
                               </SelectItem>

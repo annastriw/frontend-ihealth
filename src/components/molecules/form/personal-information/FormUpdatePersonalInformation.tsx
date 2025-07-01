@@ -73,10 +73,10 @@ export default function FormUpdatePersonalInformation() {
         data?.data.is_married !== undefined
           ? Boolean(Number(data.data.is_married))
           : false,
-      patient_type:
-        data?.data.patient_type === "DM" || data?.data.patient_type === "HT" || data?.data.patient_type === "KM"
-          ? data.data.patient_type
-          : "HT",
+      // patient_type:
+      //   data?.data.patient_type === "DM" || data?.data.patient_type === "HT" || data?.data.patient_type === "KM"
+      //     ? data.data.patient_type
+      //     : "HT",
       disease_duration: data?.data.disease_duration ?? "",
       history_therapy: data?.data.history_therapy ?? "",
     },
@@ -337,7 +337,7 @@ export default function FormUpdatePersonalInformation() {
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
   control={form.control}
   name="patient_type"
   render={({ field }) => (
@@ -362,7 +362,7 @@ export default function FormUpdatePersonalInformation() {
       </FormControl>
     </FormItem>
   )}
-/>
+/> */}
 
               <FormField
                 control={form.control}

@@ -18,7 +18,7 @@ export const personalInformationSchema = z.object({
   is_married: z.boolean(),
   last_education: z.string().nonempty(),
   origin_disease: z.string().nonempty(),
-  patient_type: z.enum(["HT", "DM", "KM", "ALL"]),
+  
   disease_duration: z.string().nonempty(),
   history_therapy: z.string().nonempty(),
 });

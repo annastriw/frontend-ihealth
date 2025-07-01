@@ -124,12 +124,12 @@ export default function CardPersonalInformationUserId({
                 )}
               </div>
             </div>
-            <div className="flex flex-col gap-1">
+            {/* <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">Tipe Pasien</div>
               <div className="uppercase">
                 {isLoading ? <Skeleton className="w-32" /> : data?.patient_type}
               </div>
-            </div>
+            </div> */}
             <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">
                 Lama Pelayanan Kesehatan

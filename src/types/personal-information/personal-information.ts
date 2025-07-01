@@ -10,7 +10,7 @@ export type PersonalInformation = {
   is_married: boolean;
   last_education: string;
   origin_disease: string;
-  patient_type: string;
+  
   disease_duration: string;
   history_therapy: string;
 };
