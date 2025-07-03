@@ -7,6 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { HistoryPostTest, PostTest } from "@/types/test/post-test";
 import { Check, ClipboardPen, Lock } from "lucide-react";
 import { useState } from "react";
+import { format } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 
 interface CardListPostTestProps {
   data?: PostTest[];
@@ -41,6 +43,7 @@ export default function CardListPostTest({
   const [selectedPostTestId, setSelectedPostTestId] = useState<string | null>(
     null,
   );
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -56,15 +59,21 @@ export default function CardListPostTest({
     setDialogStartPostTestOpen(true);
   };
 
-  const isAlreadyTaken = (postTestId: string) => {
-    return history?.some((h) => h.post_test.id === postTestId);
-  };
+  const findHistory = (postTestId: string) =>
+    history?.find((h) => h.post_test.id === postTestId);
 
   return (
     <div className="space-y-4">
       {data?.map((postTest) => {
-        const alreadyTaken = isAlreadyTaken(postTest.id);
-        const isDisabled = alreadyTaken || isLocked;
+        const historyItem = findHistory(postTest.id);
+        const alreadyTaken = !!historyItem;
+        const isDisabled = isLocked;
+
+        const formattedDate = historyItem
+          ? format(new Date(historyItem.created_at), "d MMMM yyyy 'pukul' HH:mm", {
+              locale: idLocale,
+            })
+          : null;
 
         return (
           <div
@@ -95,15 +104,17 @@ export default function CardListPostTest({
                     <CardTitle className="text-md font-bold md:text-xl">
                       {postTest.name}
                     </CardTitle>
-                    {alreadyTaken && (
+
+                    {alreadyTaken && formattedDate && (
                       <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
-                        <Check className="h-4 w-4 text-green-500" /> Sudah
-                        mengerjakan
+                        <Check className="h-4 w-4 text-green-500" />
+                        Sudah mengerjakan, pada {formattedDate}
                       </div>
                     )}
+
                     {isLocked && !alreadyTaken && (
                       <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
-                        <Lock className="text-muted-foreground h-4 w-4" />{" "}
+                        <Lock className="text-muted-foreground h-4 w-4" />
                         Kerjakan Pre Test terlebih dahulu
                       </div>
                     )}
