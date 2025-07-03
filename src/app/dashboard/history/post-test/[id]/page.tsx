@@ -1,14 +1,32 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardHistoryPostTestDetailWrapper from "@/components/organisms/dashboard/history/DashboardHistoryPostTestDetailWrapper";
 
-interface DashboardHistoryPostTestPageParams {
-  params: Promise<{ id: string }>;
+interface DashboardHistoryPostTestPageProps {
+  params: { id: string };
 }
 
-export default async function DashboardHistoryPosTestDetailPage({
+export default function DashboardHistoryPostTestDetailPage({
   params,
-}: DashboardHistoryPostTestPageParams) {
-  const { id } = await params;
+}: DashboardHistoryPostTestPageProps) {
+  const { id } = params;
+  const router = useRouter();
+
+  // 🔙 Redirect back button ke submodule
+  useEffect(() => {
+    const handler = () => {
+      const backTo = sessionStorage.getItem("backToSubmoduleId");
+      if (backTo) {
+        router.replace(`/dashboard/modules/sub/${backTo}`);
+      }
+    };
+    window.addEventListener("popstate", handler);
+    return () => window.removeEventListener("popstate", handler);
+  }, [router]);
+
   return (
     <section>
       <DashboardTitle

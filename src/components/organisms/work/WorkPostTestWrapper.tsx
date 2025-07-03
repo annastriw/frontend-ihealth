@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import BreadcrumbNavWork from "@/components/atoms/breadcrumb/BreadcrumbWork";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import DialogConfirmSubmit from "@/components/atoms/dialog/DialogConfirmSubmit";
 import { useGetDetailPostTest } from "@/http/test/get-detail-post-test";
 import { SubmitPostTest } from "@/types/test/post-test";
@@ -24,6 +24,15 @@ export default function WorkPostTestWrapper({ id }: WorkPostTestWrapperProps) {
   const openConfirmDialog = () => setConfirmDialogOpen(true);
   const closeConfirmDialog = () => setConfirmDialogOpen(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const subModuleId = searchParams.get("module_id");
+
+  useEffect(() => {
+    if (subModuleId) {
+      sessionStorage.setItem("backToSubmoduleId", subModuleId);
+    }
+  }, [subModuleId]);
 
   const { data, isLoading } = useGetDetailPostTest(
     id,
@@ -38,19 +47,24 @@ export default function WorkPostTestWrapper({ id }: WorkPostTestWrapperProps) {
       event.preventDefault();
       event.returnValue = "Jawaban Anda akan hilang jika halaman direfresh.";
     };
-
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
 
   const questions = data?.data?.questions ?? [];
-
   const [answers, setAnswers] = useState<SubmitPostTest[]>([]);
 
-  const { mutate: submitPretest } = useAddSubmitPostTest({
-    onSuccess: () => {
+  const { mutate: submitPostTest } = useAddSubmitPostTest({
+    onSuccess: (result) => {
+      const historyId = result?.data?.id || result?.history_id;
+      if (!historyId) {
+        toast.error("Gagal mengambil ID hasil post-test.");
+        return;
+      }
+
       toast.success("Post Test berhasil disubmit!");
-      router.back();
+      sessionStorage.removeItem("backToSubmoduleId");
+      router.replace(`/dashboard/history/post-test/${historyId}`);
     },
     onError: () => {
       toast.error("Gagal submit post test. Silakan coba lagi.");
@@ -70,7 +84,7 @@ export default function WorkPostTestWrapper({ id }: WorkPostTestWrapperProps) {
                 }
               }}
               currentIndex={selectedQuestionIndex}
-              totalQuestions={data.data.questions.length}
+              totalQuestions={questions.length}
             />
           )}
           <div className="pad-x-xl pt-28">
@@ -93,8 +107,7 @@ export default function WorkPostTestWrapper({ id }: WorkPostTestWrapperProps) {
                   {questions[selectedQuestionIndex].options.map((option) => {
                     const isSelected = answers.find(
                       (ans) =>
-                        ans.question_id ===
-                          questions[selectedQuestionIndex].id &&
+                        ans.question_id === questions[selectedQuestionIndex].id &&
                         ans.selected_option_id === option.id,
                     );
 
@@ -109,14 +122,11 @@ export default function WorkPostTestWrapper({ id }: WorkPostTestWrapperProps) {
                         onClick={() => {
                           const updated = [...answers];
                           const existingIndex = updated.findIndex(
-                            (a) =>
-                              a.question_id ===
-                              questions[selectedQuestionIndex].id,
+                            (a) => a.question_id === questions[selectedQuestionIndex].id,
                           );
 
                           if (existingIndex !== -1) {
-                            updated[existingIndex].selected_option_id =
-                              option.id;
+                            updated[existingIndex].selected_option_id = option.id;
                           } else {
                             updated.push({
                               question_id: questions[selectedQuestionIndex].id,
@@ -170,7 +180,7 @@ export default function WorkPostTestWrapper({ id }: WorkPostTestWrapperProps) {
           .filter((q) => !q.isAnswered)
           .map((q) => q.number)}
         onConfirm={() => {
-          submitPretest({
+          submitPostTest({
             post_test_id: id,
             answers,
           });
