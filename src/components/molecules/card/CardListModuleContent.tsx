@@ -65,6 +65,25 @@ export default function CardListModuleContent({
                   <CardTitle className="text-md font-bold md:text-xl">
                     {moduleContent.name}
                   </CardTitle>
+                  {moduleContent.last_opened_at && (
+  <p className="text-muted-foreground text-sm font-normal">
+    Terakhir membuka materi, pada{" "}
+    {new Intl.DateTimeFormat("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(new Date(moduleContent.last_opened_at))}{" "}
+    pukul{" "}
+    {new Intl.DateTimeFormat("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "Asia/Jakarta",
+    }).format(new Date(moduleContent.last_opened_at))}
+  </p>
+)}
+
+
                   {isLocked && (
                     <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
                       <Lock className="text-muted-foreground h-4 w-4" />{" "}

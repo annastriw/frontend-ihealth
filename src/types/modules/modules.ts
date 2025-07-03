@@ -17,6 +17,7 @@ export type ModuleContent = {
   type: string;
   created_at: Date;
   updated_at: Date;
+  last_opened_at?: Date;
 };
 
 export type SubModules = {
