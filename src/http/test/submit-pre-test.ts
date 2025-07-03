@@ -6,6 +6,8 @@ import { PreTest } from "@/types/test/pre-test";
 import { SubmitPreTestType } from "@/validators/test/submit-pre-test-validator";
 
 interface SubmitPretestResponse {
+  history_id: any;
+  id: string;
   data: PreTest;
 }
 

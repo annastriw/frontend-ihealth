@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SubmitPreTest } from "@/types/test/pre-test";
 import { toast } from "sonner";
 import { useAddSubmitPretest } from "@/http/test/submit-pre-test";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import DialogConfirmSubmit from "@/components/atoms/dialog/DialogConfirmSubmit";
 import { Button } from "@/components/ui/button";
 
@@ -19,43 +19,63 @@ interface WorkPreTestWrapperProps {
 
 export default function WorkPreTestWrapper({ id }: WorkPreTestWrapperProps) {
   const { data: session, status } = useSession();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const subModuleId = searchParams.get("module_id");
+
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const openConfirmDialog = () => setConfirmDialogOpen(true);
-  const closeConfirmDialog = () => setConfirmDialogOpen(false);
-  const router = useRouter();
+  const [answers, setAnswers] = useState<SubmitPreTest[]>([]);
 
   const { data, isLoading } = useGetDetailPreTest(
     id,
     session?.access_token as string,
     {
       enabled: status === "authenticated" && !!session?.access_token,
-    },
+    }
   );
 
+  // Simpan module_id untuk back navigation
+  useEffect(() => {
+    if (subModuleId) {
+      sessionStorage.setItem("backToSubmoduleId", subModuleId);
+    }
+  }, [subModuleId]);
+
+  // Cegah refresh page agar jawaban tidak hilang
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = "Jawaban Anda akan hilang jika halaman direfresh.";
     };
-
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
 
   const questions = data?.data?.questions ?? [];
 
-  const [answers, setAnswers] = useState<SubmitPreTest[]>([]);
-
   const { mutate: submitPretest } = useAddSubmitPretest({
-    onSuccess: () => {
+    onSuccess: (result) => {
+      console.log("📦 Hasil submit pre-test:", result); // Debug (hapus di produksi)
+
+      const historyId = result?.history_id;
+      if (!historyId) {
+        toast.error("Gagal mengambil ID hasil pre-test.");
+        console.error("❌ ID tidak ditemukan dalam result:", result);
+        return;
+      }
+
       toast.success("Pre Test berhasil disubmit!");
-      router.back();
+      sessionStorage.removeItem("backToSubmoduleId");
+      router.replace(`/dashboard/history/pre-test/${historyId}`);
     },
     onError: () => {
       toast.error("Gagal submit pre-test. Silakan coba lagi.");
     },
   });
+
+  const openConfirmDialog = () => setConfirmDialogOpen(true);
+  const closeConfirmDialog = () => setConfirmDialogOpen(false);
 
   return (
     <>
@@ -70,9 +90,10 @@ export default function WorkPreTestWrapper({ id }: WorkPreTestWrapperProps) {
                 }
               }}
               currentIndex={selectedQuestionIndex}
-              totalQuestions={data.data.questions.length}
+              totalQuestions={questions.length}
             />
           )}
+
           <div className="pad-x-xl pt-28">
             {isLoading ? (
               <div className="space-y-4">
@@ -93,9 +114,8 @@ export default function WorkPreTestWrapper({ id }: WorkPreTestWrapperProps) {
                   {questions[selectedQuestionIndex].options.map((option) => {
                     const isSelected = answers.find(
                       (ans) =>
-                        ans.question_id ===
-                          questions[selectedQuestionIndex].id &&
-                        ans.selected_option_id === option.id,
+                        ans.question_id === questions[selectedQuestionIndex].id &&
+                        ans.selected_option_id === option.id
                     );
 
                     return (
@@ -109,14 +129,11 @@ export default function WorkPreTestWrapper({ id }: WorkPreTestWrapperProps) {
                         onClick={() => {
                           const updated = [...answers];
                           const existingIndex = updated.findIndex(
-                            (a) =>
-                              a.question_id ===
-                              questions[selectedQuestionIndex].id,
+                            (a) => a.question_id === questions[selectedQuestionIndex].id
                           );
 
                           if (existingIndex !== -1) {
-                            updated[existingIndex].selected_option_id =
-                              option.id;
+                            updated[existingIndex].selected_option_id = option.id;
                           } else {
                             updated.push({
                               question_id: questions[selectedQuestionIndex].id,
@@ -136,6 +153,7 @@ export default function WorkPreTestWrapper({ id }: WorkPreTestWrapperProps) {
                     );
                   })}
                 </ul>
+
                 {selectedQuestionIndex === questions.length - 1 &&
                   answers.length === questions.length && (
                     <div className="pt-4">
@@ -159,6 +177,7 @@ export default function WorkPreTestWrapper({ id }: WorkPreTestWrapperProps) {
           </div>
         </SidebarInset>
       </SidebarProvider>
+
       <DialogConfirmSubmit
         open={isConfirmDialogOpen}
         onClose={closeConfirmDialog}

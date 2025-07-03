@@ -7,6 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { HistoryPreTest, PreTest } from "@/types/test/pre-test";
 import { Check, ClipboardPen } from "lucide-react";
 import { useState } from "react";
+import { format } from "date-fns";
+import { id as localeId } from "date-fns/locale";
 
 interface CardListPreTestProps {
   data?: PreTest[];
@@ -36,9 +38,7 @@ export default function CardListPreTest({
   history,
 }: CardListPreTestProps) {
   const [dialogStartPreTestOpen, setDialogStartPreTestOpen] = useState(false);
-  const [selectedPreTestId, setSelectedPreTestId] = useState<string | null>(
-    null,
-  );
+  const [selectedPreTestId, setSelectedPreTestId] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -55,23 +55,22 @@ export default function CardListPreTest({
     setDialogStartPreTestOpen(true);
   };
 
-  const isAlreadyTaken = (preTestId: string) => {
-    return history?.some((h) => h.pre_test.id === preTestId);
+  const getPreTestHistory = (preTestId: string) => {
+    return history?.find((h) => h.pre_test.id === preTestId);
   };
 
   return (
     <>
       <div className="space-y-4">
         {data?.map((preTest) => {
-          const alreadyTaken = isAlreadyTaken(preTest.id);
+          const preTestHistory = getPreTestHistory(preTest.id);
+          const alreadyTaken = !!preTestHistory;
 
           return (
             <div
               key={preTest.id}
               className={`group block ${
-                alreadyTaken
-                  ? "cursor-not-allowed opacity-70"
-                  : "cursor-pointer"
+                alreadyTaken ? "cursor-not-allowed opacity-70" : "cursor-pointer"
               }`}
               onClick={() =>
                 !alreadyTaken && handleDialogStartPretestOpen(preTest.id)
@@ -96,10 +95,16 @@ export default function CardListPreTest({
                       <CardTitle className="text-md font-bold md:text-xl">
                         {preTest.name}
                       </CardTitle>
-                      {alreadyTaken && (
+
+                      {preTestHistory && (
                         <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
-                          <Check className="h-4 w-4 text-green-500" /> Sudah
-                          mengerjakan
+                          <Check className="h-4 w-4 text-green-500" />
+                          Sudah mengerjakan, pada{" "}
+                          {format(
+                            new Date(preTestHistory.created_at),
+                            "d MMMM yyyy 'pukul' HH.mm",
+                            { locale: localeId }
+                          )}
                         </div>
                       )}
                     </div>
@@ -109,6 +114,7 @@ export default function CardListPreTest({
             </div>
           );
         })}
+
         {selectedPreTestId && (
           <DialogStartPreTest
             open={dialogStartPreTestOpen}

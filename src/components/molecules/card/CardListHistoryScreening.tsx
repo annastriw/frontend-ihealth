@@ -12,6 +12,7 @@ interface CardListHistoryScreeningProps {
   isLoading: boolean;
 }
 
+
 export default function CardListHistoryScreening({
   data,
   isLoading,
