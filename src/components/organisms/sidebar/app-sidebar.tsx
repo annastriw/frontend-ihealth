@@ -33,8 +33,8 @@ import {
   UserRoundSearch,
   Map,
   Syringe,
-  HeartPulse ,
-  Brain
+  HeartPulse,
+  Brain,
 } from "lucide-react";
 import { NavUser } from "./NavUser";
 import { useGetCheckPersonalInformation } from "@/http/personal-information/get-check-personal-information";
@@ -56,27 +56,27 @@ export function AppSidebar({ session }: AppSidebarProps) {
 
   const shouldCheckInformation = session?.user.role !== "admin";
 
-const { data: personalInfoData } = useGetCheckPersonalInformation(
-  session.access_token as string,
-  {
-    enabled: shouldCheckInformation && !!session.access_token,
-  }
-);
+  const { data: personalInfoData } = useGetCheckPersonalInformation(
+    session.access_token as string,
+    {
+      enabled: shouldCheckInformation && !!session.access_token,
+    },
+  );
 
-const { data: mapsData } = useGetCheckMapsUser(
-  session.access_token as string,
-  {
-    enabled:
-      shouldCheckInformation &&
-      !!session.access_token &&
-      (personalInfoData?.data.is_completed ?? false), 
-  }
-);
+  const { data: mapsData } = useGetCheckMapsUser(
+    session.access_token as string,
+    {
+      enabled:
+        shouldCheckInformation &&
+        !!session.access_token &&
+        (personalInfoData?.data.is_completed ?? false),
+    },
+  );
 
-const isCompleted =
-  ["admin", "medical_personal"].includes(session?.user.role) ||
-  ((personalInfoData?.data.is_completed ?? false) &&
-   (mapsData?.data.is_completed ?? false));
+  const isCompleted =
+    ["admin", "medical_personal"].includes(session?.user.role) ||
+    ((personalInfoData?.data.is_completed ?? false) &&
+      (mapsData?.data.is_completed ?? false));
 
   return (
     <Sidebar>
@@ -92,9 +92,7 @@ const isCompleted =
                   width={37}
                   height={37}
                 />
-                <h1 className="font-semibold tracking-tight">
-                  iHealth Edu
-                </h1>
+                <h1 className="font-semibold tracking-tight">iHealth Edu</h1>
               </Link>
             </div>
           </SidebarMenuItem>
@@ -171,14 +169,19 @@ const isCompleted =
                               </Link>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
-<SidebarMenuItem>
-  <SidebarMenuButton asChild className={buttonClass("/dashboard/modules")}>
-    <a href="https://www.google.com" target="_blank" rel="noopener noreferrer">
-      <Syringe />
-      <span>Diabetes Melitus</span>
-    </a>
-  </SidebarMenuButton>
-</SidebarMenuItem>
+                          <SidebarMenuItem>
+                            <SidebarMenuButton
+                              asChild
+                              className={buttonClass(
+                                "/dashboard/diabetes-melitus",
+                              )}
+                            >
+                              <Link href="/dashboard/diabetes-melitus">
+                                <Syringe />
+                                <span>Diabetes Melitus</span>
+                              </Link>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
 
                           <SidebarMenuItem>
                             <SidebarMenuButton
@@ -194,7 +197,9 @@ const isCompleted =
                           <SidebarMenuItem>
                             <SidebarMenuButton
                               asChild
-                              className={buttonClass("/dashboard/mental-health")}
+                              className={buttonClass(
+                                "/dashboard/mental-health",
+                              )}
                             >
                               <Link href="/dashboard/mental-health">
                                 <Brain />
@@ -341,7 +346,7 @@ const isCompleted =
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
-                        <SidebarMenuItem>
+                      <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
                           className={buttonClass("/dashboard/admin/maps")}
