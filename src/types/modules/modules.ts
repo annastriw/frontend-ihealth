@@ -5,6 +5,7 @@ export type Modules = {
   type: string;
   created_at: Date;
   updated_at: Date;
+  sub_modules: SubModules[];
 };
 
 export type ModuleContent = {
