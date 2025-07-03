@@ -48,10 +48,15 @@ export default function WorkScreeningWrapper({ id }: WorkScreeningProps) {
   const [answers, setAnswers] = useState<SubmitScreening[]>([]);
 
   const { mutate: submitScreening } = useAddSubmitScreening({
-    onSuccess: () => {
-      toast.success("Screening berhasil disubmit!");
-      router.push(`/dashboard/screening`);
-    },
+    onSuccess: (data) => {
+  toast.success("Screening berhasil disubmit!");
+  const historyId = data?.history_id;
+  if (historyId) {
+    router.replace(`/dashboard/history/screening/${historyId}`);
+  } else {
+    router.replace("/dashboard/screening");
+  }
+},
     onError: () => {
       toast.error("Gagal submit screening. Silakan coba lagi.");
     },

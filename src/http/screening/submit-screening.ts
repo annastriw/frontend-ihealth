@@ -6,6 +6,7 @@ import { SubmitScreeningType } from "@/validators/screening/submit-screening-val
 import { Screening } from "@/types/screening/screening";
 
 interface SubmitScreeningResponse {
+  history_id: any;
   data: Screening;
 }
 

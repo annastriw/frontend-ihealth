@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HistoryPreTestDetail } from "@/types/test/pre-test";
+import { format } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 
 interface CardListHistoryQuestionScreeningProps {
   data?: HistoryPreTestDetail;
@@ -16,7 +18,7 @@ export default function CardListHistoryQuestionScreening({
   const optionLabels = ["A", "B", "C", "D", "E", "F"];
 
   const filteredAnswers = data?.answer.filter((answer) =>
-    answer.question.toLowerCase().includes(searchQuery?.toLowerCase() || ""),
+    answer.question.toLowerCase().includes(searchQuery?.toLowerCase() || "")
   );
 
   if (isLoading) {
@@ -48,6 +50,35 @@ export default function CardListHistoryQuestionScreening({
 
   return (
     <div className="space-y-4">
+      {/* Card informasi pengerjaan */}
+      {data && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Informasi Screening</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground space-y-1">
+  <p>
+    Dikerjakan pada:{" "}
+    <span className="font-medium text-primary">
+      {format(new Date(data.created_at), "EEEE, dd MMMM yyyy 'pukul' HH:mm", {
+        locale: idLocale,
+      })}
+    </span>
+  </p>
+  <p className="pt-2">
+    <span className="text-foreground">
+      Screening ini bertujuan untuk menggambarkan kondisi kesehatan Anda saat ini.
+      Tidak terdapat jawaban yang benar atau salah. Hasil dari screening ini
+      dapat digunakan sebagai bahan pertimbangan awal oleh tenaga kesehatan ahli
+      untuk menentukan tindak lanjut yang sesuai, seperti konsultasi atau pemeriksaan lanjutan.
+    </span>
+  </p>
+</CardContent>
+
+        </Card>
+      )}
+
+      {/* Card list soal dan jawaban */}
       {filteredAnswers?.map((answer, index) => (
         <Card key={answer.id}>
           <CardHeader>
@@ -63,7 +94,7 @@ export default function CardListHistoryQuestionScreening({
                     <div
                       key={option.id}
                       className={`flex items-center gap-2 rounded-md ${
-                        isSelected ? "text-green-600" : ""
+                        isSelected ? "text-green-600 font-semibold" : ""
                       }`}
                     >
                       <span className="font-semibold">

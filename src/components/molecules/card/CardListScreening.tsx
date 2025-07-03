@@ -17,11 +17,8 @@ export default function CardListScreening({
   isLoading,
   history,
 }: CardListScreeningProps) {
-  const [dialogStartScreeningOpen, setDialogStartScreeningOpen] =
-    useState(false);
-  const [selectedScreeningId, setSelectedScreeningId] = useState<string | null>(
-    null,
-  );
+  const [dialogStartScreeningOpen, setDialogStartScreeningOpen] = useState(false);
+  const [selectedScreeningId, setSelectedScreeningId] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -61,29 +58,20 @@ export default function CardListScreening({
   const isAlreadyTaken = (screeningId: string) => {
     return history?.some((h) => h.screening.id === screeningId);
   };
+
   return (
-    <div>
+    <div className="space-y-4">
       {data?.map((screening) => {
         const alreadyTaken = isAlreadyTaken(screening.id);
 
         return (
           <div
             key={screening.id}
-            className={`group block ${
-              alreadyTaken ? "cursor-not-allowed opacity-70" : "cursor-pointer"
-            }`}
-            onClick={() =>
-              !alreadyTaken && handleDialogStartPretestOpen(screening.id)
-            }
+            className="group block cursor-pointer"
+            onClick={() => handleDialogStartPretestOpen(screening.id)}
           >
             <div className="flex flex-row gap-6">
-              <div
-                className={`${
-                  alreadyTaken
-                    ? "bg-gray-300"
-                    : "bg-primary group-hover:bg-secondary"
-                } relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg md:flex`}
-              >
+              <div className="relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg bg-primary group-hover:bg-secondary md:flex">
                 <FileSearch className="text-background m-auto h-12 w-12" />
               </div>
               <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
@@ -94,11 +82,23 @@ export default function CardListScreening({
                       {screening.name}
                     </CardTitle>
                     {alreadyTaken && (
-                      <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
-                        <Check className="h-4 w-4 text-green-500" /> Sudah
-                        mengerjakan
-                      </div>
-                    )}
+  <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
+    <Check className="h-4 w-4 text-green-500" />
+    Terakhir mengerjakan pada{" "}
+    {
+      new Date(
+        history.find((h) => h.screening.id === screening.id)!.created_at
+      ).toLocaleString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    }
+  </div>
+)}
+
                   </div>
                 </CardHeader>
               </Card>
@@ -106,6 +106,7 @@ export default function CardListScreening({
           </div>
         );
       })}
+
       {selectedScreeningId && (
         <DialogStartScreening
           open={dialogStartScreeningOpen}

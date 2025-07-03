@@ -4,6 +4,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { HistoryScreening } from "@/types/screening/screening";
 import { ClipboardPenLine, FileX2 } from "lucide-react";
 import Link from "next/link";
+import { format } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 
 interface CardListHistoryScreeningProps {
   data: HistoryScreening[];
@@ -21,12 +23,10 @@ export default function CardListHistoryScreening({
           <div className="flex flex-row gap-6" key={i}>
             <Skeleton className="hidden aspect-video h-36 w-36 rounded-lg md:flex" />
             <Card className="border-muted w-full border-2 shadow-transparent">
-              <CardHeader className="flex md:flex-row md:items-center md:justify-between">
-                <div className="space-y-2">
-                  <Skeleton className="h-5 w-24 rounded" />
-                  <Skeleton className="h-6 w-64 rounded" />
-                  <Skeleton className="h-4 w-40 rounded" />
-                </div>
+              <CardHeader className="space-y-2">
+                <Skeleton className="h-5 w-24 rounded" />
+                <Skeleton className="h-6 w-64 rounded" />
+                <Skeleton className="h-4 w-40 rounded" />
               </CardHeader>
             </Card>
           </div>
@@ -46,29 +46,37 @@ export default function CardListHistoryScreening({
 
   return (
     <div className="space-y-4">
-      {data?.map((screening) => (
-        <Link
-          href={`/dashboard/history/screening/${screening.id}`}
-          key={screening.id}
-          className="group block"
-        >
-          <div className="flex flex-row gap-6">
-            <div className="group-hover:bg-secondary bg-primary relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg md:flex">
-              <ClipboardPenLine className="text-background m-auto h-12 w-12" />
-            </div>
-            <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
-              <CardHeader className="flex md:flex-row md:items-center md:justify-between">
-                <div className="space-y-2">
+      {data.map((screening) => {
+        const formattedDate = format(new Date(screening.created_at), "dd MMMM yyyy", {
+          locale: idLocale,
+        });
+
+        return (
+          <Link
+            href={`/dashboard/history/screening/${screening.id}`}
+            key={screening.id}
+            className="group block"
+          >
+            <div className="flex flex-row gap-6">
+              <div className="group-hover:bg-secondary bg-primary relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg md:flex">
+                <ClipboardPenLine className="text-background m-auto h-12 w-12" />
+              </div>
+
+              <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
+                <CardHeader className="space-y-1">
                   <Badge className="bg-secondary">Screening</Badge>
                   <CardTitle className="text-md font-bold md:text-xl">
                     {screening.screening.name}
                   </CardTitle>
-                </div>
-              </CardHeader>
-            </Card>
-          </div>
-        </Link>
-      ))}
+                  <p className="text-muted-foreground text-sm">
+                    {formattedDate}
+                  </p>
+                </CardHeader>
+              </Card>
+            </div>
+          </Link>
+        );
+      })}
     </div>
   );
 }

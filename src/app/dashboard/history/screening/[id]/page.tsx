@@ -2,13 +2,14 @@ import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardHistoryScreeningDetailWrapper from "@/components/organisms/dashboard/history/DashboardHistoryScreeningDetailWrapper";
 
 interface DashboardHistoryScreeningDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
-export default async function DashboardHistoryScreeningDetailPage({
+export default function DashboardHistoryScreeningDetailPage({
   params,
 }: DashboardHistoryScreeningDetailPageProps) {
-  const { id } = await params;
+  const { id } = params;
+
   return (
     <section>
       <DashboardTitle
@@ -19,3 +20,4 @@ export default async function DashboardHistoryScreeningDetailPage({
     </section>
   );
 }
+

@@ -6,3 +6,4 @@ export const screeningSchema = z.object({
 });
 
 export type ScreeningType = z.infer<typeof screeningSchema>;
+
