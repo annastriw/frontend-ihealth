@@ -28,26 +28,31 @@ export default function DialogStartScreening({
         <div className="text-muted-foreground">
           <p className="text-muted-foreground text-sm leading-6">
             Formulir screening ini dirancang untuk membantu mengidentifikasi
-            tanda atau faktor risiko yang dapat mengarah pada masalah ginjal.
-            Hasil dari screening ini bukan merupakan diagnosis medis. Untuk
-            kepastian lebih lanjut, disarankan berkonsultasi dengan dokter atau
-            tenaga kesehatan. Sebelum mengisi, perhatikan hal berikut:
+            tanda atau faktor risiko yang dapat mengarah pada{" "}
+            <strong>Hipertensi</strong> dan <strong>Diabetes Melitus</strong>.
+            Hasil dari screening ini <strong>bukan merupakan diagnosis medis</strong>.
+            Untuk kepastian lebih lanjut, disarankan untuk berkonsultasi langsung
+            dengan dokter atau tenaga kesehatan profesional.
           </p>
-          <ul className="list-outside list-decimal pl-5 text-sm leading-6">
+          <p className="mt-4 text-sm font-medium">Sebelum mengisi, harap perhatikan hal-hal berikut:</p>
+          <ul className="list-outside list-decimal pl-5 text-sm leading-6 mt-2">
             <li>Pastikan koneksi internet Anda stabil selama pengisian.</li>
-            <li>Formulir ini hanya bisa diisi satu kali.</li>
-            <li>Jika koneksi terputus, pengisian harus dimulai dari awal.</li>
             <li>
-              Jawaban Anda akan digunakan untuk analisis awal dan tidak dapat
-              diubah setelah dikirim.
+              Formulir ini <strong>dapat diisi lebih dari satu kali</strong>, jika Anda ingin
+              melakukan evaluasi ulang.
+            </li>
+            <li>Jika koneksi terputus, Anda dapat memulai kembali pengisian dari awal.</li>
+            <li>
+              Jawaban Anda akan digunakan untuk analisis awal dan{" "}
+              <strong>tidak dapat diubah</strong> setelah dikirim.
             </li>
             <li>
-              Tidak ada jawaban benar atau salah, isi sesuai kondisi Anda dengan
-              jujur.
+              Tidak ada jawaban benar atau salah — mohon isi dengan <strong>jujur</strong>{" "}
+              sesuai kondisi Anda saat ini.
             </li>
             <li>
-              Setelah Anda klik “Selesai & Kumpulkan”, screening dianggap
-              selesai.
+              Setelah Anda klik tombol <strong>“Selesai & Kumpulkan”</strong>, pengisian
+              screening dianggap selesai dan akan tersimpan di riwayat Anda.
             </li>
           </ul>
         </div>

@@ -29,24 +29,27 @@ export default function DialogStartPreTest({
         <ScrollArea className="h-72 pr-4">
           <div className="text-muted-foreground space-y-2 text-sm">
             <p>
-              Pastikan anda memahami hal berikut sebelum mengerjakan pre test:
+              Pastikan Anda memahami hal-hal berikut sebelum memulai <strong>pre test</strong>:
             </p>
-            <ol className="ml-5 list-outside list-decimal space-y-1">
-              <li>Pastikan koneksi internet anda stabil.</li>
+            <ol className="ml-5 list-decimal space-y-1">
               <li>
-                Anda hanya memiliki 1 (satu) kali kesempatan mengerjakan pre
-                test.
+                <strong>Pre test</strong> bertujuan untuk mengetahui tingkat <strong>pemahaman awal</strong> Anda sebelum mempelajari materi edukasi kesehatan.
               </li>
               <li>
-                Jika koneksi internet anda terputus, anda harus mengulang pre
-                test dari awal.
+                Anda hanya memiliki <strong>1 (satu) kali kesempatan</strong> untuk mengerjakan pre test. Setelah dikumpulkan, Anda <strong>tidak dapat mengulang</strong>.
               </li>
               <li>
-                Setelah anda memilih &quot;Selesai untuk Dinilai&quot;, pre test
-                dianggap selesai dan tidak dapat diulang. Anda akan mendapat
-                penilaian dan jawaban benar.
+                Pastikan <strong>koneksi internet</strong> dalam kondisi <strong>stabil</strong> selama pengerjaan pre test.
               </li>
-              <li>Jawaban dapat anda lihat setelah selesai mengerjakan.</li>
+              <li>
+                Jika koneksi internet <strong>terputus</strong> atau terjadi gangguan, Anda harus <strong>mengulang dari awal</strong>.
+              </li>
+              <li>
+                Setelah menekan tombol <strong>“Selesai untuk Dinilai”</strong>, jawaban akan langsung dinilai dan <strong>tidak dapat diubah</strong>.
+              </li>
+              <li>
+                Hasil <strong>penilaian</strong> dan <strong>jawaban benar</strong> akan ditampilkan setelah Anda menyelesaikan pre test.
+              </li>
             </ol>
           </div>
         </ScrollArea>
