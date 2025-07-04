@@ -47,13 +47,14 @@ export default function FormEditScreening({
   isLoading,
 }: FormEditScreeningProps) {
   const form = useForm<ScreeningType>({
-    resolver: zodResolver(screeningSchema),
-    defaultValues: {
-      question_set_id: data.question_set_id ?? "",
-      name: data.name ?? "",
-    },
-    mode: "onChange",
-  });
+  resolver: zodResolver(screeningSchema),
+  defaultValues: {
+    question_set_id: data.question_set_id ?? "",
+    name: data.name ?? "",
+    type: data.type ?? "",
+  },
+  mode: "onChange",
+});
 
   const router = useRouter();
 
@@ -125,6 +126,35 @@ export default function FormEditScreening({
                   </FormItem>
                 )}
               />
+              
+<FormField
+  control={form.control}
+  name="type"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Tipe Screening</FormLabel>
+      <FormControl>
+        {isLoading ? (
+          <Skeleton className="h-10 w-full rounded-md" />
+        ) : (
+          <Select value={field.value} onValueChange={field.onChange}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Pilih tipe screening" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="HT">Hipertensi</SelectItem>
+              <SelectItem value="DM">Diabetes Melitus</SelectItem>
+              
+            </SelectContent>
+          </Select>
+        )}
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
               <FormField
                 control={form.control}
                 name="name"
