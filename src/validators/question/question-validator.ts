@@ -2,7 +2,10 @@ import { z } from "zod";
 
 const optionSchema = z.object({
   option_text: z.string().nonempty(),
-  option_index: z.number().positive(),
+  option_index: z.preprocess((val) => {
+    const num = Number(val);
+    return isNaN(num) ? undefined : num;
+  }, z.number().min(1, { message: "Urutan mulai dari 1" })),
   score: z.preprocess((val) => {
     if (val === "" || val === null || val === undefined) return null;
     const num = Number(val);
