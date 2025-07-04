@@ -15,48 +15,42 @@ interface DashboardSubModulesWrapper {
   id: string;
 }
 
-export default function DashboardSubModulesWrapper({
-  id,
-}: DashboardSubModulesWrapper) {
+export default function DashboardSubModulesWrapper({ id }: DashboardSubModulesWrapper) {
   const { data: session, status } = useSession();
 
-  const { data: preTest, isPending: preTestIsPending } =
-    useGetAllPreTestBySubModule(id, session?.access_token as string, {
-      enabled: status === "authenticated",
-    });
+  const { data: preTest, isPending: preTestIsPending } = useGetAllPreTestBySubModule(
+    id,
+    session?.access_token as string,
+    { enabled: status === "authenticated" }
+  );
 
   const { data, isPending } = useGetDetailSubModule(
     id,
     session?.access_token as string,
-    {
-      enabled: status === "authenticated",
-    },
+    { enabled: status === "authenticated" }
   );
 
-  const { data: postTest, isPending: postTestIsPending } =
-    useGetAllPostTestBySubModule(id, session?.access_token as string, {
-      enabled: status === "authenticated",
-    });
+  const { data: postTest, isPending: postTestIsPending } = useGetAllPostTestBySubModule(
+    id,
+    session?.access_token as string,
+    { enabled: status === "authenticated" }
+  );
 
   const { data: historyPreTest } = useGetAllHistoryPreTest(
     session?.access_token as string,
-    {
-      enabled: status === "authenticated",
-    },
+    { enabled: status === "authenticated" }
   );
 
-  const { data: HistoryPostTest } = useGetAllHistoryPostTest(
+  const { data: historyPostTest } = useGetAllHistoryPostTest(
     session?.access_token as string,
-    {
-      enabled: status === "authenticated",
-    },
+    { enabled: status === "authenticated" }
   );
 
+  // Identifikasi pretest yang sudah selesai
   const preTestIds = preTest?.data.map((p) => p.id) || [];
 
   const completedPreTests =
-    historyPreTest?.data.filter((h) => preTestIds.includes(h.pre_test.id)) ||
-    [];
+    historyPreTest?.data.filter((h) => preTestIds.includes(h.pre_test.id)) || [];
 
   const isPreTestCompleted = completedPreTests.length === preTestIds.length;
 
@@ -66,21 +60,27 @@ export default function DashboardSubModulesWrapper({
         head={data?.data.name ?? "Detail Sub Materi"}
         body={`Menampilkan detail sub materi dari ${data?.data.name ?? ""}`}
       />
+
       <div className="space-y-4">
+        {/* Pretest */}
         <CardListPreTest
           data={preTest?.data || []}
           isLoading={preTestIsPending}
           history={historyPreTest?.data || []}
         />
+
+        {/* Materi (terkunci jika pretest belum semua dikerjakan) */}
         <CardListModuleContent
-          data={data?.data.module_contents}
+          data={data?.data.module_contents || []}
           isLoading={isPending}
           isLocked={!isPreTestCompleted}
         />
+
+        {/* Posttest (juga terkunci jika pretest belum selesai semua) */}
         <CardListPostTest
           data={postTest?.data || []}
           isLoading={postTestIsPending}
-          history={HistoryPostTest?.data || []}
+          history={historyPostTest?.data || []}
           isLocked={!isPreTestCompleted}
         />
       </div>

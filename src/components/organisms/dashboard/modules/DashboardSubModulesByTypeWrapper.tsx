@@ -2,14 +2,31 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useGetAllModules } from "@/http/modulels/get-all-modules";
-import { SubModules } from "@/types/modules/modules";
-import CardListSubModule from "@/components/molecules/card/CardListSubModule";
+import { Modules } from "@/types/modules/modules";
+import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
+import CardListModule from "@/components/molecules/card/CardListModule";
 
 const typeMap: Record<string, string> = {
   "hipertensi": "HT",
   "diabetes-melitus": "DM",
   "mental-health": "KM",
+};
+
+const typeTitleMap: Record<string, { head: string; body: string }> = {
+  "hipertensi": {
+    head: "Modul Materi Hipertensi",
+    body: "Menampilkan semua submodul dan materi untuk Hipertensi",
+  },
+  "diabetes-melitus": {
+    head: "Modul Materi Diabetes Melitus",
+    body: "Menampilkan semua submodul dan materi untuk Diabetes Melitus",
+  },
+  "mental-health": {
+    head: "Modul Materi Kesehatan Mental",
+    body: "Menampilkan semua submodul dan materi untuk Kesehatan Mental",
+  },
 };
 
 interface DashboardSubModulesByTypeWrapperProps {
@@ -21,7 +38,9 @@ export default function DashboardSubModulesByTypeWrapper({
 }: DashboardSubModulesByTypeWrapperProps) {
   const selectedType = typeMap[type];
   const { data: session, status } = useSession();
-  const [subModules, setSubModules] = useState<SubModules[]>([]);
+  const router = useRouter();
+
+  const [filteredModules, setFilteredModules] = useState<Modules[]>([]);
 
   const {
     data: modules,
@@ -33,15 +52,32 @@ export default function DashboardSubModulesByTypeWrapper({
 
   useEffect(() => {
     if (modules && modules.length > 0) {
-      const allSubs = modules.flatMap((mod) => mod.sub_modules || []);
-      setSubModules(allSubs);
+      setFilteredModules(modules);
     }
   }, [modules]);
 
+  const handleClick = (id: string) => {
+    router.push(`/dashboard/modules/${id}`);
+  };
+
   if (!selectedType) return <div>Type tidak valid.</div>;
   if (status === "loading" || isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Gagal mengambil data submodul.</div>;
-  if (subModules.length === 0) return <div>Tidak ada submodul ditemukan.</div>;
+  if (isError) return <div>Gagal mengambil data modul.</div>;
+  if (filteredModules.length === 0) return <div>Tidak ada modul ditemukan.</div>;
 
-  return <CardListSubModule data={subModules} isLoading={isLoading} />;
+  return (
+    <>
+      <DashboardTitle
+        head={typeTitleMap[type]?.head || "Modul Materi"}
+        body={typeTitleMap[type]?.body || ""}
+      />
+      <div className="space-y-4">
+        <CardListModule
+          data={filteredModules}
+          isLoading={isLoading}
+          onClick={handleClick}
+        />
+      </div>
+    </>
+  );
 }

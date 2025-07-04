@@ -10,6 +10,7 @@ import Link from "next/link";
 interface CardListSubModuleProps {
   data?: SubModules[];
   isLoading?: boolean;
+  onClick?: (id: string) => void; // ✅ tambahan props onClick
 }
 
 function SubModuleSkeleton() {
@@ -31,6 +32,7 @@ function SubModuleSkeleton() {
 export default function CardListSubModule({
   data,
   isLoading,
+  onClick,
 }: CardListSubModuleProps) {
   if (isLoading) {
     return (
@@ -53,12 +55,8 @@ export default function CardListSubModule({
 
   return (
     <div className="space-y-4">
-      {data?.map((subModule) => (
-        <Link
-          key={subModule.id}
-          href={`/dashboard/modules/sub/${subModule.id}`}
-          className="group block"
-        >
+      {data.map((subModule) => {
+        const cardContent = (
           <div className="flex flex-row gap-6">
             <div className="group-hover:bg-secondary bg-primary relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg md:flex">
               <Book className="text-background m-auto h-12 w-12" />
@@ -76,8 +74,32 @@ export default function CardListSubModule({
               </CardHeader>
             </Card>
           </div>
-        </Link>
-      ))}
+        );
+
+        // ✅ jika onClick tersedia → bungkus dengan <div> dan pakai handler
+        if (onClick) {
+          return (
+            <div
+              key={subModule.id}
+              onClick={() => onClick(subModule.id)}
+              className="group block cursor-pointer"
+            >
+              {cardContent}
+            </div>
+          );
+        }
+
+        // ✅ jika tidak ada onClick → fallback ke <Link>
+        return (
+          <Link
+            key={subModule.id}
+            href={`/dashboard/modules/sub/${subModule.id}`}
+            className="group block"
+          >
+            {cardContent}
+          </Link>
+        );
+      })}
     </div>
   );
 }

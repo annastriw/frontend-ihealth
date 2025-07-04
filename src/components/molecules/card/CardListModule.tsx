@@ -10,6 +10,7 @@ import Link from "next/link";
 interface CardListModuleProps {
   data?: Modules[];
   isLoading?: boolean;
+  onClick?: (id: string) => void;
 }
 
 function SubModuleSkeleton() {
