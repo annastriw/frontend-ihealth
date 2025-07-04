@@ -75,9 +75,14 @@ export default function DialogCreateSubModules({
   };
 
   const { data: session, status } = useSession();
-  const { data } = useGetAllModules(session?.access_token as string, {
+  const { data } = useGetAllModules(
+  session?.access_token as string,
+  undefined, // tambahkan ini agar tidak salah posisi argumen
+  {
     enabled: status === "authenticated",
-  });
+  }
+);
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
