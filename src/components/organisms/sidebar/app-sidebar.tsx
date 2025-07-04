@@ -158,17 +158,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
                               </Link>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
-                          <SidebarMenuItem>
-                            <SidebarMenuButton
-                              asChild
-                              className={buttonClass("/dashboard/modules")}
-                            >
-                              <Link href="/dashboard/modules">
-                                <NotebookText />
-                                <span>Modul Materi</span>
-                              </Link>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
+                          
                           <SidebarMenuItem>
                             <SidebarMenuButton
                               asChild

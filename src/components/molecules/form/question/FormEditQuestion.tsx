@@ -123,24 +123,28 @@ export default function FormEditQuestion({ id, data }: FormEditQuestionProps) {
               />
 
               <FormField
-                control={form.control}
-                name={`options.${index}.option_index`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Urutan Pilihan Jawaban
-                      <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={`Masukkan pilihan ${index + 1}`}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+  control={form.control}
+  name={`options.${index}.option_index`}
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Urutan Pilihan Jawaban <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Input
+          type="number"
+          min={1}
+          value={field.value ?? ""}
+          onChange={(e) => field.onChange(Number(e.target.value))}
+          placeholder="Minimal 1"
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
 
               {form.getValues(`options.${index}.score`) !== null && (
                 <FormField
