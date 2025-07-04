@@ -8,4 +8,5 @@ export type TesDetail = {
   subModule: SubModules;
   name: string;
   questions: Question[];
+  type: "HT" | "DM";
 };

@@ -56,6 +56,7 @@ export default function DialogEditScreening({
     defaultValues: {
       question_set_id: data.question_set_id,
       name: data.name,
+      type: data.type,
     },
     mode: "onChange",
   });
@@ -64,6 +65,7 @@ export default function DialogEditScreening({
     form.reset({
       question_set_id: data.question_set_id,
       name: data.name,
+      type: data.type,
     });
   }, [data, form]);
 
@@ -106,6 +108,7 @@ export default function DialogEditScreening({
               className="space-y-5 pt-4"
               onSubmit={form.handleSubmit(onSubmit)}
             >
+              {/* Modul */}
               <FormField
                 control={form.control}
                 name="question_set_id"
@@ -122,7 +125,7 @@ export default function DialogEditScreening({
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Pilih modul yang tersedia" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent position="popper" className="z-50">
                           <SelectGroup>
                             <SelectLabel>Modul</SelectLabel>
                             {modules?.data.map((module) => (
@@ -138,6 +141,39 @@ export default function DialogEditScreening({
                   </FormItem>
                 )}
               />
+
+              {/* Tipe Screening */}
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Tipe Screening <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih tipe screening" />
+                        </SelectTrigger>
+                        <SelectContent position="popper" className="z-50">
+                          <SelectGroup>
+                            <SelectItem value="HT">Hipertensi</SelectItem>
+                            <SelectItem value="DM">Diabetes Melitus</SelectItem>
+                            
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Nama */}
               <FormField
                 control={form.control}
                 name="name"

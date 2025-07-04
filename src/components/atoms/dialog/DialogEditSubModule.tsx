@@ -89,9 +89,14 @@ export default function DialogEditSubModule({
   };
 
   const { data: session, status } = useSession();
-  const { data: modules } = useGetAllModules(session?.access_token as string, {
+  const { data: modules } = useGetAllModules(
+  session?.access_token as string,
+  undefined, // karena kita tidak filter berdasarkan type
+  {
     enabled: status === "authenticated",
-  });
+  }
+);
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

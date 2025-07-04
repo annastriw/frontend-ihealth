@@ -34,13 +34,14 @@ import { toast } from "sonner";
 
 export default function FormCreateScreening() {
   const form = useForm<ScreeningType>({
-    resolver: zodResolver(screeningSchema),
-    defaultValues: {
-      question_set_id: "",
-      name: "",
-    },
-    mode: "onChange",
-  });
+  resolver: zodResolver(screeningSchema),
+  defaultValues: {
+    question_set_id: "",
+    name: "",
+    type: "",
+  },
+  mode: "onChange",
+});
 
   const router = useRouter();
 
@@ -108,6 +109,31 @@ export default function FormCreateScreening() {
                   </FormItem>
                 )}
               />
+
+                <FormField
+  control={form.control}
+  name="type"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Tipe Screening</FormLabel>
+      <FormControl>
+        <Select value={field.value} onValueChange={field.onChange}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Pilih tipe screening" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="HT">Hipertensi</SelectItem>
+            <SelectItem value="DM">Diabetes Melitus</SelectItem>
+            
+          </SelectContent>
+        </Select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
               <FormField
                 control={form.control}
                 name="name"

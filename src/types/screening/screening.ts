@@ -7,6 +7,7 @@ export type Screening = {
   name: string;
   created_at: Date;
   updated_at: Date;
+  type: "HT" | "DM";
 };
 
 export type ScreeningDetail = {

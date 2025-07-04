@@ -9,10 +9,11 @@ import { useSession } from "next-auth/react";
 export default function DashboardAdminModulesWrapper() {
   const { data: session, status } = useSession();
   const { data, isPending } = useGetAllModules(
-    session?.access_token as string,
-    {
-      enabled: status === "authenticated",
-    },
+  session?.access_token as string,
+  undefined, // type tidak digunakan di sini
+  {
+    enabled: status === "authenticated",
+  },
   );
   return (
     <div className="space-y-4">
