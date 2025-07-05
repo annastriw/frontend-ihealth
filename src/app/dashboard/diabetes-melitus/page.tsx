@@ -1,5 +1,5 @@
 import DashboardSubModulesByTypeWrapper from "@/components/organisms/dashboard/modules/DashboardSubModulesByTypeWrapper";
 
 export default function DiabetesMelitusPage() {
-  return <DashboardSubModulesByTypeWrapper type="hipertensi" withScreening />;
+  return <DashboardSubModulesByTypeWrapper type="diabetes-melitus" withScreening />;
 }
