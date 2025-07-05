@@ -114,7 +114,7 @@ export default function CardPersonalInformationUserId({
             </div>
             <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">
-                Riwayat pelayanan kesehatan sebelumnya
+                Riwayat tempat pelayanan kesehatan sebelumnya
               </div>
               <div>
                 {isLoading ? (

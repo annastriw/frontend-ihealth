@@ -325,11 +325,11 @@ export default function FormUpdatePersonalInformation() {
                 name="origin_disease"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Riwayat pelayanan kesehatan sebelumnya</FormLabel>
+                    <FormLabel>Riwayat tempat pelayanan kesehatan sebelumnya</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Masukkan rumah sakit sebelumnya"
+                        placeholder="Masukkan tempat pelayanan kesehatan sebelumnya"
                         {...field}
                         value={field.value}
                       />
@@ -397,7 +397,6 @@ export default function FormUpdatePersonalInformation() {
                         value={field.value}
                       >
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Pilih jenis terapi" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>

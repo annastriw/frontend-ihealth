@@ -323,13 +323,13 @@ export default function FormCreatePersonalInformation() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Riwayat pelayanan kesehatan sebelumnya{" "}
+                      Riwayat tempat pelayanan kesehatan sebelumnya{" "}
                       <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Masukkan riwayat pelayanan kesehatan sebelumnya"
+                        placeholder="Masukkan riwayat tempat pelayanan kesehatan sebelumnya"
                         {...field}
                         value={field.value ?? ""}
                       />
