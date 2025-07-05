@@ -9,10 +9,14 @@ interface GetAllScreeningResponse {
 
 export const GetAllScreeningHandler = async (
   token: string,
+  type?: string,
 ): Promise<GetAllScreeningResponse> => {
   const { data } = await api.get<GetAllScreeningResponse>("/screening", {
     headers: {
       Authorization: `Bearer ${token}`,
+    },
+    params: {
+      type: type,
     },
   });
 
@@ -21,11 +25,12 @@ export const GetAllScreeningHandler = async (
 
 export const useGetAllScreening = (
   token: string,
+  type?: string,
   options?: Partial<UseQueryOptions<GetAllScreeningResponse, AxiosError>>,
 ) => {
   return useQuery({
-    queryKey: ["screening-list"],
-    queryFn: () => GetAllScreeningHandler(token),
+    queryKey: ["screening-list", type],
+    queryFn: () => GetAllScreeningHandler(token, type),
     ...options,
   });
 };

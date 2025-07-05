@@ -147,17 +147,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
                     <SidebarMenu>
                       {session?.user.role === "user" && (
                         <>
-                          <SidebarMenuItem>
-                            <SidebarMenuButton
-                              asChild
-                              className={buttonClass("/dashboard/screening")}
-                            >
-                              <Link href="/dashboard/screening">
-                                <Search />
-                                <span>Screening</span>
-                              </Link>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
+                          
                           
                           <SidebarMenuItem>
                             <SidebarMenuButton
