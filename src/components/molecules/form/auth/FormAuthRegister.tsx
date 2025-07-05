@@ -216,11 +216,11 @@ export default function FormAuthRegister() {
   name="disease_type"
   render={({ field }) => (
     <FormItem>
-      <FormLabel>Jenis Penyakit</FormLabel>
+      <FormLabel>Diagnosa Medis</FormLabel>
       <FormControl>
         <Select onValueChange={field.onChange} defaultValue={field.value}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Pilih jenis penyakit" />
+            <SelectValue placeholder="Pilih jenis diagnosa medis" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="DM">Diabetes Melitus</SelectItem>

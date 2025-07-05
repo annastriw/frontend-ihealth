@@ -156,7 +156,7 @@ export default function DashboardAdminDetailUsersWrapper({
                   </div>
                   <div className="flex flex-col gap-1">
                     <div className="text-muted-foreground md:w-4/12">
-                      Riwayat pelayanan kesehatan sebelumnya
+                      Riwayat tempat pelayanan kesehatan sebelumnya
                     </div>
                     <div className="md:w-8/12">
                       {personal?.data.origin_disease}
@@ -172,7 +172,7 @@ export default function DashboardAdminDetailUsersWrapper({
                   </div>
                   <div className="flex flex-col gap-1">
                     <div className="text-muted-foreground md:w-4/12">
-                      Lama Terdiagnosis Ginjal
+                      Lama Terdiagnosis Diabetes Melitus atau Hipertensi
                     </div>
                     <div className="md:w-8/12">
                       {personal?.data.disease_duration}
@@ -180,7 +180,7 @@ export default function DashboardAdminDetailUsersWrapper({
                   </div>
                   <div className="flex flex-col gap-1">
                     <div className="text-muted-foreground md:w-4/12">
-                      Terapi Yang Pernah Dijalani
+                      Apakah pernah berobat ke dokter sebelumnya
                     </div>
                     <div className="uppercase md:w-8/12">
                       {personal?.data.history_therapy?.toLowerCase() ===

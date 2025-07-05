@@ -142,7 +142,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
               <>
                 {/* Menu utama */}
                 <SidebarGroup>
-                  <SidebarGroupLabel>Menu Utama</SidebarGroupLabel>
+                  <SidebarGroupLabel>Modul Edukasi</SidebarGroupLabel>
                   <SidebarGroupContent>
                     <SidebarMenu>
                       {session?.user.role === "user" && (

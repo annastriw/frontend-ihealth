@@ -3,7 +3,7 @@ import { z } from "zod";
 export const registerSchema = z
   .object({
     name: z.string().min(1, { message: "Nama harus diisi." }).trim(),
-    disease_type: z.string().min(1, { message: "Jenis penyakit harus diisi." }),
+    disease_type: z.string().min(1, { message: "Jenis diagnosa medis harus diisi." }),
     email: z
       .string()
       .min(1, { message: "Email harus diisi." })
