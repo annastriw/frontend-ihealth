@@ -17,11 +17,13 @@ import { toast } from "sonner";
 export default function DashboardScreeningWrapper() {
   const { data: session, status } = useSession();
   const { data, isPending } = useGetAllScreening(
-    session?.access_token as string,
-    {
-      enabled: status === "authenticated",
-    },
-  );
+  session?.access_token as string,
+  undefined,
+  {
+    enabled: status === "authenticated",
+  },
+);
+
   const [selectedScreening, setSelectedScreening] = useState<Screening | null>(
     null,
   );
