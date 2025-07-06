@@ -10,9 +10,12 @@ export type PersonalInformation = {
   is_married: boolean;
   last_education: string;
   origin_disease: string;
-  
+
   disease_duration: string;
   history_therapy: string;
+  smoking_history: string;
+  body_mass_index: string;
+  heart_disease_history: string;
 };
 
 export type CheckPersonalInformation = {

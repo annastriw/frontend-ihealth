@@ -60,6 +60,9 @@ export default function FormViewPersonalInformation({
       origin_disease: "",
       // patient_type: "",
       disease_duration: "",
+      smoking_history: "",
+      body_mass_index: "",
+      heart_disease_history: "",
     },
   });
 
@@ -80,6 +83,9 @@ export default function FormViewPersonalInformation({
         origin_disease: data.data.origin_disease,
         // patient_type: data.data.patient_type,
         disease_duration: data.data.disease_duration,
+        smoking_history: data.data.smoking_history,
+        body_mass_index: data.data.body_mass_index,
+        heart_disease_history: data.data.heart_disease_history,
       });
     }
   }, [data?.data, form]);
@@ -298,7 +304,9 @@ export default function FormViewPersonalInformation({
             name="origin_disease"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Riwayat tempat pelayanan kesehatan sebelumnya</FormLabel>
+                <FormLabel>
+                  Riwayat tempat pelayanan kesehatan sebelumnya
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -311,7 +319,7 @@ export default function FormViewPersonalInformation({
               </FormItem>
             )}
           />
-        
+
           <FormField
             control={form.control}
             name="disease_duration"

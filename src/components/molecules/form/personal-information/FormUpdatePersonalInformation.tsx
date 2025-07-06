@@ -79,6 +79,9 @@ export default function FormUpdatePersonalInformation() {
       //     : "HT",
       disease_duration: data?.data.disease_duration ?? "",
       history_therapy: data?.data.history_therapy ?? "",
+      smoking_history: data?.data.smoking_history ?? "",
+      body_mass_index: data?.data.body_mass_index ?? "",
+      heart_disease_history: data?.data.heart_disease_history ?? "",
     },
     mode: "onChange",
   });
@@ -325,7 +328,9 @@ export default function FormUpdatePersonalInformation() {
                 name="origin_disease"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Riwayat tempat pelayanan kesehatan sebelumnya</FormLabel>
+                    <FormLabel>
+                      Riwayat tempat pelayanan kesehatan sebelumnya
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="text"
@@ -337,6 +342,71 @@ export default function FormUpdatePersonalInformation() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="smoking_history"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Riwayat Merokok <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Masukkan riwayat merokok (contoh: tidak pernah, aktif, bekas perokok)"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="body_mass_index"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Indeks Massa Tubuh <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Masukkan indeks massa tubuh (contoh: 23.5)"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="heart_disease_history"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Riwayat Penyakit Jantung{" "}
+                      <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Masukkan riwayat penyakit jantung (contoh: tidak ada, pernah serangan jantung)"
+                        {...field}
+                        value={field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* <FormField
   control={form.control}
   name="patient_type"
@@ -388,22 +458,17 @@ export default function FormUpdatePersonalInformation() {
                 name="history_therapy"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Apakah anda sudah berobat ke dokter?
-                    </FormLabel>
+                    <FormLabel>Apakah anda sudah berobat ke dokter?</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
                       >
-                        <SelectTrigger className="w-full">
-                        </SelectTrigger>
+                        <SelectTrigger className="w-full"></SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel></SelectLabel>
-                            <SelectItem value="already">
-                              Sudah
-                            </SelectItem>
+                            <SelectItem value="already">Sudah</SelectItem>
                             <SelectItem value="nothing">
                               Belum Pernah
                             </SelectItem>

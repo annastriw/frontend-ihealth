@@ -18,9 +18,12 @@ export const personalInformationSchema = z.object({
   is_married: z.boolean(),
   last_education: z.string().nonempty(),
   origin_disease: z.string().nonempty(),
-  
+
   disease_duration: z.string().nonempty(),
   history_therapy: z.string().nonempty(),
+  smoking_history: z.string().nonempty(),
+  body_mass_index: z.string().nonempty(),
+  heart_disease_history: z.string().nonempty(),
 });
 
 export type PersonalInformationType = z.infer<typeof personalInformationSchema>;

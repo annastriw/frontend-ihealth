@@ -58,6 +58,9 @@ export default function FormCreatePersonalInformation() {
       // patient_type: undefined,
       disease_duration: "",
       history_therapy: "nothing",
+      smoking_history: "",
+      body_mass_index: "",
+      heart_disease_history: "",
     },
     mode: "onChange",
   });
@@ -338,6 +341,71 @@ export default function FormCreatePersonalInformation() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="smoking_history"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Riwayat Merokok <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Masukkan riwayat merokok (contoh: tidak pernah, aktif, bekas perokok)"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="body_mass_index"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Indeks Massa Tubuh <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Masukkan indeks massa tubuh (contoh: 23.5)"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="heart_disease_history"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Riwayat Penyakit Jantung{" "}
+                      <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Masukkan riwayat penyakit jantung (contoh: tidak ada, pernah serangan jantung)"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* <FormField
                 control={form.control}
                 name="patient_type"
@@ -392,9 +460,7 @@ export default function FormCreatePersonalInformation() {
                         value={field.value ?? ""}
                       />
                     </FormControl>
-                    <FormDescription>
-                      * Contoh: 2 Tahun
-                    </FormDescription>
+                    <FormDescription>* Contoh: 2 Tahun</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -419,9 +485,7 @@ export default function FormCreatePersonalInformation() {
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel></SelectLabel>
-                            <SelectItem value="already">
-                              Sudah
-                            </SelectItem>
+                            <SelectItem value="already">Sudah</SelectItem>
                             <SelectItem value="nothing">
                               Belum Pernah
                             </SelectItem>
