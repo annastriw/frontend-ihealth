@@ -18,14 +18,26 @@ const editModuleContentHandler = async ({
   token,
   body,
 }: EditModuleContentPayload): Promise<EditModuleContentResponse> => {
-  const { data } = await api.post(`/module-contents/${id}`, body, {
+  console.log("📤 [editModuleContentHandler] Payload ID:", id);
+
+  // Inject `_method` ke FormData untuk override menjadi PUT
+  body.append("_method", "PUT");
+
+  // Debug isi FormData (manual)
+  for (const [key, value] of body.entries()) {
+    console.log(`📄 FormData -> ${key}:`, value);
+  }
+
+  const response = await api.post(`/module-content/${id}`, body, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "multipart/form-data",
     },
   });
 
-  return data;
+  console.log("✅ [editModuleContentHandler] Response:", response.data);
+
+  return response.data;
 };
 
 export const useEditModuleContent = (

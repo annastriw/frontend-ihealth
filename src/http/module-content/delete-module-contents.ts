@@ -16,7 +16,7 @@ const deleteModuleContentHandler = async ({
   id,
   token,
 }: DeleteModuleContentPayload): Promise<DeleteModuleContentResponse> => {
-  const { data } = await api.delete(`/module-contents/${id}`, {
+  const { data } = await api.delete(`/module-content/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
