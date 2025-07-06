@@ -454,31 +454,29 @@ export default function FormUpdatePersonalInformation() {
                 )}
               />
               <FormField
-                control={form.control}
-                name="history_therapy"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Apakah anda sudah berobat ke dokter?</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="w-full"></SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel></SelectLabel>
-                            <SelectItem value="already">Sudah</SelectItem>
-                            <SelectItem value="nothing">
-                              Belum Pernah
-                            </SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+  control={form.control}
+  name="history_therapy"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Apakah anda sudah berobat ke dokter?</FormLabel>
+      <FormControl>
+        <Select onValueChange={field.onChange} value={field.value}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Pilih status pengobatan" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Status Pengobatan</SelectLabel>
+              <SelectItem value="already">Sudah</SelectItem>
+              <SelectItem value="nothing">Belum Pernah</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </FormControl>
+    </FormItem>
+  )}
+/>
+
               <div className="flex justify-end">
                 <Button type="submit" disabled={isPending}>
                   {isPending ? "Loading..." : "Simpan"}
