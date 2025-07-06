@@ -454,6 +454,9 @@ export default function FormUpdatePersonalInformation() {
                 )}
               />
               <FormField
+
+
+
                 control={form.control}
                 name="history_therapy"
                 render={({ field }) => (
@@ -479,6 +482,7 @@ export default function FormUpdatePersonalInformation() {
                   </FormItem>
                 )}
               />
+
               <div className="flex justify-end">
                 <Button type="submit" disabled={isPending}>
                   {isPending ? "Loading..." : "Simpan"}

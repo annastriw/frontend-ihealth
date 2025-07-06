@@ -18,11 +18,13 @@ export default function DashboardAdminReportWrapper() {
   const [typeFilter, setTypeFilter] = useState("all");
 
   const { data, isPending } = useGetAllScreening(
-    session?.access_token as string,
-    {
-      enabled: status === "authenticated" && activeTab === "screening",
-    },
-  );
+  session?.access_token as string,
+  undefined,
+  {
+    enabled: status === "authenticated" && activeTab === "screening",
+  },
+);
+
 
   const { data: preTest, isPending: preTestIsPending } = useGetAllPreTest(
     session?.access_token as string,
