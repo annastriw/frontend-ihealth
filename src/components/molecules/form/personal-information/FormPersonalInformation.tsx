@@ -466,37 +466,28 @@ export default function FormCreatePersonalInformation() {
                 )}
               />
               <FormField
-                control={form.control}
-                name="history_therapy"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Apakah anda sudah berobat ke dokter?{" "}
-                      <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Pilih jenis terapi" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel></SelectLabel>
-                            <SelectItem value="already">Sudah</SelectItem>
-                            <SelectItem value="nothing">
-                              Belum Pernah
-                            </SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+  control={form.control}
+  name="history_therapy"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Apakah anda sudah berobat ke dokter?</FormLabel>
+      <FormControl>
+        <Select onValueChange={field.onChange} value={field.value}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Pilih jawaban" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="already">Sudah</SelectItem>
+              <SelectItem value="nothing">Belum Pernah</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </FormControl>
+    </FormItem>
+  )}
+/>
+
               <div className="flex justify-end">
                 <Button type="submit" disabled={isPending}>
                   {isPending ? "Loading..." : "Tambahkan"}
