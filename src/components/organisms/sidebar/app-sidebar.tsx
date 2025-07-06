@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
-  Search,
+  //Search,
   Book,
   History,
   BookOpen,
@@ -35,6 +35,7 @@ import {
   Syringe,
   HeartPulse,
   Brain,
+  Stethoscope,
 } from "lucide-react";
 import { NavUser } from "./NavUser";
 import { useGetCheckPersonalInformation } from "@/http/personal-information/get-check-personal-information";
@@ -147,8 +148,6 @@ export function AppSidebar({ session }: AppSidebarProps) {
                     <SidebarMenu>
                       {session?.user.role === "user" && (
                         <>
-                          
-                          
                           <SidebarMenuItem>
                             <SidebarMenuButton
                               asChild
@@ -346,6 +345,28 @@ export function AppSidebar({ session }: AppSidebarProps) {
             {/* Medical personal groups */}
             {session?.user.role === "medical_personal" && (
               <>
+                {/* Screening untuk Medical Personal */}
+                <SidebarGroup>
+                  <SidebarGroupLabel>Screening</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          className={buttonClass(
+                            "/dashboard/medical/screening/diabetes-melitus",
+                          )}
+                        >
+                          <Link href="/dashboard/medical/screening/diabetes-melitus">
+                            <Stethoscope />
+                            <span>Diabetes Melitus</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+
                 <SidebarGroup>
                   <SidebarGroupLabel>Diskusi</SidebarGroupLabel>
                   <SidebarGroupContent>
