@@ -1,13 +1,11 @@
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardHistoryScreeningDetailWrapper from "@/components/organisms/dashboard/history/DashboardHistoryScreeningDetailWrapper";
 
-interface DashboardHistoryScreeningDetailPageProps {
-  params: { id: string };
-}
-
 export default function DashboardHistoryScreeningDetailPage({
   params,
-}: DashboardHistoryScreeningDetailPageProps) {
+}: {
+  params: { id: string };
+}) {
   const { id } = params;
 
   return (
@@ -20,4 +18,3 @@ export default function DashboardHistoryScreeningDetailPage({
     </section>
   );
 }
-
