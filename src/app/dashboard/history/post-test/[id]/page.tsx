@@ -9,7 +9,7 @@ interface DashboardHistoryPostTestPageProps {
   params: { id: string };
 }
 
-export default function DashboardHistoryPostTestDetailPage({
+export default function Page({
   params,
 }: DashboardHistoryPostTestPageProps) {
   const { id } = params;
