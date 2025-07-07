@@ -1,14 +1,38 @@
-import dynamic from "next/dynamic";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
+import DashboardHistoryPostTestDetailWrapper from "@/components/organisms/dashboard/history/DashboardHistoryPostTestDetailWrapper";
 
 interface DashboardHistoryPostTestPageProps {
   params: { id: string };
 }
 
-// Import ClientPage secara dinamis (agar bisa pakai "use client")
-const ClientComponent = dynamic(() => import("./ClientPage"), {
-  ssr: false,
-});
+export default function DashboardHistoryPostTestDetailPage({
+  params,
+}: DashboardHistoryPostTestPageProps) {
+  const { id } = params;
+  const router = useRouter();
 
-export default function Page({ params }: DashboardHistoryPostTestPageProps) {
-  return <ClientComponent id={params.id} />;
+  useEffect(() => {
+    const handler = () => {
+      const backTo = sessionStorage.getItem("backToSubmoduleId");
+      if (backTo) {
+        router.replace(`/dashboard/modules/sub/${backTo}`);
+      }
+    };
+    window.addEventListener("popstate", handler);
+    return () => window.removeEventListener("popstate", handler);
+  }, [router]);
+
+  return (
+    <section>
+      <DashboardTitle
+        head="Detail Riwayat Post Test"
+        body="Menampilkan detail riwayat post test"
+      />
+      <DashboardHistoryPostTestDetailWrapper id={id} />
+    </section>
+  );
 }
