@@ -1,9 +1,5 @@
 import ClientPage from "./ClientPage";
 
-interface DashboardHistoryPostTestPageProps {
-  params: { id: string };
-}
-
-export default function Page({ params }: DashboardHistoryPostTestPageProps) {
+export default function Page({ params }: { params: { id: string } }) {
   return <ClientPage id={params.id} />;
 }

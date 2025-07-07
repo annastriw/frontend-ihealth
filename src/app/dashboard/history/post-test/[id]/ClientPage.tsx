@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardHistoryPostTestDetailWrapper from "@/components/organisms/dashboard/history/DashboardHistoryPostTestDetailWrapper";
 
-export default function ClientPage({ id }: { id: string }) {
+interface ClientPageProps {
+  id: string;
+}
+
+export default function ClientPage({ id }: ClientPageProps) {
   const router = useRouter();
 
   useEffect(() => {
@@ -15,8 +19,11 @@ export default function ClientPage({ id }: { id: string }) {
         router.replace(`/dashboard/modules/sub/${backTo}`);
       }
     };
+
     window.addEventListener("popstate", handler);
-    return () => window.removeEventListener("popstate", handler);
+    return () => {
+      window.removeEventListener("popstate", handler);
+    };
   }, [router]);
 
   return (
