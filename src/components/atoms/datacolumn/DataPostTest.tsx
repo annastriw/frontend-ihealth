@@ -41,7 +41,7 @@ export const postTestColumns = (
       const data = row.original;
       return (
         <div className="max-w-[200px] truncate">
-          <p className="truncate">{data.sub_module.name}</p>
+          <p className="truncate">{data.sub_module?.name ?? "-"}</p>
         </div>
       );
     },
