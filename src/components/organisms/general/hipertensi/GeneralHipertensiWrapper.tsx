@@ -4,7 +4,7 @@ export default function GeneralHipertensiWrapper() {
   return (
     <div className="space-y-4 text-justify">
       <Image
-        src={"/images/content/pgk.jpg"}
+        src={"/images/content/hipertensi.jpg"}
         alt="Hipertensi"
         width={1000}
         height={1000}

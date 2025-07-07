@@ -215,7 +215,9 @@ export function AppSidebar({ session }: AppSidebarProps) {
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
-                      <SidebarMenuItem>
+                      
+                      {/* <SidebarMenuItem>
+                      // Disembunyikan sementara karena tidak digunakan, hanya fokus pada HT, DM, dan KM
                         <SidebarMenuButton
                           asChild
                           className={buttonClass("/dashboard/admin/modules")}
@@ -225,7 +227,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
                             <span>Modul</span>
                           </Link>
                         </SidebarMenuButton>
-                      </SidebarMenuItem>
+                      </SidebarMenuItem> */}
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
