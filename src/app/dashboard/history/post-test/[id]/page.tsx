@@ -1,5 +1,5 @@
 import ClientPage from "./ClientPage";
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page({ params }: any) {
   return <ClientPage id={params.id} />;
 }
