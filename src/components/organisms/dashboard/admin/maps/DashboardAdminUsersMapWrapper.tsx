@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import React from "react";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useGetAllUserMap } from '@/http/admin/map/get-user-map';
