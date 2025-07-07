@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { useGetAllModules } from "@/http/modulels/get-all-modules";
 import { Modules } from "@/types/modules/modules";
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
-import CardListModule from "@/components/molecules/card/CardListModule";
 import ScreeningWrapper from "@/components/organisms/dashboard/screening/ScreeningWrapper";
+import DashboardSubModulesWrapper from "@/components/organisms/dashboard/sub-modules/DashboardSubModulesWrapper";
 
 const typeMap: Record<string, string> = {
   "hipertensi": "HT",
@@ -17,18 +17,19 @@ const typeMap: Record<string, string> = {
 
 const typeTitleMap: Record<string, { head: string; body: string }> = {
   "hipertensi": {
-    head: "Modul Materi Hipertensi",
-    body: "Menampilkan semua submodul dan materi untuk Hipertensi",
+    head: "Modul Edukasi Hipertensi",
+    body: "Pembelajaran Hipertensi terdiri dari beberapa tahapan penting, yaitu screening untuk mengetahui kondisi awal, pre test untuk mengukur pemahaman awal, materi edukasi, dan post test sebagai evaluasi akhir.",
   },
   "diabetes-melitus": {
-    head: "Modul Materi Diabetes Melitus",
-    body: "Menampilkan semua submodul dan materi untuk Diabetes Melitus",
+    head: "Modul Edukasi Diabetes Melitus",
+    body: "Pembelajaran Diabetes Melitus terdiri dari beberapa tahapan penting, yaitu screening untuk mengetahui kondisi awal, pre test untuk mengukur pemahaman awal, materi edukasi, dan post test sebagai evaluasi akhir.",
   },
   "mental-health": {
-    head: "Modul Materi Kesehatan Mental",
-    body: "Menampilkan semua submodul dan materi untuk Kesehatan Mental",
+    head: "Modul Edukasi Kesehatan Mental",
+    body: "Pembelajaran Kesehatan Mental terdiri dari beberapa tahapan penting, yaitu screening untuk mengetahui kondisi awal, pre test untuk mengukur pemahaman awal, materi edukasi, dan post test sebagai evaluasi akhir.",
   },
 };
+
 
 interface DashboardSubModulesByTypeWrapperProps {
   type: string;
@@ -59,10 +60,6 @@ export default function DashboardSubModulesByTypeWrapper({
     }
   }, [modules]);
 
-  const handleClick = (id: string) => {
-    router.push(`/dashboard/modules/${id}`);
-  };
-
   if (!selectedType) return <div>Type tidak valid.</div>;
   if (status === "loading" || isLoading) return <div>Loading...</div>;
   if (isError) return <div>Gagal mengambil data modul.</div>;
@@ -70,23 +67,26 @@ export default function DashboardSubModulesByTypeWrapper({
 
   return (
     <div className="space-y-6 px-4 md:px-6 lg:px-8 py-6">
+      {/* Judul Halaman */}
       <DashboardTitle
         head={typeTitleMap[type]?.head || "Modul Materi"}
         body={typeTitleMap[type]?.body || ""}
       />
 
+      {/* Screening (jika HT atau DM) */}
       {withScreening && (selectedType === "HT" || selectedType === "DM") && (
         <div className="space-y-4">
           <ScreeningWrapper type={selectedType} />
         </div>
       )}
 
-      <div className="space-y-4">
-        <CardListModule
-          data={filteredModules}
-          isLoading={isLoading}
-          onClick={handleClick}
-        />
+      {/* Pretest → Konten Materi → Posttest per Submodul */}
+      <div className="space-y-6">
+        {filteredModules.map((module) =>
+          module.sub_modules.map((subModule) => (
+            <DashboardSubModulesWrapper key={subModule.id} id={subModule.id} />
+          ))
+        )}
       </div>
     </div>
   );

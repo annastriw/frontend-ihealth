@@ -1,6 +1,5 @@
 "use client";
 
-import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import CardListModuleContent from "@/components/molecules/card/CardListModuleContent";
 import CardListPreTest from "@/components/molecules/card/CardListPreTest";
 import { useGetDetailSubModule } from "@/http/sub-modules/get-detail-sub-module";
@@ -56,10 +55,7 @@ export default function DashboardSubModulesWrapper({ id }: DashboardSubModulesWr
 
   return (
     <div>
-      <DashboardTitle
-        head={data?.data.name ?? "Detail Sub Materi"}
-        body={`Menampilkan detail sub materi dari ${data?.data.name ?? ""}`}
-      />
+      
 
       <div className="space-y-4">
         {/* Pretest */}
