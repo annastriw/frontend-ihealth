@@ -4,7 +4,7 @@ export default function GeneralDiabetesMelitusWrapper() {
   return (
     <div className="space-y-4 text-justify">
       <Image
-        src={"/images/content/capd.jpeg"}
+        src={"/images/content/diabetes.jpg"}
         alt="Diabetes Melitus"
         width={1000}
         height={1000}

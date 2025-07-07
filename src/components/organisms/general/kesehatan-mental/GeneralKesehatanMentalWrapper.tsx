@@ -4,7 +4,7 @@ export default function GeneralKesehatanMentalWrapper() {
   return (
     <div className="space-y-4 text-justify">
       <Image
-        src={"/images/content/hd.jpg"}
+        src={"/images/content/mental-health.jpg"}
         alt="Kesehatan Mental"
         width={1000}
         height={1000}
