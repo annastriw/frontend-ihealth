@@ -6,16 +6,20 @@ export type PersonalInformation = {
   date_of_birth: Date;
   age: string;
   work: string;
-  gender: string;
+  gender: "0" | "1";
   is_married: boolean;
   last_education: string;
   origin_disease: string;
 
   disease_duration: string;
   history_therapy: string;
-  smoking_history: string;
-  body_mass_index: string;
-  heart_disease_history: string;
+  smoking_history:
+    | "perokok aktif"
+    | "mantan perokok"
+    | "tidak pernah merokok"
+    | "tidak ada informasi";
+  bmi: string;
+  heart_disease_history: "0" | "1";
 };
 
 export type CheckPersonalInformation = {

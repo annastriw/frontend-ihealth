@@ -58,9 +58,9 @@ export default function FormCreatePersonalInformation() {
       // patient_type: undefined,
       disease_duration: "",
       history_therapy: "nothing",
-      smoking_history: "",
-      body_mass_index: "",
-      heart_disease_history: "",
+      smoking_history: undefined,
+      bmi: "",
+      heart_disease_history: undefined,
     },
     mode: "onChange",
   });
@@ -269,8 +269,8 @@ export default function FormCreatePersonalInformation() {
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Jenis Kelamin</SelectLabel>
-                            <SelectItem value="male">Laki - Laki</SelectItem>
-                            <SelectItem value="female">Perempuan</SelectItem>
+                            <SelectItem value="0">Laki - Laki</SelectItem>
+                            <SelectItem value="1">Perempuan</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -342,6 +342,7 @@ export default function FormCreatePersonalInformation() {
                 )}
               />
 
+              {/*ACEL*/}
               <FormField
                 control={form.control}
                 name="smoking_history"
@@ -351,12 +352,31 @@ export default function FormCreatePersonalInformation() {
                       Riwayat Merokok <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Masukkan riwayat merokok (contoh: tidak pernah, aktif, bekas perokok)"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih riwayat merokok" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Riwayat Merokok</SelectLabel>
+                            <SelectItem value="perokok aktif">
+                              Perokok Aktif
+                            </SelectItem>
+                            <SelectItem value="mantan perokok">
+                              Mantan Perokok
+                            </SelectItem>
+                            <SelectItem value="tidak pernah merokok">
+                              Tidak Pernah Merokok
+                            </SelectItem>
+                            <SelectItem value="tidak ada informasi">
+                              Tidak Ada Informasi
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -365,20 +385,26 @@ export default function FormCreatePersonalInformation() {
 
               <FormField
                 control={form.control}
-                name="body_mass_index"
+                name="bmi"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Indeks Massa Tubuh <span className="text-red-500">*</span>
+                      Indeks BMI (Body Mass Index){" "}
+                      <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
-                        type="text"
-                        placeholder="Masukkan indeks massa tubuh (contoh: 23.5)"
+                        type="number"
+                        step="0.1"
+                        placeholder="Masukkan BMI (contoh: 22.3)"
                         {...field}
                         value={field.value ?? ""}
                       />
                     </FormControl>
+                    <FormDescription>
+                      * Masukkan nilai BMI dalam format desimal (contoh: 22.3,
+                      20.8, 18.5)
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -394,17 +420,27 @@ export default function FormCreatePersonalInformation() {
                       <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Masukkan riwayat penyakit jantung (contoh: tidak ada, pernah serangan jantung)"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih riwayat penyakit jantung" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Riwayat Penyakit Jantung</SelectLabel>
+                            <SelectItem value="1">Ya</SelectItem>
+                            <SelectItem value="0">Tidak</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {/*ACEL*/}
 
               {/* <FormField
                 control={form.control}
@@ -466,27 +502,32 @@ export default function FormCreatePersonalInformation() {
                 )}
               />
               <FormField
-  control={form.control}
-  name="history_therapy"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Apakah anda sudah berobat ke dokter?</FormLabel>
-      <FormControl>
-        <Select onValueChange={field.onChange} value={field.value}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Pilih jawaban" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="already">Sudah</SelectItem>
-              <SelectItem value="nothing">Belum Pernah</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </FormControl>
-    </FormItem>
-  )}
-/>
+                control={form.control}
+                name="history_therapy"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Apakah anda sudah berobat ke dokter?</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih jawaban" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="already">Sudah</SelectItem>
+                            <SelectItem value="nothing">
+                              Belum Pernah
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
               <div className="flex justify-end">
                 <Button type="submit" disabled={isPending}>

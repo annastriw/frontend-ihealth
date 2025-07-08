@@ -61,7 +61,7 @@ export default function FormViewPersonalInformation({
       // patient_type: "",
       disease_duration: "",
       smoking_history: "",
-      body_mass_index: "",
+      bmi: "",
       heart_disease_history: "",
     },
   });
@@ -84,7 +84,7 @@ export default function FormViewPersonalInformation({
         // patient_type: data.data.patient_type,
         disease_duration: data.data.disease_duration,
         smoking_history: data.data.smoking_history,
-        body_mass_index: data.data.body_mass_index,
+        bmi: data.data.bmi,
         heart_disease_history: data.data.heart_disease_history,
       });
     }
@@ -319,6 +319,94 @@ export default function FormViewPersonalInformation({
               </FormItem>
             )}
           />
+
+          {/*ACEL*/}
+          <FormField
+            control={form.control}
+            name="smoking_history"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Riwayat Merokok</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih riwayat merokok" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Riwayat Merokok</SelectLabel>
+                        <SelectItem value="perokok aktif">
+                          Perokok Aktif
+                        </SelectItem>
+                        <SelectItem value="mantan perokok">
+                          Mantan Perokok
+                        </SelectItem>
+                        <SelectItem value="tidak pernah merokok">
+                          Tidak Pernah Merokok
+                        </SelectItem>
+                        <SelectItem value="tidak ada informasi">
+                          Tidak Ada Informasi
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="bmi"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>BMI (Body Mass Index)</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.1"
+                    placeholder="Masukkan BMI (contoh: 22.3)"
+                    {...field}
+                    value={field.value}
+                    disabled
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="heart_disease_history"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Riwayat Penyakit Jantung</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih riwayat penyakit jantung" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Riwayat Penyakit Jantung</SelectLabel>
+                        <SelectItem value="1">Ya</SelectItem>
+                        <SelectItem value="0">Tidak</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          {/*SAMPE HEART DISEASE*/}
 
           <FormField
             control={form.control}

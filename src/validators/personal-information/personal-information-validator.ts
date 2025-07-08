@@ -14,16 +14,36 @@ export const personalInformationSchema = z.object({
     }),
   age: z.string().nonempty(),
   work: z.string().nonempty(),
-  gender: z.enum(["male", "female"]),
+  gender: z.enum(["0", "1"], {
+    required_error: "Jenis kelamin harus dipilih",
+  }),
+
   is_married: z.boolean(),
   last_education: z.string().nonempty(),
   origin_disease: z.string().nonempty(),
 
   disease_duration: z.string().nonempty(),
   history_therapy: z.string().nonempty(),
-  smoking_history: z.string().nonempty(),
-  body_mass_index: z.string().nonempty(),
-  heart_disease_history: z.string().nonempty(),
+  smoking_history: z.enum(
+    [
+      "perokok aktif",
+      "mantan perokok",
+      "tidak pernah merokok",
+      "tidak ada informasi",
+    ],
+    {
+      required_error: "Riwayat merokok harus dipilih",
+    },
+  ),
+  bmi: z
+    .string()
+    .min(1, "BMI harus diisi")
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: "BMI harus berupa angka yang valid. Contoh: 22.3",
+    }),
+  heart_disease_history: z.enum(["0", "1"], {
+    required_error: "Riwayat penyakit jantung harus dipilih",
+  }),
 });
 
 export type PersonalInformationType = z.infer<typeof personalInformationSchema>;

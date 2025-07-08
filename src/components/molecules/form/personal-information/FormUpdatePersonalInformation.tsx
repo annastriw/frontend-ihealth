@@ -63,9 +63,9 @@ export default function FormUpdatePersonalInformation() {
         : "",
       age: data?.data.age ?? "",
       gender:
-        data?.data.gender === "male" || data?.data.gender === "female"
+        data?.data.gender === "0" || data?.data.gender === "1"
           ? data.data.gender
-          : "female",
+          : "1",
       work: data?.data.work ?? "",
       last_education: data?.data.last_education ?? "",
       origin_disease: data?.data.origin_disease ?? "",
@@ -79,9 +79,9 @@ export default function FormUpdatePersonalInformation() {
       //     : "HT",
       disease_duration: data?.data.disease_duration ?? "",
       history_therapy: data?.data.history_therapy ?? "",
-      smoking_history: data?.data.smoking_history ?? "",
-      body_mass_index: data?.data.body_mass_index ?? "",
-      heart_disease_history: data?.data.heart_disease_history ?? "",
+      smoking_history: data?.data.smoking_history ?? undefined,
+      bmi: data?.data.bmi ?? "",
+      heart_disease_history: data?.data.heart_disease_history ?? undefined,
     },
     mode: "onChange",
   });
@@ -280,8 +280,8 @@ export default function FormUpdatePersonalInformation() {
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Jenis Kelamin</SelectLabel>
-                            <SelectItem value="male">Laki - Laki</SelectItem>
-                            <SelectItem value="female">Perempuan</SelectItem>
+                            <SelectItem value="0">Laki - Laki</SelectItem>
+                            <SelectItem value="1">Perempuan</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -343,6 +343,7 @@ export default function FormUpdatePersonalInformation() {
                 )}
               />
 
+              {/*ACEL*/}
               <FormField
                 control={form.control}
                 name="smoking_history"
@@ -352,12 +353,31 @@ export default function FormUpdatePersonalInformation() {
                       Riwayat Merokok <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Masukkan riwayat merokok (contoh: tidak pernah, aktif, bekas perokok)"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih riwayat merokok" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Riwayat Merokok</SelectLabel>
+                            <SelectItem value="perokok aktif">
+                              Perokok Aktif
+                            </SelectItem>
+                            <SelectItem value="mantan perokok">
+                              Mantan Perokok
+                            </SelectItem>
+                            <SelectItem value="tidak pernah merokok">
+                              Tidak Pernah Merokok
+                            </SelectItem>
+                            <SelectItem value="tidak ada informasi">
+                              Tidak Ada Informasi
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -366,20 +386,26 @@ export default function FormUpdatePersonalInformation() {
 
               <FormField
                 control={form.control}
-                name="body_mass_index"
+                name="bmi"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Indeks Massa Tubuh <span className="text-red-500">*</span>
+                      Indeks BMI (Body Mass Index){" "}
+                      <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
-                        type="text"
-                        placeholder="Masukkan indeks massa tubuh (contoh: 23.5)"
+                        type="number"
+                        step="0.1"
+                        placeholder="Masukkan BMI (contoh: 22.3)"
                         {...field}
                         value={field.value ?? ""}
                       />
                     </FormControl>
+                    <FormDescription>
+                      * Masukkan nilai BMI dalam format desimal (contoh: 22.3,
+                      20.8, 18.5)
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -395,17 +421,27 @@ export default function FormUpdatePersonalInformation() {
                       <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Masukkan riwayat penyakit jantung (contoh: tidak ada, pernah serangan jantung)"
-                        {...field}
+                      <Select
+                        onValueChange={field.onChange}
                         value={field.value}
-                      />
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih riwayat penyakit jantung" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Riwayat Penyakit Jantung</SelectLabel>
+                            <SelectItem value="1">Ya</SelectItem>
+                            <SelectItem value="0">Tidak</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {/*ACEL*/}
 
               {/* <FormField
   control={form.control}
@@ -454,28 +490,32 @@ export default function FormUpdatePersonalInformation() {
                 )}
               />
               <FormField
-  control={form.control}
-  name="history_therapy"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Apakah anda sudah berobat ke dokter?</FormLabel>
-      <FormControl>
-        <Select onValueChange={field.onChange} value={field.value}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Pilih jawaban" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="already">Sudah</SelectItem>
-              <SelectItem value="nothing">Belum Pernah</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </FormControl>
-    </FormItem>
-  )}
-/>
-
+                control={form.control}
+                name="history_therapy"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Apakah anda sudah berobat ke dokter?</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih jawaban" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="already">Sudah</SelectItem>
+                            <SelectItem value="nothing">
+                              Belum Pernah
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
               <div className="flex justify-end">
                 <Button type="submit" disabled={isPending}>
