@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useUpdateAccount } from "@/http/auth/update-account";
 import {
   updateAccountSchema,
@@ -35,6 +36,7 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
       email: session.user.email || "",
       username: session.user.username || "",
       phone_number: session.user.phone_number || "",
+      disease_type: session.user.disease_type as "HT" | "DM" | "KM" || "HT", // default: HT
     },
     mode: "onChange",
   });
@@ -50,8 +52,9 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
   });
 
   const onSubmit = (body: UpdateAccountType) => {
-    updateAccountHandler({ ...body });
+    updateAccountHandler(body);
   };
+
   return (
     <div>
       <Form {...form}>
@@ -81,7 +84,7 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
                   Email <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="Masukkan nama" {...field} />
+                  <Input type="email" placeholder="Masukkan email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -122,6 +125,35 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
                     placeholder="Masukkan nomor telepon"
                     {...field}
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* ✅ Dropdown Diagnosa Medis */}
+          <FormField
+            control={form.control}
+            name="disease_type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Diagnosa Medis <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih diagnosa medis" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Diagnosa Medis</SelectLabel>
+                        <SelectItem value="HT">Hipertensi (HT)</SelectItem>
+                        <SelectItem value="DM">Diabetes Melitus (DM)</SelectItem>
+                        <SelectItem value="KM">Kesehatan Mental (KM)</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
