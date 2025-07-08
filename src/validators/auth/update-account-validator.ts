@@ -20,6 +20,12 @@ export const updateAccountSchema = z.object({
     .regex(/^08\d{8,11}$/, {
       message: "Format nomor telepon tidak valid. Gunakan format 08xxxxxxxxx.",
     }),
+  disease_type: z
+    .enum(["HT", "DM", "KM"])
+    .optional()
+    .refine((val) => val === undefined || ["HT", "DM", "KM"].includes(val), {
+      message: "Diagnosa medis tidak valid.",
+    }),
 });
 
 export type UpdateAccountType = z.infer<typeof updateAccountSchema>;
