@@ -13,6 +13,13 @@ interface DashboardAdminDetailUsersWrapperProps {
   id: string;
 }
 
+const getGenderLabel = (gender?: "0" | "1") => {
+  if (gender === "0") return "Laki-laki";
+  if (gender === "1") return "Perempuan";
+  return "-";
+};
+
+
 export default function DashboardAdminDetailUsersWrapper({
   id,
 }: DashboardAdminDetailUsersWrapperProps) {
@@ -122,13 +129,7 @@ export default function DashboardAdminDetailUsersWrapper({
                     <div className="text-muted-foreground md:w-4/12">
                       Jenis Kelamin
                     </div>
-                    <div className="md:w-8/12">
-                      {personal?.data.gender === "male"
-                        ? "Laki-laki"
-                        : personal?.data.gender === "female"
-                          ? "Perempuan"
-                          : "-"}
-                    </div>
+                    <div className="md:w-8/12">{getGenderLabel(personal?.data.gender)}</div>
                   </div>
                   <div className="flex flex-col gap-1">
                     <div className="text-muted-foreground md:w-4/12">
