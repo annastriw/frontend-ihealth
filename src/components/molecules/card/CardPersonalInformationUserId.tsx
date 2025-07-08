@@ -15,6 +15,12 @@ interface CardPersonalInformationUserIdProps {
   isLoading: boolean;
 }
 
+const getGenderLabel = (gender?: "0" | "1") => {
+  if (gender === "0") return "Laki-laki";
+  if (gender === "1") return "Perempuan";
+  return "-";
+};
+
 export default function CardPersonalInformationUserId({
   data,
   isLoading,
@@ -32,20 +38,14 @@ export default function CardPersonalInformationUserId({
           <div className="grid grid-cols-1 space-y-4 md:grid-cols-2 md:space-y-6">
             <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">Nama</div>
-              <div>
-                {isLoading ? <Skeleton className="w-32" /> : data?.name}
-              </div>
+              <div>{isLoading ? <Skeleton className="w-32" /> : data?.name}</div>
             </div>
+
             <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">Tempat Lahir</div>
-              <div>
-                {isLoading ? (
-                  <Skeleton className="w-32" />
-                ) : (
-                  data?.place_of_birth
-                )}
-              </div>
+              <div>{isLoading ? <Skeleton className="w-32" /> : data?.place_of_birth}</div>
             </div>
+
             <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">Tanggal Lahir</div>
               <div>
@@ -60,6 +60,7 @@ export default function CardPersonalInformationUserId({
                 )}
               </div>
             </div>
+
             <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">Umur</div>
               <div>
@@ -70,26 +71,23 @@ export default function CardPersonalInformationUserId({
                 )}
               </div>
             </div>
+
             <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">Jenis Kelamin</div>
               <div>
                 {isLoading ? (
                   <Skeleton className="w-32" />
-                ) : data?.gender === "male" ? (
-                  "Laki-laki"
-                ) : data?.gender === "female" ? (
-                  "Perempuan"
                 ) : (
-                  "-"
+                  getGenderLabel(data?.gender)
                 )}
               </div>
             </div>
+
             <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">Pekerjaan</div>
-              <div>
-                {isLoading ? <Skeleton className="w-32" /> : data?.work}
-              </div>
+              <div>{isLoading ? <Skeleton className="w-32" /> : data?.work}</div>
             </div>
+
             <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">Sudah Menikah</div>
               <div>
@@ -102,50 +100,33 @@ export default function CardPersonalInformationUserId({
                 )}
               </div>
             </div>
+
             <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">Pendidikan Terakhir</div>
-              <div>
-                {isLoading ? (
-                  <Skeleton className="w-32" />
-                ) : (
-                  data?.last_education
-                )}
-              </div>
+              <div>{isLoading ? <Skeleton className="w-32" /> : data?.last_education}</div>
             </div>
+
             <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">
                 Riwayat tempat pelayanan kesehatan sebelumnya
               </div>
-              <div>
-                {isLoading ? (
-                  <Skeleton className="w-32" />
-                ) : (
-                  data?.origin_disease
-                )}
-              </div>
+              <div>{isLoading ? <Skeleton className="w-32" /> : data?.origin_disease}</div>
             </div>
+
             {/* <div className="flex flex-col gap-1">
               <div className="text-muted-foreground">Tipe Pasien</div>
               <div className="uppercase">
                 {isLoading ? <Skeleton className="w-32" /> : data?.patient_type}
               </div>
             </div> */}
+
             <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">
-                Lama Pelayanan Kesehatan
-              </div>
-              <div>
-                {isLoading ? (
-                  <Skeleton className="w-32" />
-                ) : (
-                  data?.disease_duration
-                )}
-              </div>
+              <div className="text-muted-foreground">Lama Pelayanan Kesehatan</div>
+              <div>{isLoading ? <Skeleton className="w-32" /> : data?.disease_duration}</div>
             </div>
+
             <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">
-                Terapi Yang Pernah Dijalani
-              </div>
+              <div className="text-muted-foreground">Terapi Yang Pernah Dijalani</div>
               <div className="uppercase">
                 {isLoading ? (
                   <Skeleton className="w-32" />

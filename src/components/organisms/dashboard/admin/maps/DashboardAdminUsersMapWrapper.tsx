@@ -45,8 +45,8 @@ const yellowIcon = new L.Icon({
 
 // Kelurahan dan RW
 const rwByKelurahan = {
-  pedalangan: Array.from({ length: 11 }, (_, i) => `RW ${i + 1}`),
-  padangsari: Array.from({ length: 17 }, (_, i) => `RW ${i + 1}`),
+  Pedalangan: Array.from({ length: 11 }, (_, i) => `RW ${i + 1}`),
+  Padangsari: Array.from({ length: 17 }, (_, i) => `RW ${i + 1}`),
 };
 
 // Kelurahan type
@@ -68,8 +68,8 @@ export default function DashboardAdminUsersMapsWrapper() {
 
   // Init grouped RW data
   const grouped: Record<KelurahanType, Record<string, { DM: number; HT: number, ALL: number }>> = {
-    pedalangan: {},
-    padangsari: {},
+    Pedalangan: {},
+    Padangsari: {},
   };
 
   Object.entries(rwByKelurahan).forEach(([kelurahan, rwList]) => {
@@ -83,7 +83,7 @@ export default function DashboardAdminUsersMapsWrapper() {
     const rw = user.rw;
     const disease = user.disease_type?.toUpperCase();
 
-    if ((kel === 'pedalangan' || kel === 'padangsari') && rw && grouped[kel as KelurahanType]?.[rw]) {
+    if ((kel === 'Pedalangan' || kel === 'Padangsari') && rw && grouped[kel as KelurahanType]?.[rw]) {
   if (disease === 'DM') grouped[kel as KelurahanType][rw].DM++;
   else if (disease === 'HT') grouped[kel as KelurahanType][rw].HT++;
   else if (disease === 'ALL') {
@@ -146,7 +146,7 @@ const markerIcon = disease === 'HT'
 
       {/* Statistik RW per kelurahan */}
       <div className="grid md:grid-cols-2 gap-6">
-        {(['pedalangan', 'padangsari'] as KelurahanType[]).map(kelurahan => (
+        {(['Pedalangan', 'Padangsari'] as KelurahanType[]).map(kelurahan => (
           <Card key={kelurahan} className="p-4">
             <h3 className="text-lg font-bold capitalize mb-2">{kelurahan}</h3>
             <div className="space-y-1">

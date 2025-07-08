@@ -77,8 +77,8 @@ function RefreshLocationButton({ onRefresh }: { onRefresh: () => void }) {
 }
 
 const kelurahanOptions = {
-  pedalangan: Array.from({ length: 11 }, (_, i) => `RW ${i + 1}`),
-  padangsari: Array.from({ length: 17 }, (_, i) => `RW ${i + 1}`),
+  Pedalangan: Array.from({ length: 11 }, (_, i) => `RW ${i + 1}`),
+  Padangsari: Array.from({ length: 17 }, (_, i) => `RW ${i + 1}`),
 };
 
 export default function DashboardMapsWrapper() {
@@ -183,8 +183,8 @@ export default function DashboardMapsWrapper() {
                       <SelectValue placeholder="Pilih Kelurahan" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pedalangan">Pedalangan</SelectItem>
-                      <SelectItem value="padangsari">Padangsari</SelectItem>
+                      <SelectItem value="Pedalangan">Pedalangan</SelectItem>
+                      <SelectItem value="Padangsari">Padangsari</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
