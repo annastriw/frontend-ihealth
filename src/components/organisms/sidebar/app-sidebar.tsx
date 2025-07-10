@@ -202,19 +202,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
                   <SidebarGroupLabel>Manajemen Konten</SidebarGroupLabel>
                   <SidebarGroupContent>
                     <SidebarMenu>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton
-                          asChild
-                          className={buttonClass(
-                            "/dashboard/admin/question-banks",
-                          )}
-                        >
-                          <Link href="/dashboard/admin/question-banks">
-                            <BookOpen />
-                            <span>Bank Soal</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
+                      
                       
                       {/* <SidebarMenuItem>
                       // Disembunyikan sementara karena tidak digunakan, hanya fokus pada HT, DM, dan KM
@@ -241,6 +229,21 @@ export function AppSidebar({ session }: AppSidebarProps) {
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
+
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          className={buttonClass(
+                            "/dashboard/admin/question-banks",
+                          )}
+                        >
+                          <Link href="/dashboard/admin/question-banks">
+                            <BookOpen />
+                            <span>Bank Soal</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
