@@ -4,18 +4,15 @@ import { Metadata } from "next";
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardAdminReportScreeningScoringDetailWrapper from "@/components/organisms/dashboard/admin/reports/screening-scoring/DashboardAdminReportScreeningScoringDetailWrapper";
 
-type PageProps = {
-  params: {
-    screening_scoring_id: string;
-    history_id: string;
-  };
-};
-
 export const metadata: Metadata = {
   title: "Detail Riwayat Screening",
 };
 
-export default function Page({ params }: PageProps) {
+export default function Page({
+  params,
+}: {
+  params: { screening_scoring_id: string; history_id: string };
+}) {
   const { screening_scoring_id, history_id } = params;
 
   return (
