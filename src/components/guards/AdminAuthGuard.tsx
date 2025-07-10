@@ -1,8 +1,10 @@
-import { PropsWithChildren, useEffect } from "react";
+"use client";
+
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { PropsWithChildren, useEffect } from "react";
 
-const AdminLayout = ({ children }: PropsWithChildren) => {
+export default function AdminAuthGuard({ children }: PropsWithChildren) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -17,7 +19,5 @@ const AdminLayout = ({ children }: PropsWithChildren) => {
     return null;
   }
 
-  return <div className="min-h-full w-full">{children}</div>;
-};
-
-export default AdminLayout;
+  return <>{children}</>;
+}
