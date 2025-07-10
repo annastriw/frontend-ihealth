@@ -10,7 +10,10 @@ export const metadata: Metadata = {
 export default function Page({
   params,
 }: {
-  params: { screening_scoring_id: string; history_id: string };
+  params: {
+    screening_scoring_id: string;
+    history_id: string;
+  };
 }) {
   const { screening_scoring_id, history_id } = params;
 
@@ -28,4 +31,8 @@ export default function Page({
       </section>
     </AdminAuthGuard>
   );
+}
+
+export async function generateStaticParams() {
+  return [];
 }
