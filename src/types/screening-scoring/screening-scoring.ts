@@ -65,7 +65,7 @@ export type UserHistoryScreeningScoringDetail = {
   id: string;
   sum_score: number;
   created_at: string | Date;
-  answer: UserAnswerQuestion[];
+  answers: UserAnswerQuestion[];
   user: User;
 };
 
@@ -79,8 +79,15 @@ export type AdminUserHistoryScreeningScoring = {
   screening: ScreeningScoring;
 };
 
-export type AdminUserHistoryScreeningScoringByScreening = {
+export interface AdminUserHistoryScreeningScoringByScreening {
   id: string;
-  created_at: string | Date;
-  user: User;
-};
+  screening_scoring_id: string; // ✅ penting untuk link
+  user: {
+    id: string;
+    name: string;
+  };
+  score: number; // ✅ skor hasil screening
+  created_at: string;
+  updated_at: string;
+}
+
