@@ -31,7 +31,3 @@ export default function Page({ params }: PageProps) {
     </section>
   );
 }
-
-export async function generateStaticParams() {
-  return [];
-}
