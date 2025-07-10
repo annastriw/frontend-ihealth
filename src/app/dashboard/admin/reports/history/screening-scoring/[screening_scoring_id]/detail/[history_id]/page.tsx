@@ -32,8 +32,6 @@ export default function Page({ params }: PageProps) {
   );
 }
 
-// Hapus jika tidak digunakan untuk static generation
-// Jika tetap ingin ada, pastikan seperti ini:
 export async function generateStaticParams() {
   return [];
 }
