@@ -1,21 +1,24 @@
-// src/types/screening-scoring/screening-scoring.ts
-
 import { Question } from "../questions/question";
 import { User } from "../user/user";
 
 /**
- * Tipe Screening Scoring untuk PASIEN
+ * Tipe Screening Scoring untuk PASIEN dan ADMIN
  */
 export type ScreeningScoring = {
   id: string;
+  question_set_id: string;
   name: string;
   type: "HT" | "DM";
-  created_at: Date;
-  updated_at: Date;
+  created_at: string | Date;
+  updated_at: string | Date;
 };
 
+/**
+ * Detail screening scoring (untuk pasien saat kerjakan)
+ */
 export type ScreeningScoringDetail = {
   id: string;
+  question_set_id: string;
   name: string;
   type: "HT" | "DM";
   questions: Question[];
@@ -37,7 +40,7 @@ export type SubmitScreeningScoring = {
  */
 export type UserHistoryScreeningScoring = {
   id: string;
-  created_at: Date;
+  created_at: string | Date;
   screening: ScreeningScoring;
   user: User;
 };
@@ -61,7 +64,7 @@ export type UserAnswerQuestion = {
 export type UserHistoryScreeningScoringDetail = {
   id: string;
   sum_score: number;
-  created_at: Date;
+  created_at: string | Date;
   answer: UserAnswerQuestion[];
   user: User;
 };
@@ -71,14 +74,13 @@ export type UserHistoryScreeningScoringDetail = {
  */
 export type AdminUserHistoryScreeningScoring = {
   id: string;
-  created_at: Date;
+  created_at: string | Date;
   user: User;
   screening: ScreeningScoring;
 };
 
 export type AdminUserHistoryScreeningScoringByScreening = {
   id: string;
-  created_at: Date;
+  created_at: string | Date;
   user: User;
 };
-

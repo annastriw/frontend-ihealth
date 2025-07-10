@@ -1,3 +1,4 @@
+// src/app/dashboard/admin/screening/page.tsx
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardScreeningWrapper from "@/components/organisms/dashboard/admin/screening/DashboardScreeningWrapper";
 
