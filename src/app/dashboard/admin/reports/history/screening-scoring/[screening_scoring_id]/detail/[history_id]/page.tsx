@@ -10,9 +10,11 @@ interface PageProps {
   };
 }
 
-export default function ScreeningScoringHistoryDetailPage({
+const ScreeningScoringHistoryDetailPage = ({
   params,
-}: PageProps) {
+}: {
+  params: { screening_scoring_id: string; history_id: string };
+}) => {
   const { screening_scoring_id, history_id } = params;
 
   return (
@@ -27,4 +29,6 @@ export default function ScreeningScoringHistoryDetailPage({
       />
     </section>
   );
-}
+};
+
+export default ScreeningScoringHistoryDetailPage;
