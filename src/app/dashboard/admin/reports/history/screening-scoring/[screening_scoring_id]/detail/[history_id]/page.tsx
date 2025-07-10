@@ -4,21 +4,18 @@ import { Metadata } from "next";
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardAdminReportScreeningScoringDetailWrapper from "@/components/organisms/dashboard/admin/reports/screening-scoring/DashboardAdminReportScreeningScoringDetailWrapper";
 
-// Tipe props langsung ditentukan untuk menghindari inference error saat build
-type Props = {
+type PageProps = {
   params: {
     screening_scoring_id: string;
     history_id: string;
   };
 };
 
-// Optional: Metadata untuk SEO (jika diperlukan)
 export const metadata: Metadata = {
   title: "Detail Riwayat Screening",
 };
 
-// Komponen utama halaman
-export default function Page({ params }: Props) {
+export default function Page({ params }: PageProps) {
   const { screening_scoring_id, history_id } = params;
 
   return (
@@ -35,7 +32,8 @@ export default function Page({ params }: Props) {
   );
 }
 
-// WAJIB: Tambahkan ini agar Next.js tidak menganggap route ini sebagai SSG (static generation)
+// Hapus jika tidak digunakan untuk static generation
+// Jika tetap ingin ada, pastikan seperti ini:
 export async function generateStaticParams() {
   return [];
 }
