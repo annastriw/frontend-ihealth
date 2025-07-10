@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardAdminReportScreeningScoringDetailWrapper from "@/components/organisms/dashboard/admin/reports/screening-scoring/DashboardAdminReportScreeningScoringDetailWrapper";
-import AdminAuthGuard from "@/components/guards/AdminAuthGuard"; // ✅
+import AdminAuthGuard from "@/components/guards/AdminAuthGuard";
 
 export const metadata: Metadata = {
   title: "Detail Riwayat Screening",
