@@ -23,7 +23,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetAllQuestionBanks } from "@/http/question-banks/get-all-question-bank";
 import { useEditScreeningScoring } from "@/http/screening-scoring/edit-screening-scoring";
-import { TesDetail } from "@/types/test/test-detail";
+import { ScreeningScoringDetail } from "@/types/screening-scoring/screening-scoring-detail";
 import {
   screeningScoringSchema,
   ScreeningScoringType,
@@ -37,7 +37,12 @@ import { Loader2 } from "lucide-react";
 
 interface FormEditScreeningScoringProps {
   id: string;
-  data: TesDetail;
+  data: {
+    id: string;
+    name: string;
+    type: "HT" | "DM";
+    question_set_id: string;
+  };
   isLoading: boolean;
 }
 
