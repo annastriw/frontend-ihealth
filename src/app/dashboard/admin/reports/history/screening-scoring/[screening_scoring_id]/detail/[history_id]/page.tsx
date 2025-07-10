@@ -1,4 +1,5 @@
-//src/app/dashboard/admin/reports/history/screening-scoring/[screening_scoring_id]/detail/[history_id]/page.tsx
+// src/app/dashboard/admin/reports/history/screening-scoring/[screening_scoring_id]/detail/[history_id]/page.tsx
+
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardAdminReportScreeningScoringDetailWrapper from "@/components/organisms/dashboard/admin/reports/screening-scoring/DashboardAdminReportScreeningScoringDetailWrapper";
 
