@@ -1,3 +1,4 @@
+// src/components/organisms/dashboard/admin/reports/screening/DashboardAdminReportScreeningDetailWrapper.tsx
 "use client";
 
 import CardListHistoryQuestionScreening from "@/components/molecules/card/CardListHistoryQuestionScreening";

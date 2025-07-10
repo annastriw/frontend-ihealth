@@ -3,11 +3,13 @@
 import CardListReportHistoryPostTest from "@/components/molecules/card/CardListReportHistoryPostTest";
 import CardListReportHistoryPreTest from "@/components/molecules/card/CardListReportHistoryPreTest";
 import CardListReportHistoryScreening from "@/components/molecules/card/CardListReportHistoryScreening";
+import CardListReportHistoryScreeningScoring from "@/components/molecules/card/CardListReportHistoryScreeningScoring"; // ⬅️ pastikan ini ada
 import ReportSearchAndFilter from "@/components/molecules/search/ReportSearchFilter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetAllScreening } from "@/http/screening/get-all-screening";
-import { useGetAllPostTest } from "@/http/test/get-all-post-test";
 import { useGetAllPreTest } from "@/http/test/get-all-pre-test";
+import { useGetAllPostTest } from "@/http/test/get-all-post-test";
+import { useGetAllScreeningScoring } from "@/http/screening-scoring/get-all-screening-scoring"; // ⬅️ pastikan ini tersedia
 import { useSession } from "next-auth/react";
 import { useState, useMemo } from "react";
 
@@ -18,13 +20,20 @@ export default function DashboardAdminReportWrapper() {
   const [typeFilter, setTypeFilter] = useState("all");
 
   const { data, isPending } = useGetAllScreening(
-  session?.access_token as string,
-  undefined,
-  {
-    enabled: status === "authenticated" && activeTab === "screening",
-  },
-);
+    session?.access_token as string,
+    undefined,
+    {
+      enabled: status === "authenticated" && activeTab === "screening",
+    },
+  );
 
+  const { data: screeningScoring, isPending: screeningScoringIsPending } = useGetAllScreeningScoring(
+    session?.access_token as string,
+    undefined,
+    {
+      enabled: status === "authenticated" && activeTab === "screening-scoring",
+    }
+  );
 
   const { data: preTest, isPending: preTestIsPending } = useGetAllPreTest(
     session?.access_token as string,
@@ -68,6 +77,14 @@ export default function DashboardAdminReportWrapper() {
     );
   }, [data?.data, search]);
 
+  const filteredScreeningScoring = useMemo(() => {
+    return (screeningScoring?.data ?? []).filter((item) => {
+      const matchSearch = item.name.toLowerCase().includes(search.toLowerCase());
+      const matchType = typeFilter === "all" || item.type === typeFilter;
+      return matchSearch && matchType;
+    });
+  }, [screeningScoring?.data, search, typeFilter]);
+
   return (
     <div>
       <Tabs
@@ -75,12 +92,13 @@ export default function DashboardAdminReportWrapper() {
         className="w-full"
         onValueChange={(val) => {
           setActiveTab(val);
-          setSearch(""); // reset search
-          setTypeFilter("all"); // reset filter
+          setSearch("");
+          setTypeFilter("all");
         }}
       >
-        <TabsList className="mb-4 grid w-full max-w-sm grid-cols-3">
+        <TabsList className="mb-4 grid w-full max-w-lg grid-cols-4">
           <TabsTrigger value="screening">Screening</TabsTrigger>
+          <TabsTrigger value="screening-scoring">Scr Scoring</TabsTrigger>
           <TabsTrigger value="pre-test">Pre Test</TabsTrigger>
           <TabsTrigger value="post-test">Post Test</TabsTrigger>
         </TabsList>
@@ -97,6 +115,13 @@ export default function DashboardAdminReportWrapper() {
           <CardListReportHistoryScreening
             data={filteredScreening}
             isLoading={isPending}
+          />
+        </TabsContent>
+
+        <TabsContent value="screening-scoring">
+          <CardListReportHistoryScreeningScoring
+            data={filteredScreeningScoring}
+            isLoading={screeningScoringIsPending}
           />
         </TabsContent>
 
