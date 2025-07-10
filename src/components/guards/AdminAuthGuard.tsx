@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { PropsWithChildren, useEffect } from "react";
+import { useEffect, PropsWithChildren } from "react";
 
 export default function AdminAuthGuard({ children }: PropsWithChildren) {
   const { data: session, status } = useSession();
