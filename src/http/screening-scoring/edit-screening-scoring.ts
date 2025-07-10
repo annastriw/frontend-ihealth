@@ -8,7 +8,14 @@ import { ScreeningScoring } from "@/types/screening-scoring/screening-scoring";
 import { ScreeningScoringType } from "@/validators/screening-scoring/screening-scoring-validator";
 
 interface EditScreeningScoringResponse {
-  data: ScreeningScoring;
+  data: {
+    id: string;
+    name: string;
+    type: "HT" | "DM";
+    question_set_id: string;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 /**

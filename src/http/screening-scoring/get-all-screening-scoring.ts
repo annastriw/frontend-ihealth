@@ -6,7 +6,14 @@ import { api } from "@/lib/axios";
 import { ScreeningScoring } from "@/types/screening-scoring/screening-scoring";
 
 interface GetAllScreeningScoringResponse {
-  data: ScreeningScoring[];
+  data: {
+    id: string;
+    name: string;
+    type: "HT" | "DM";
+    question_set_id: string;
+    created_at: string;
+    updated_at: string;
+  }[];
 }
 
 /**
@@ -32,7 +39,7 @@ export const getAllScreeningScoringHandler = async (
 };
 
 /**
- * Hook React Query untuk ambil semua screening scoring (by optional type)
+ * Hook React Query untuk ambil semua screening scoring (optional filter by type)
  */
 export const useGetAllScreeningScoring = (
   token: string,

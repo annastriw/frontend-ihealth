@@ -20,4 +20,6 @@ export const submitScreeningScoringSchema = z.object({
     .min(1, { message: "Minimal satu jawaban diperlukan" }),
 });
 
-export type SubmitScreeningScoringType = z.infer<typeof submitScreeningScoringSchema>;
+export type SubmitScreeningScoringType = z.infer<
+  typeof submitScreeningScoringSchema
+>;
