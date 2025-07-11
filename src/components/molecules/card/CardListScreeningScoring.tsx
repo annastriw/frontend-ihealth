@@ -1,25 +1,36 @@
-// src/components/molecules/card/CardListScreening.tsx
-import DialogStartScreening from "@/components/atoms/dialog/DialogStartScreening";
+import DialogStartScreeningScoring from "@/components/atoms/dialog/DialogStartScreeningScoring";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { HistoryScreening, Screening } from "@/types/screening/screening";
+import {
+  UserHistoryScreeningScoring,
+  ScreeningScoring,
+} from "@/types/screening-scoring/screening-scoring";
 import { Check, FileSearch, FileX2 } from "lucide-react";
 import { useState } from "react";
 
-interface CardListScreeningProps {
-  data: Screening[];
+interface CardListScreeningScoringProps {
+  data: ScreeningScoring[];
   isLoading: boolean;
-  history: HistoryScreening[];
+  history: UserHistoryScreeningScoring[];
 }
 
-export default function CardListScreening({
+export default function CardListScreeningScoring({
   data,
   isLoading,
   history,
-}: CardListScreeningProps) {
-  const [dialogStartScreeningOpen, setDialogStartScreeningOpen] = useState(false);
-  const [selectedScreeningId, setSelectedScreeningId] = useState<string | null>(null);
+}: CardListScreeningScoringProps) {
+  const [dialogStartOpen, setDialogStartOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const handleOpenDialog = (id: string) => {
+    setSelectedId(id);
+    setDialogStartOpen(true);
+  };
+
+  const isAlreadyTaken = (id: string) => {
+    return history?.some((h) => h.screening.id === id);
+  };
 
   if (isLoading) {
     return (
@@ -51,25 +62,17 @@ export default function CardListScreening({
     );
   }
 
-  const handleDialogStartPretestOpen = (id: string) => {
-    setSelectedScreeningId(id);
-    setDialogStartScreeningOpen(true);
-  };
-
-  const isAlreadyTaken = (screeningId: string) => {
-    return history?.some((h) => h.screening.id === screeningId);
-  };
-
   return (
     <div className="space-y-4">
-      {data?.map((screening) => {
+      {data.map((screening) => {
         const alreadyTaken = isAlreadyTaken(screening.id);
+        const latestHistory = history.find((h) => h.screening.id === screening.id);
 
         return (
           <div
             key={screening.id}
             className="group block cursor-pointer"
-            onClick={() => handleDialogStartPretestOpen(screening.id)}
+            onClick={() => handleOpenDialog(screening.id)}
           >
             <div className="flex flex-row gap-6">
               <div className="relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg bg-primary group-hover:bg-secondary md:flex">
@@ -78,28 +81,24 @@ export default function CardListScreening({
               <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
                 <CardHeader className="flex md:flex-row md:items-center md:justify-between">
                   <div className="space-y-2">
-                    <Badge className="bg-secondary">Screening</Badge>
+                    <Badge className="bg-secondary">Screening Skoring</Badge>
                     <CardTitle className="text-md font-bold md:text-xl">
                       {screening.name}
                     </CardTitle>
-                    {alreadyTaken && (
-  <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
-    <Check className="h-4 w-4 text-green-500" />
-    Terakhir mengerjakan pada{" "}
-    {
-      new Date(
-        history.find((h) => h.screening.id === screening.id)!.created_at
-      ).toLocaleString("id-ID", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    }
-  </div>
-)}
 
+                    {alreadyTaken && latestHistory && (
+                      <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
+                        <Check className="h-4 w-4 text-green-500" />
+                        Terakhir mengerjakan pada{" "}
+                        {new Date(latestHistory.created_at).toLocaleString("id-ID", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </div>
+                    )}
                   </div>
                 </CardHeader>
               </Card>
@@ -108,11 +107,11 @@ export default function CardListScreening({
         );
       })}
 
-      {selectedScreeningId && (
-        <DialogStartScreening
-          open={dialogStartScreeningOpen}
-          setOpen={setDialogStartScreeningOpen}
-          id={selectedScreeningId}
+      {selectedId && (
+        <DialogStartScreeningScoring
+          open={dialogStartOpen}
+          setOpen={setDialogStartOpen}
+          id={selectedId}
         />
       )}
     </div>

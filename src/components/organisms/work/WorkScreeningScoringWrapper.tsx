@@ -1,84 +1,86 @@
-// src/components/organisms/work/WorkScreeningWrapper.tsx
 "use client";
 
 import { useSession } from "next-auth/react";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useEffect, useState } from "react";
-import BreadcrumbNavWork from "@/components/atoms/breadcrumb/BreadcrumbWork";
+import BreadcrumbWorkScoring from "@/components/atoms/breadcrumb/BreadcrumbWorkScoring";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import DialogConfirmSubmit from "@/components/atoms/dialog/DialogConfirmSubmitPreTest";
-import { useGetDetailScreening } from "@/http/screening/get-detail-screening";
-import { useAddSubmitScreening } from "@/http/screening/submit-screening";
-import { SubmitScreening } from "@/types/screening/screening";
 import { Button } from "@/components/ui/button";
+import { useGetDetailScreeningScoring } from "@/http/screening-scoring/get-detail-screening-scoring";
+import { useSubmitScreeningScoring } from "@/http/screening-scoring/submit-screening-scoring";
+import {
+  ScreeningScoringDetail,
+  SubmitScreeningScoring,
+} from "@/types/screening-scoring/screening-scoring";
 
-interface WorkScreeningProps {
+interface WorkScreeningScoringWrapperProps {
   id: string;
 }
 
-export default function WorkScreeningWrapper({ id }: WorkScreeningProps) {
+export default function WorkScreeningScoringWrapper({
+  id,
+}: WorkScreeningScoringWrapperProps) {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const openConfirmDialog = () => setConfirmDialogOpen(true);
-  const closeConfirmDialog = () => setConfirmDialogOpen(false);
-  const router = useRouter();
 
-  const { data, isLoading } = useGetDetailScreening(
+  const { data, isLoading } = useGetDetailScreeningScoring(
     id,
     session?.access_token as string,
     {
       enabled: status === "authenticated" && !!session?.access_token,
-    },
+    }
   );
+
+  const questions = (data?.data as ScreeningScoringDetail)?.question_set?.questions ?? [];
+
+  const [answers, setAnswers] = useState<SubmitScreeningScoring["answers"]>([]);
+
+  const { mutate: submitScreeningScoring } = useSubmitScreeningScoring({
+    onSuccess: (data) => {
+      toast.success("Screening skoring berhasil disubmit!");
+      const historyId = data?.history_id;
+      if (historyId) {
+        router.replace(`/dashboard/history/screening-scoring/${historyId}`);
+      } else {
+        router.replace("/dashboard");
+      }
+    },
+    onError: () => {
+      toast.error("Gagal submit screening skoring. Silakan coba lagi.");
+    },
+  });
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = "Jawaban Anda akan hilang jika halaman direfresh.";
     };
-
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
-
-  const questions = data?.data?.questions ?? [];
-
-  const [answers, setAnswers] = useState<SubmitScreening[]>([]);
-
-  const { mutate: submitScreening } = useAddSubmitScreening({
-    onSuccess: (data) => {
-  toast.success("Screening berhasil disubmit!");
-  const historyId = data?.history_id;
-  if (historyId) {
-    router.replace(`/dashboard/history/screening/${historyId}`);
-  } else {
-    router.replace("/dashboard/screening");
-  }
-},
-    onError: () => {
-      toast.error("Gagal submit screening. Silakan coba lagi.");
-    },
-  });
 
   return (
     <>
       <SidebarProvider>
         <SidebarInset>
           {data?.data && (
-            <BreadcrumbNavWork
-              data={data.data}
+            <BreadcrumbWorkScoring
+              data={data.data as ScreeningScoringDetail}
               onBack={() => {
                 if (selectedQuestionIndex > 0) {
                   setSelectedQuestionIndex((prev) => prev - 1);
                 }
               }}
               currentIndex={selectedQuestionIndex}
-              totalQuestions={data.data.questions.length}
+              totalQuestions={questions.length}
             />
           )}
+
           <div className="pad-x-xl pt-28">
             {isLoading ? (
               <div className="space-y-4">
@@ -98,11 +100,10 @@ export default function WorkScreeningWrapper({ id }: WorkScreeningProps) {
 
                 <ul className="space-y-3">
                   {questions[selectedQuestionIndex].options.map((option) => {
-                    const isSelected = answers.find(
+                    const isSelected = answers.some(
                       (ans) =>
-                        ans.question_id ===
-                          questions[selectedQuestionIndex].id &&
-                        ans.selected_option_id === option.id,
+                        ans.question_id === questions[selectedQuestionIndex].id &&
+                        ans.selected_option_id === option.id
                     );
 
                     return (
@@ -117,13 +118,11 @@ export default function WorkScreeningWrapper({ id }: WorkScreeningProps) {
                           const updated = [...answers];
                           const existingIndex = updated.findIndex(
                             (a) =>
-                              a.question_id ===
-                              questions[selectedQuestionIndex].id,
+                              a.question_id === questions[selectedQuestionIndex].id
                           );
 
                           if (existingIndex !== -1) {
-                            updated[existingIndex].selected_option_id =
-                              option.id;
+                            updated[existingIndex].selected_option_id = option.id;
                           } else {
                             updated.push({
                               question_id: questions[selectedQuestionIndex].id,
@@ -143,10 +142,14 @@ export default function WorkScreeningWrapper({ id }: WorkScreeningProps) {
                     );
                   })}
                 </ul>
+
                 {selectedQuestionIndex === questions.length - 1 &&
                   answers.length === questions.length && (
                     <div className="pt-4">
-                      <Button onClick={openConfirmDialog} className="w-full">
+                      <Button
+                        onClick={() => setConfirmDialogOpen(true)}
+                        className="w-full"
+                      >
                         Selesai
                       </Button>
                     </div>
@@ -166,9 +169,10 @@ export default function WorkScreeningWrapper({ id }: WorkScreeningProps) {
           </div>
         </SidebarInset>
       </SidebarProvider>
+
       <DialogConfirmSubmit
         open={isConfirmDialogOpen}
-        onClose={closeConfirmDialog}
+        onClose={() => setConfirmDialogOpen(false)}
         unansweredNumbers={questions
           .map((q, index) => ({
             number: index + 1,
@@ -177,8 +181,8 @@ export default function WorkScreeningWrapper({ id }: WorkScreeningProps) {
           .filter((q) => !q.isAnswered)
           .map((q) => q.number)}
         onConfirm={() => {
-          submitScreening({
-            screening_id: id,
+          submitScreeningScoring({
+            screening_scoring_id: id,
             answers,
           });
           setConfirmDialogOpen(false);

@@ -15,13 +15,22 @@ export type ScreeningScoring = {
 
 /**
  * Detail screening scoring (untuk pasien saat kerjakan)
+ * ✅ DISAMAKAN DENGAN RESPONSE API: tambahkan `question_set.questions`
  */
 export type ScreeningScoringDetail = {
   id: string;
   question_set_id: string;
   name: string;
   type: "HT" | "DM";
-  questions: Question[];
+  created_at: string | Date;
+  updated_at: string | Date;
+  question_set: {
+    id: string;
+    name: string;
+    created_at: string | Date;
+    updated_at: string | Date;
+    questions: Question[];
+  };
 };
 
 /**
@@ -90,4 +99,3 @@ export interface AdminUserHistoryScreeningScoringByScreening {
   created_at: string;
   updated_at: string;
 }
-
