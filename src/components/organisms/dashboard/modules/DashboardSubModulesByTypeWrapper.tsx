@@ -7,6 +7,7 @@ import { useGetAllModules } from "@/http/modulels/get-all-modules";
 import { Modules } from "@/types/modules/modules";
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import ScreeningWrapper from "@/components/organisms/dashboard/screening/ScreeningWrapper";
+import ScreeningScoringWrapper from "@/components/organisms/dashboard/screening-scoring/ScreeningScoringWrapper";
 import DashboardSubModulesWrapper from "@/components/organisms/dashboard/sub-modules/DashboardSubModulesWrapper";
 
 const typeMap: Record<string, string> = {
@@ -29,7 +30,6 @@ const typeTitleMap: Record<string, { head: string; body: string }> = {
     body: "Pembelajaran Kesehatan Mental terdiri dari beberapa tahapan penting, yaitu screening untuk mengetahui kondisi awal, pre test untuk mengukur pemahaman awal, materi edukasi, dan post test sebagai evaluasi akhir.",
   },
 };
-
 
 interface DashboardSubModulesByTypeWrapperProps {
   type: string;
@@ -77,6 +77,7 @@ export default function DashboardSubModulesByTypeWrapper({
       {withScreening && (selectedType === "HT" || selectedType === "DM") && (
         <div className="space-y-4">
           <ScreeningWrapper type={selectedType} />
+          <ScreeningScoringWrapper type={selectedType} />
         </div>
       )}
 
