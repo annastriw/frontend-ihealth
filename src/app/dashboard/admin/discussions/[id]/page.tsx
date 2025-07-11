@@ -1,3 +1,4 @@
+// src/app/dashboard/admin/discussions/[id]/page.tsx
 import DashboardAdminDetailDiscussionWrapper from "@/components/organisms/dashboard/admin/discussions/DashboardAdminDiscussionDetailWrapper";
 
 interface DashboardAdminDiscussionDetailPageProps {
