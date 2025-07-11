@@ -10,19 +10,20 @@ export const metadata: Metadata = {
   title: "Detail Riwayat Screening",
 };
 
-interface PageProps {
+// ✅ Ganti nama interfacing agar tidak tabrakan
+interface Props {
   params: {
     screening_scoring_id: string;
     history_id: string;
   };
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: Props) {
   const session = await getServerSession(authOptions);
 
   // AuthGuard: hanya admin yang boleh akses
   if (!session || session.user.role !== "admin") {
-    return redirect("/dashboard");
+    redirect("/dashboard"); // ✅ jangan return redirect, cukup langsung panggil
   }
 
   const { screening_scoring_id, history_id } = params;
