@@ -1,3 +1,4 @@
+// src/components/molecules/card/CardListReportHistoryScreeningScoring.tsx
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FileSearch } from "lucide-react";

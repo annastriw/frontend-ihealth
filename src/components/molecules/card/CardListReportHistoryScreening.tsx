@@ -1,3 +1,4 @@
+// src/components/molecules/card/CardListReportHistoryScreening.tsx
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Screening } from "@/types/screening/screening";
@@ -33,12 +34,13 @@ export default function CardListReportHistoryScreening({
       </div>
     );
   }
+
   return (
     <div className="space-y-4">
-      {data.map((screening) => (
+      {data.map((item) => (
         <Link
-          href={`/dashboard/admin/reports/history/screening/${screening.id}`}
-          key={screening.id}
+          key={item.id}
+          href={`/dashboard/admin/reports/history/screening/${item.id}`}
           className="group block cursor-pointer"
         >
           <div className="flex flex-row gap-6">
@@ -49,8 +51,11 @@ export default function CardListReportHistoryScreening({
               <CardHeader className="flex md:flex-row md:items-center md:justify-between">
                 <div className="space-y-2">
                   <CardTitle className="text-md font-bold md:text-xl">
-                    {screening.name}
+                    {item.name}
                   </CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Tipe: {item.type === "HT" ? "Hipertensi" : "Diabetes Melitus"}
+                  </p>
                 </div>
               </CardHeader>
             </Card>

@@ -1,7 +1,8 @@
-// src/components/molecules/card/CardListHistoryQuestionScreeningScoring.tsx
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Check, Plus } from "lucide-react";
+import { format } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 
 interface Option {
   id: string;
@@ -21,6 +22,7 @@ interface Props {
   isLoading?: boolean;
   searchQuery?: string;
   score?: number;
+  createdAt?: string | Date;
 }
 
 export default function CardListHistoryQuestionScreeningScoring({
@@ -28,12 +30,20 @@ export default function CardListHistoryQuestionScreeningScoring({
   isLoading = false,
   searchQuery = "",
   score,
+  createdAt,
 }: Props) {
   const optionLabels = ["A", "B", "C", "D", "E", "F"];
 
   const filteredAnswers = answers.filter((answer) =>
     answer.question.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  const formatCreatedAt = (value: string | Date): string => {
+    const dateObj = typeof value === "string" ? new Date(value) : value;
+    return format(dateObj, "EEEE, dd MMMM yyyy 'pukul' HH:mm", {
+      locale: idLocale,
+    });
+  };
 
   if (isLoading) {
     return (
@@ -64,6 +74,39 @@ export default function CardListHistoryQuestionScreeningScoring({
 
   return (
     <div className="space-y-4">
+      {/* Informasi Screening Skoring */}
+      {(createdAt || score !== undefined) && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Informasi Screening Skoring</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground space-y-1">
+            {createdAt && (
+              <p>
+                Dikerjakan pada:{" "}
+                <span className="font-medium text-primary">
+                  {formatCreatedAt(createdAt)}
+                </span>
+              </p>
+            )}
+            {score !== undefined && (
+              <p>
+                Total Skor:{" "}
+                <span className="font-semibold text-green-700 text-base">
+                  {score}
+                </span>
+              </p>
+            )}
+            <p className="pt-2 text-foreground">
+              Tes screening ini bertujuan untuk mengidentifikasi risiko kesehatan Anda secara mandiri.
+              Hasil dari tes ini dapat memberikan gambaran awal terhadap kondisi kesehatan Anda, tetapi tidak menggantikan
+              diagnosis profesional medis. Konsultasikan dengan tenaga medis untuk evaluasi lebih lanjut.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Daftar pertanyaan dan jawaban */}
       {filteredAnswers.map((answer, index) => (
         <Card key={index}>
           <CardHeader>
@@ -82,7 +125,7 @@ export default function CardListHistoryQuestionScreeningScoring({
                         isSelected ? "text-green-600 font-semibold" : ""
                       }`}
                     >
-                      <span>
+                      <span className="font-semibold">
                         {optionLabels[idx] || String.fromCharCode(65 + idx)}.
                       </span>
                       <span>{option.text}</span>

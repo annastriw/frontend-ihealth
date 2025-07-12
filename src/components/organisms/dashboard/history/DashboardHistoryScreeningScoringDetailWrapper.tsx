@@ -1,3 +1,4 @@
+// DashboardHistoryScreeningScoringDetailWrapper.tsx
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -47,19 +48,14 @@ export default function DashboardHistoryScreeningScoringDetailWrapper({
     );
   }
 
-  return (
-    <div className="space-y-4">
-      <div>
-        <p className="text-xl font-semibold">
-          Total Skor:{" "}
-          <span className="text-primary">{data.data.sum_score}</span>
-        </p>
-      </div>
+  const history = data.data;
 
-      <CardListHistoryQuestionScreeningScoring
-        answers={data.data.answers}
-        isLoading={false}
-      />
-    </div>
+  return (
+    <CardListHistoryQuestionScreeningScoring
+      answers={history.answers}
+      score={history.sum_score}
+      createdAt={history.created_at}
+      isLoading={false}
+    />
   );
 }
