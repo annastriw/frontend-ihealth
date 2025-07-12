@@ -1,23 +1,23 @@
-// src/components/molecules/card/CardListHistoryScreening.tsx
+// src/components/molecules/card/CardListHistoryScreeningScoring.tsx
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { HistoryScreening } from "@/types/screening/screening";
+import { UserHistoryScreeningScoring } from "@/types/screening-scoring/screening-scoring";
 import { ClipboardPenLine, FileX2 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
 
-interface CardListHistoryScreeningProps {
-  data: HistoryScreening[];
+interface CardListHistoryScreeningScoringProps {
+  data: UserHistoryScreeningScoring[];
   isLoading: boolean;
 }
 
-
-export default function CardListHistoryScreening({
+export default function CardListHistoryScreeningScoring({
   data,
   isLoading,
-}: CardListHistoryScreeningProps) {
+}: CardListHistoryScreeningScoringProps) {
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -41,22 +41,22 @@ export default function CardListHistoryScreening({
     return (
       <div className="flex flex-col items-center justify-center space-y-4 py-10 text-center">
         <FileX2 className="text-muted-foreground h-16 w-16" />
-        <p className="text-muted-foreground">Belum ada riwayat screening.</p>
+        <p className="text-muted-foreground">Belum ada riwayat screening scoring.</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      {data.map((screening) => {
-        const formattedDate = format(new Date(screening.created_at), "dd MMMM yyyy", {
+      {data.map((item) => {
+        const formattedDate = format(new Date(item.created_at), "dd MMMM yyyy", {
           locale: idLocale,
         });
 
         return (
           <Link
-            href={`/dashboard/history/screening/${screening.id}`}
-            key={screening.id}
+            href={`/dashboard/history/screening-scoring/${item.id}`}
+            key={item.id}
             className="group block"
           >
             <div className="flex flex-row gap-6">
@@ -66,13 +66,11 @@ export default function CardListHistoryScreening({
 
               <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
                 <CardHeader className="space-y-1">
-                  <Badge className="bg-secondary">Screening</Badge>
+                  <Badge className="bg-secondary">Screening Scoring</Badge>
                   <CardTitle className="text-md font-bold md:text-xl">
-                    {screening.screening.name}
+                    {item.screening.name}
                   </CardTitle>
-                  <p className="text-muted-foreground text-sm">
-                    {formattedDate}
-                  </p>
+                  <p className="text-muted-foreground text-sm">{formattedDate}</p>
                 </CardHeader>
               </Card>
             </div>

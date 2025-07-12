@@ -1,3 +1,4 @@
+// src/types/screening-scoring/screening-scoring.ts
 import { Question } from "../questions/question";
 import { User } from "../user/user";
 
