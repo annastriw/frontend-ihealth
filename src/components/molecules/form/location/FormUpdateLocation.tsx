@@ -34,10 +34,10 @@ const MapLeaflet = dynamic(
   { ssr: false }
 );
 
-// Opsi RW berdasarkan kelurahan
+// RW TANPA leading zero (biar cocok dengan data backend)
 const kelurahanOptions = {
-  Pedalangan: Array.from({ length: 11 }, (_, i) => `RW ${String(i + 1).padStart(2, '0')}`),
-  Padangsari: Array.from({ length: 17 }, (_, i) => `RW ${String(i + 1).padStart(2, '0')}`),
+  Pedalangan: Array.from({ length: 11 }, (_, i) => `RW ${i + 1}`),
+  Padangsari: Array.from({ length: 17 }, (_, i) => `RW ${i + 1}`),
 };
 
 export default function FormUpdateLocation() {
@@ -57,7 +57,6 @@ export default function FormUpdateLocation() {
 
   const kelurahan = form.watch("kelurahan");
 
-  // Ambil lokasi awal user
   useEffect(() => {
     if (status !== "authenticated" || !session?.access_token) return;
 
@@ -79,7 +78,6 @@ export default function FormUpdateLocation() {
       .finally(() => setLoading(false));
   }, [status, session]);
 
-  // Submit form
   const onSubmit = (values: UpdateLocationType) => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/update-location`, {
       method: "PUT",
@@ -154,7 +152,9 @@ export default function FormUpdateLocation() {
                           </SelectTrigger>
                           <SelectContent>
                             {kelurahanOptions[kelurahan as keyof typeof kelurahanOptions].map((rw) => (
-                              <SelectItem key={rw} value={rw}>{rw}</SelectItem>
+                              <SelectItem key={rw} value={rw}>
+                                {rw}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
