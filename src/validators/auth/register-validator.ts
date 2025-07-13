@@ -1,9 +1,12 @@
+// src/validators/auth/register-validator.ts
 import { z } from "zod";
 
 export const registerSchema = z
   .object({
     name: z.string().min(1, { message: "Nama harus diisi." }).trim(),
-    disease_type: z.string().min(1, { message: "Jenis diagnosa medis harus diisi." }),
+    disease_type: z.enum(["HT", "DM", "ALL", "GENERAL"], {
+      errorMap: () => ({ message: "Jenis diagnosa medis harus diisi." }),
+    }),
     email: z
       .string()
       .min(1, { message: "Email harus diisi." })
@@ -20,8 +23,7 @@ export const registerSchema = z
       .string()
       .min(1, { message: "Nomor telepon harus diisi." })
       .regex(/^08\d{8,11}$/, {
-        message:
-          "Format nomor telepon tidak valid. Gunakan format 08xxxxxxxxx.",
+        message: "Format nomor telepon tidak valid. Gunakan format 08xxxxxxxxx.",
       }),
     password: z.string().min(1, { message: "Password harus diisi." }),
     password_confirmation: z

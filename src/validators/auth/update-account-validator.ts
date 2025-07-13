@@ -1,3 +1,4 @@
+// src/validators/auth/update-account-validator.ts
 import { z } from "zod";
 
 export const updateAccountSchema = z.object({
@@ -21,9 +22,9 @@ export const updateAccountSchema = z.object({
       message: "Format nomor telepon tidak valid. Gunakan format 08xxxxxxxxx.",
     }),
   disease_type: z
-    .enum(["HT", "DM", "KM"])
+    .enum(["HT", "DM", "ALL", "GENERAL"])
     .optional()
-    .refine((val) => val === undefined || ["HT", "DM", "KM"].includes(val), {
+    .refine((val) => val === undefined || ["HT", "DM", "ALL", "GENERAL"].includes(val), {
       message: "Diagnosa medis tidak valid.",
     }),
 });

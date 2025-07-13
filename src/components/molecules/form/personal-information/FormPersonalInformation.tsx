@@ -440,45 +440,7 @@ export default function FormCreatePersonalInformation() {
                   </FormItem>
                 )}
               />
-              {/*ACEL*/}
-
-              {/* <FormField
-                control={form.control}
-                name="patient_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                        Anda saat ini sedang terdiagnosis penyakit apa?{" "}
-                      <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Jenis Diagnosis" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Diagnosis</SelectLabel>
-                            <SelectItem value="DM">
-                              Diabetes Melitus
-                            </SelectItem>
-                            <SelectItem value="HT">
-                              Hipertensi
-                            </SelectItem>
-                                                        <SelectItem value="ALL">
-                              Diabetes Melitus dan Hipertensi
-                            </SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
+              
               <FormField
                 control={form.control}
                 name="disease_duration"

@@ -13,9 +13,7 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -46,7 +44,7 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
       email: session.user.email || "",
       username: session.user.username || "",
       phone_number: session.user.phone_number || "",
-      disease_type: session.user.disease_type as "HT" | "DM" | "KM" || "HT",
+      disease_type: (session.user.disease_type as "HT" | "DM" | "ALL" | "GENERAL") || "GENERAL",
     },
     mode: "onChange",
   });
@@ -67,13 +65,14 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
     <div>
       <Form {...form}>
         <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-          {/* Semua role: name */}
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nama <span className="text-red-500">*</span></FormLabel>
+                <FormLabel>
+                  Nama <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input type="text" placeholder="Masukkan nama" {...field} />
                 </FormControl>
@@ -82,13 +81,14 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
             )}
           />
 
-          {/* Semua role: email */}
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email <span className="text-red-500">*</span></FormLabel>
+                <FormLabel>
+                  Email <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input type="email" placeholder="Masukkan email" {...field} />
                 </FormControl>
@@ -97,13 +97,14 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
             )}
           />
 
-          {/* Semua role: username */}
           <FormField
             control={form.control}
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username <span className="text-red-500">*</span></FormLabel>
+                <FormLabel>
+                  Username <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input type="text" placeholder="Masukkan username" {...field} />
                 </FormControl>
@@ -112,13 +113,14 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
             )}
           />
 
-          {/* Semua role: phone number */}
           <FormField
             control={form.control}
             name="phone_number"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nomor Telepon <span className="text-red-500">*</span></FormLabel>
+                <FormLabel>
+                  Nomor Telepon <span className="text-red-500">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input type="text" placeholder="Masukkan nomor telepon" {...field} />
                 </FormControl>
@@ -127,26 +129,25 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
             )}
           />
 
-          {/* Diagnosa hanya untuk user */}
           {isUser && (
             <FormField
               control={form.control}
               name="disease_type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Diagnosa Medis <span className="text-red-500">*</span></FormLabel>
+                  <FormLabel>
+                    Diagnosa Medis <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Pilih diagnosa medis" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Diagnosa Medis</SelectLabel>
-                          <SelectItem value="HT">Hipertensi (HT)</SelectItem>
-                          <SelectItem value="DM">Diabetes Melitus (DM)</SelectItem>
-                          <SelectItem value="KM">Kesehatan Mental (KM)</SelectItem>
-                        </SelectGroup>
+                        <SelectItem value="DM">Diabetes Melitus</SelectItem>
+                        <SelectItem value="HT">Hipertensi</SelectItem>
+                        <SelectItem value="ALL">Diabetes Melitus dan Hipertensi</SelectItem>
+                        <SelectItem value="GENERAL">Pengguna Umum</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
