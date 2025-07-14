@@ -180,7 +180,19 @@ export default function DashboardMapsWrapper() {
           className="h-full w-full z-0"
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {polygon && <GeoJSON data={polygon} style={{ color: 'red', fillOpacity: 0.2 }} />}
+          {polygon && 
+          <GeoJSON
+  data={polygon}
+  style={{
+    color: '#166534',                      // Outline hijau tua
+    fillColor: 'rgba(34, 197, 94, 0.2)',   // Isi hijau muda transparan
+    fillOpacity: 1,
+    weight: 2,
+  }}
+/>
+
+          
+          }
           {polygon && (
             <MapClickHandler
               setCoords={setCoords}

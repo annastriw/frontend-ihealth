@@ -1,3 +1,4 @@
+// src/components/organisms/dashboard/maps/MapPicker.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -7,16 +8,20 @@ import {
   Marker,
   useMapEvents,
   useMap,
+  GeoJSON,
 } from 'react-leaflet';
 import { LatLngLiteral } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Konfigurasi default Leaflet marker (warna biru dari CDN)
 import L from 'leaflet';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import { point } from '@turf/helpers';
+import { toast } from 'sonner';
+
+// Atur default icon Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
@@ -26,9 +31,9 @@ type MapPickerProps = {
   lng: number;
   onChange: (lat: number, lng: number) => void;
   className?: string;
+  polygon?: any;
 };
 
-// Komponen untuk fly-to saat koordinat berubah
 function FlyToLocation({ coords }: { coords: LatLngLiteral }) {
   const map = useMap();
   useEffect(() => {
@@ -37,21 +42,31 @@ function FlyToLocation({ coords }: { coords: LatLngLiteral }) {
   return null;
 }
 
-// Handler klik pada peta
 function ClickHandler({
   setCoords,
+  polygon,
 }: {
   setCoords: (lat: number, lng: number) => void;
+  polygon: any;
 }) {
+  const isInside = (lat: number, lng: number) => {
+    if (!polygon?.features?.length) return false;
+    return booleanPointInPolygon(point([lng, lat]), polygon.features[0]);
+  };
+
   useMapEvents({
     click(e) {
-      setCoords(e.latlng.lat, e.latlng.lng);
+      const { lat, lng } = e.latlng;
+      setCoords(lat, lng);
+      if (!isInside(lat, lng)) {
+        toast.warning('Lokasi berada di luar Kecamatan Banyumanik. Geser ke dalam area.');
+      }
     },
   });
+
   return null;
 }
 
-// Tombol refresh lokasi GPS
 function RefreshButton({ onRefresh }: { onRefresh: () => void }) {
   return (
     <div className="absolute bottom-4 right-4 z-[9999]">
@@ -71,10 +86,15 @@ export default function MapPicker({
   lng,
   onChange,
   className = 'h-64 w-full rounded-lg overflow-hidden relative',
+  polygon,
 }: MapPickerProps) {
   const [coords, setCoords] = useState<LatLngLiteral>({ lat, lng });
 
-  // Fungsi untuk mengambil lokasi pengguna via GPS
+  const isInside = (lat: number, lng: number) => {
+    if (!polygon?.features?.length) return false;
+    return booleanPointInPolygon(point([lng, lat]), polygon.features[0]);
+  };
+
   const handleRefreshLocation = () => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
@@ -83,18 +103,24 @@ export default function MapPicker({
         const newCoords = { lat: latitude, lng: longitude };
         setCoords(newCoords);
         onChange(latitude, longitude);
+
+        if (!isInside(latitude, longitude)) {
+          toast.warning('Lokasi berada di luar Kecamatan Banyumanik. Geser ke dalam area.');
+        }
       },
       (err) => {
-        alert('Gagal mendapatkan lokasi. Pastikan izin lokasi aktif.');
+        toast.error('Gagal mendapatkan lokasi. Pastikan izin lokasi aktif.');
         console.error(err);
       }
     );
   };
 
-  // Saat user klik peta
   const handleMapClick = (lat: number, lng: number) => {
     setCoords({ lat, lng });
     onChange(lat, lng);
+    if (!isInside(lat, lng)) {
+      toast.warning('Lokasi berada di luar Kecamatan Banyumanik. Geser ke dalam area.');
+    }
   };
 
   return (
@@ -106,8 +132,16 @@ export default function MapPicker({
         className="h-full w-full z-0"
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+        {polygon && (
+          <GeoJSON
+            data={polygon}
+            style={{ color: 'green', fillOpacity: 0.3, weight: 2 }}
+          />
+        )}
+
         <Marker position={coords} />
-        <ClickHandler setCoords={handleMapClick} />
+        <ClickHandler setCoords={handleMapClick} polygon={polygon} />
         <FlyToLocation coords={coords} />
       </MapContainer>
 

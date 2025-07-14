@@ -1,4 +1,3 @@
-// src/components/molecules/form/location/FormUpdateLocation.tsx
 'use client';
 
 import { useEffect, useState } from "react";
@@ -29,13 +28,15 @@ import {
 } from "@/validators/maps/update-location-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
+import { point } from "@turf/helpers";
+
 // Map component (tanpa SSR)
 const MapLeaflet = dynamic(
   () => import("@/components/organisms/dashboard/maps/MapPicker"),
   { ssr: false }
 );
 
-// RW TANPA leading zero (biar cocok dengan data backend)
 const kelurahanOptions = {
   Pedalangan: Array.from({ length: 11 }, (_, i) => `RW ${i + 1}`),
   Padangsari: Array.from({ length: 17 }, (_, i) => `RW ${i + 1}`),
@@ -44,6 +45,7 @@ const kelurahanOptions = {
 export default function FormUpdateLocation() {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
+  const [polygon, setPolygon] = useState<any | null>(null);
 
   const form = useForm<UpdateLocationType>({
     resolver: zodResolver(updateLocationSchema),
@@ -57,6 +59,12 @@ export default function FormUpdateLocation() {
   });
 
   const kelurahan = form.watch("kelurahan");
+
+  useEffect(() => {
+    fetch("/maps/banyumanik.geojson")
+      .then(res => res.json())
+      .then(data => setPolygon(data));
+  }, []);
 
   useEffect(() => {
     if (status !== "authenticated" || !session?.access_token) return;
@@ -80,6 +88,20 @@ export default function FormUpdateLocation() {
   }, [status, session]);
 
   const onSubmit = (values: UpdateLocationType) => {
+    if (!polygon?.features?.length) {
+      toast.error("Data wilayah belum tersedia.");
+      return;
+    }
+
+    const lat = parseFloat(values.latitude);
+    const lng = parseFloat(values.longitude);
+    const isInside = booleanPointInPolygon(point([lng, lat]), polygon.features[0]);
+
+    if (!isInside) {
+      toast.error("Lokasi harus berada di dalam Kecamatan Banyumanik.");
+      return;
+    }
+
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/update-location`, {
       method: "PUT",
       headers: {
@@ -108,10 +130,7 @@ export default function FormUpdateLocation() {
                 <FormItem>
                   <FormLabel>Alamat Lengkap</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Contoh: Jl. Kenanga Barat No. 5 RT 02 RW 03"
-                      {...field}
-                    />
+                    <Input placeholder="Contoh: Jl. Kenanga Barat No. 5 RT 02 RW 03" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -153,9 +172,7 @@ export default function FormUpdateLocation() {
                           </SelectTrigger>
                           <SelectContent>
                             {kelurahanOptions[kelurahan as keyof typeof kelurahanOptions].map((rw) => (
-                              <SelectItem key={rw} value={rw}>
-                                {rw}
-                              </SelectItem>
+                              <SelectItem key={rw} value={rw}>{rw}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -175,6 +192,7 @@ export default function FormUpdateLocation() {
                     form.setValue("latitude", lat.toString());
                     form.setValue("longitude", lng.toString());
                   }}
+                  polygon={polygon}
                 />
               )}
             </div>
