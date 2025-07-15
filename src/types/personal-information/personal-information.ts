@@ -1,3 +1,4 @@
+// src/types/personal-information/personal-information.ts
 export type PersonalInformation = {
   id: string;
   user_id: string;
@@ -20,6 +21,8 @@ export type PersonalInformation = {
     | "tidak ada informasi";
   bmi: string;
   heart_disease_history: "0" | "1";
+  height: string;
+  weight: string;
 };
 
 export type CheckPersonalInformation = {

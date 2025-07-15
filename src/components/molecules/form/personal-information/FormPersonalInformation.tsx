@@ -62,6 +62,8 @@ export default function FormCreatePersonalInformation() {
       smoking_history: undefined,
       bmi: "",
       heart_disease_history: undefined,
+      weight: "",
+      height: "",
     },
     mode: "onChange",
   });
@@ -81,15 +83,30 @@ export default function FormCreatePersonalInformation() {
       },
     });
 
-  useEffect(() => {
-    const dateOfBirth = form.watch("date_of_birth");
+  const dateOfBirth = form.watch("date_of_birth");
+const weight = form.watch("weight");
+const height = form.watch("height");
 
-    if (dateOfBirth) {
-      const dob = new Date(dateOfBirth);
-      const age = differenceInYears(new Date(), dob);
-      form.setValue("age", String(age));
-    }
-  }, [form.watch("date_of_birth")]);
+useEffect(() => {
+  if (dateOfBirth) {
+    const dob = new Date(dateOfBirth);
+    const age = differenceInYears(new Date(), dob);
+    form.setValue("age", String(age));
+  }
+}, [dateOfBirth]);
+
+useEffect(() => {
+  const weightNum = parseFloat(weight);
+  const heightNum = parseFloat(height); // dalam cm
+
+  if (!isNaN(weightNum) && !isNaN(heightNum) && heightNum > 0) {
+    const heightInMeters = heightNum / 100;
+    const bmi = weightNum / (heightInMeters * heightInMeters);
+    form.setValue("bmi", bmi.toFixed(1));
+  }
+}, [weight, height]);
+
+
 
   const onSubmit = (body: PersonalInformationType) => {
     addNewQuestionTalkHandler({ ...body });
@@ -398,31 +415,73 @@ export default function FormCreatePersonalInformation() {
               />
 
               <FormField
-                control={form.control}
-                name="bmi"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Indeks BMI (Body Mass Index){" "}
-                      <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        step="0.1"
-                        placeholder="Masukkan BMI (contoh: 22.3)"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      * Masukkan nilai BMI dalam format desimal (contoh: 22.3,
-                      20.8, 18.5)
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+  control={form.control}
+  name="weight"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Berat Badan (kg) <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Input
+          type="number"
+          placeholder="Masukkan berat badan dalam kilogram"
+          {...field}
+          value={field.value ?? ""}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+<FormField
+  control={form.control}
+  name="height"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Tinggi Badan (cm) <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Input
+          type="number"
+          placeholder="Masukkan tinggi badan dalam sentimeter"
+          {...field}
+          value={field.value ?? ""}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+<FormField
+  control={form.control}
+  name="bmi"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Indeks BMI (Body Mass Index){" "}
+        <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Input
+          type="text"
+          placeholder="BMI akan dihitung otomatis"
+          {...field}
+          value={field.value ?? ""}
+          readOnly
+        />
+      </FormControl>
+      <FormDescription>
+        * BMI dihitung otomatis dari berat dan tinggi badan
+      </FormDescription>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
 
               <FormField
                 control={form.control}

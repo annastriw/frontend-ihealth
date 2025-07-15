@@ -1,3 +1,4 @@
+// src/validators/personal-information/personal-information-validator.ts
 import { z } from "zod";
 
 export const personalInformationSchema = z.object({
@@ -44,6 +45,21 @@ export const personalInformationSchema = z.object({
   heart_disease_history: z.enum(["0", "1"], {
     required_error: "Riwayat penyakit jantung harus dipilih",
   }),
+
+  // ✅ Tambahkan validasi berat dan tinggi badan
+  weight: z
+    .string()
+    .min(1, "Berat badan harus diisi")
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: "Berat badan harus berupa angka positif",
+    }),
+  height: z
+    .string()
+    .min(1, "Tinggi badan harus diisi")
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: "Tinggi badan harus berupa angka positif",
+    }),
 });
+
 
 export type PersonalInformationType = z.infer<typeof personalInformationSchema>;
