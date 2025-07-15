@@ -42,7 +42,7 @@ import { CalendarIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function FormUpdatePersonalInformation() {
@@ -51,7 +51,7 @@ export default function FormUpdatePersonalInformation() {
     session?.access_token as string,
     {
       enabled: status === "authenticated" && !!session?.access_token,
-    },
+    }
   );
 
   const form = useForm<PersonalInformationType>({
@@ -63,10 +63,7 @@ export default function FormUpdatePersonalInformation() {
         ? format(new Date(data.data.date_of_birth), "yyyy-MM-dd")
         : "",
       age: data?.data.age ?? "",
-      gender:
-        data?.data.gender === "0" || data?.data.gender === "1"
-          ? data.data.gender
-          : "1",
+      gender: data?.data.gender ?? "1",
       work: data?.data.work ?? "",
       last_education: data?.data.last_education ?? "",
       origin_disease: data?.data.origin_disease ?? "",
@@ -74,15 +71,13 @@ export default function FormUpdatePersonalInformation() {
         data?.data.is_married !== undefined
           ? Boolean(Number(data.data.is_married))
           : false,
-      // patient_type:
-      //   data?.data.patient_type === "DM" || data?.data.patient_type === "HT" || data?.data.patient_type === "KM"
-      //     ? data.data.patient_type
-      //     : "HT",
       disease_duration: data?.data.disease_duration ?? "",
       history_therapy: data?.data.history_therapy ?? "",
       smoking_history: data?.data.smoking_history ?? undefined,
       bmi: data?.data.bmi ?? "",
       heart_disease_history: data?.data.heart_disease_history ?? undefined,
+      weight: data?.data.weight ?? "",
+      height: data?.data.height ?? "",
     },
     mode: "onChange",
   });
@@ -100,19 +95,34 @@ export default function FormUpdatePersonalInformation() {
       },
     });
 
-  useEffect(() => {
-    const dateOfBirth = form.watch("date_of_birth");
+  // Watchers for automatic calculations
+  const dateOfBirth = useWatch({ control: form.control, name: "date_of_birth" });
+  const weight = useWatch({ control: form.control, name: "weight" });
+  const height = useWatch({ control: form.control, name: "height" });
 
+  useEffect(() => {
     if (dateOfBirth) {
       const dob = new Date(dateOfBirth);
       const age = differenceInYears(new Date(), dob);
       form.setValue("age", String(age));
     }
-  }, [form.watch("date_of_birth")]);
+  }, [dateOfBirth]);
+
+  useEffect(() => {
+    const parsedWeight = parseFloat(weight);
+    const parsedHeight = parseFloat(height);
+
+    if (!isNaN(parsedWeight) && !isNaN(parsedHeight) && parsedHeight > 0) {
+      const heightInMeters = parsedHeight / 100;
+      const bmi = parsedWeight / (heightInMeters * heightInMeters);
+      form.setValue("bmi", bmi.toFixed(1));
+    }
+  }, [weight, height]);
 
   const onSubmit = (body: PersonalInformationType) => {
     editPersonalInformationHandler({ ...body });
   };
+
   return (
     <div>
       <Card>
@@ -403,25 +413,65 @@ export default function FormUpdatePersonalInformation() {
 
               <FormField
                 control={form.control}
-                name="bmi"
+                name="weight"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Indeks BMI (Body Mass Index){" "}
-                      <span className="text-red-500">*</span>
+                      Berat Badan (kg) <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
                         step="0.1"
-                        placeholder="Masukkan BMI (contoh: 22.3)"
+                        placeholder="Masukkan berat badan"
                         {...field}
-                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="height"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Tinggi Badan (cm) <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        placeholder="Masukkan tinggi badan"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="bmi"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Indeks BMI <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        placeholder="Otomatis dari berat & tinggi"
+                        readOnly
+                        {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      * Masukkan nilai BMI dalam format desimal (contoh: 22.3,
-                      20.8, 18.5)
+                      * BMI dihitung otomatis berdasarkan berat & tinggi badan
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
