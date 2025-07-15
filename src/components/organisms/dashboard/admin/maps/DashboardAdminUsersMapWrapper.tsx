@@ -1,13 +1,13 @@
-// src/components/organisms/dashboard/admin/maps/DashboardAdminUsersMapWrapper.tsx
 'use client';
 
 import dynamic from 'next/dynamic';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useGetAllUserMap } from '@/http/admin/map/get-user-map';
 import { useSession } from 'next-auth/react';
 import { Card } from '@/components/ui/card';
+import { GeoJSON } from 'react-leaflet';
 
 // Dynamic imports
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
@@ -58,10 +58,16 @@ export default function DashboardAdminUsersMapsWrapper() {
   });
 
   const defaultPosition = { lat: -7.0562, lng: 110.4381 };
+  const [polygon, setPolygon] = useState<any | null>(null);
+
+  useEffect(() => {
+    fetch('/maps/banyumanik.geojson')
+      .then((res) => res.json())
+      .then((data) => setPolygon(data));
+  }, []);
 
   if (isPending) return <div className="p-6">Loading data pengguna...</div>;
 
-  // Inisialisasi statistik
   const grouped: Record<KelurahanType, Record<string, { DM: number; HT: number; ALL: number }>> = {
     Pedalangan: {},
     Padangsari: {},
@@ -78,7 +84,6 @@ export default function DashboardAdminUsersMapsWrapper() {
     const rw = user.rw;
     const disease = user.disease_type?.toUpperCase();
 
-    // Skip if not valid kelurahan or GENERAL
     if (
       !kel || !rw ||
       !(kel === 'Pedalangan' || kel === 'Padangsari') ||
@@ -107,6 +112,18 @@ export default function DashboardAdminUsersMapsWrapper() {
         className="h-[80vh] w-full rounded-lg z-0"
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+        {polygon && (
+          <GeoJSON
+            data={polygon}
+            style={{
+              color: '#166534',
+              fillColor: 'rgba(34, 197, 94, 0.2)',
+              fillOpacity: 1,
+              weight: 2,
+            }}
+          />
+        )}
 
         {userMapData?.data?.map((user: any) => {
           const lat = parseFloat(user.latitude);
@@ -145,25 +162,24 @@ export default function DashboardAdminUsersMapsWrapper() {
         })}
       </MapContainer>
 
-      {/* Statistik RW per kelurahan */}
       <div className="grid md:grid-cols-2 gap-6">
         {(['Pedalangan', 'Padangsari'] as KelurahanType[]).map(kelurahan => (
           <Card key={kelurahan} className="p-4">
             <h3 className="text-lg font-bold capitalize mb-2">{kelurahan}</h3>
             <div className="space-y-1">
-            {rwByKelurahan[kelurahan].map(rw => {
-              const count = grouped[kelurahan][rw];
-              return (
-                <div key={rw} className="text-sm flex justify-between border-b pb-1">
-                  <span>{rw}</span>
-                  <span className="flex flex-col text-right">
-                    <span className="text-red-600">Hipertensi: {count.HT} orang</span>
-                    <span className="text-yellow-600">Diabetes Melitus: {count.DM} orang</span>
-                    <span className="text-orange-600">DM + HT: {count.ALL} orang</span>
-                  </span>
-                </div>
-              );
-            })}
+              {rwByKelurahan[kelurahan].map(rw => {
+                const count = grouped[kelurahan][rw];
+                return (
+                  <div key={rw} className="text-sm flex justify-between border-b pb-1">
+                    <span>{rw}</span>
+                    <span className="flex flex-col text-right">
+                      <span className="text-red-600">Hipertensi: {count.HT} orang</span>
+                      <span className="text-yellow-600">Diabetes Melitus: {count.DM} orang</span>
+                      <span className="text-orange-600">DM + HT: {count.ALL} orang</span>
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </Card>
         ))}
