@@ -1,3 +1,4 @@
+// src/components/molecules/form/personal-information/FormUpdatePersonalInformation.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -191,7 +192,7 @@ export default function FormUpdatePersonalInformation() {
                                 date ? format(date, "yyyy-MM-dd") : "",
                               )
                             }
-                            fromYear={1960}
+                            fromYear={1925}
                             toYear={2030}
                           />
                         </PopoverContent>
