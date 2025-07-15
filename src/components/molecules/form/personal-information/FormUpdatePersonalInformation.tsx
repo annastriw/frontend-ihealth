@@ -312,15 +312,31 @@ export default function FormUpdatePersonalInformation() {
                 name="last_education"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Pendidikan Terakhir</FormLabel>
+                    <FormLabel>
+                      Pendidikan Terakhir <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Masukkan pendidikan terakhir"
-                        {...field}
-                        value={field.value}
-                      />
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih pendidikan terakhir" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Pendidikan</SelectLabel>
+                            <SelectItem value="SD">SD</SelectItem>
+                            <SelectItem value="SMP">SMP</SelectItem>
+                            <SelectItem value="SMA/SMK">SMA / SMK</SelectItem>
+                            <SelectItem value="D1">D1</SelectItem>
+                            <SelectItem value="D2">D2</SelectItem>
+                            <SelectItem value="D3">D3</SelectItem>
+                            <SelectItem value="S1">S1</SelectItem>
+                            <SelectItem value="S2">S2</SelectItem>
+                            <SelectItem value="S3">S3</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -450,7 +466,7 @@ export default function FormUpdatePersonalInformation() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Sejak kapan terdiagnosis Diabetes Melitus atau Hipertensi?
+                      Berapa lama anda telah terdiagnosis Diabetes Melitus atau Hipertensi?
                     </FormLabel>
                     <FormControl>
                       <Input
