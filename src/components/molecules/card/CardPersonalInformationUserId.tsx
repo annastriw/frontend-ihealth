@@ -1,3 +1,6 @@
+// src/components/molecules/card/CardPersonalInformationUserId.tsx
+"use client";
+
 import {
   Card,
   CardContent,
@@ -21,125 +24,139 @@ const getGenderLabel = (gender?: "0" | "1") => {
   return "-";
 };
 
+const getHeartDiseaseLabel = (value?: "0" | "1") => {
+  if (value === "1") return "Ada Riwayat";
+  if (value === "0") return "Tidak Ada";
+  return "-";
+};
+
 export default function CardPersonalInformationUserId({
   data,
   isLoading,
 }: CardPersonalInformationUserIdProps) {
   return (
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Informasi Pribadi</CardTitle>
-          <CardDescription>
-            Menampilkan data informasi pribadi dari pasien.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4 md:space-y-6">
-          <div className="grid grid-cols-1 space-y-4 md:grid-cols-2 md:space-y-6">
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">Nama</div>
-              <div>{isLoading ? <Skeleton className="w-32" /> : data?.name}</div>
-            </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Informasi Pribadi</CardTitle>
+        <CardDescription>Menampilkan data informasi pribadi dari pasien.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4 md:space-y-6">
+        <div className="grid grid-cols-1 space-y-4 md:grid-cols-2 md:space-y-6">
+          {/* Nama Lengkap */}
+          <Field label="Nama Lengkap" value={data?.name} loading={isLoading} />
 
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">Tempat Lahir</div>
-              <div>{isLoading ? <Skeleton className="w-32" /> : data?.place_of_birth}</div>
-            </div>
+          {/* Tempat Lahir */}
+          <Field label="Tempat Lahir" value={data?.place_of_birth} loading={isLoading} />
 
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">Tanggal Lahir</div>
-              <div>
-                {isLoading ? (
-                  <Skeleton className="w-32" />
-                ) : data?.date_of_birth ? (
-                  format(new Date(data.date_of_birth), "dd MMMM yyyy", {
-                    locale: id,
-                  })
-                ) : (
-                  "-"
-                )}
-              </div>
-            </div>
+          {/* Tanggal Lahir */}
+          <Field
+            label="Tanggal Lahir"
+            value={
+              data?.date_of_birth
+                ? format(new Date(data.date_of_birth), "dd MMMM yyyy", { locale: id })
+                : "-"
+            }
+            loading={isLoading}
+          />
 
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">Umur</div>
-              <div>
-                {isLoading ? (
-                  <Skeleton className="w-20" />
-                ) : (
-                  `${data?.age} Tahun`
-                )}
-              </div>
-            </div>
+          {/* Umur */}
+          <Field
+            label="Umur"
+            value={data?.age ? `${data.age} Tahun` : "-"}
+            loading={isLoading}
+          />
 
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">Jenis Kelamin</div>
-              <div>
-                {isLoading ? (
-                  <Skeleton className="w-32" />
-                ) : (
-                  getGenderLabel(data?.gender)
-                )}
-              </div>
-            </div>
+          {/* Sudah Berkeluarga */}
+          <Field
+            label="Apakah sudah berkeluarga?"
+            value={data?.is_married ? "Sudah Menikah" : "Belum Menikah"}
+            loading={isLoading}
+          />
 
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">Pekerjaan</div>
-              <div>{isLoading ? <Skeleton className="w-32" /> : data?.work}</div>
-            </div>
+          {/* Jenis Kelamin */}
+          <Field
+            label="Jenis Kelamin"
+            value={getGenderLabel(data?.gender)}
+            loading={isLoading}
+          />
 
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">Sudah Menikah</div>
-              <div>
-                {isLoading ? (
-                  <Skeleton className="w-32" />
-                ) : data?.is_married ? (
-                  "Sudah Menikah"
-                ) : (
-                  "Belum Menikah"
-                )}
-              </div>
-            </div>
+          {/* Pekerjaan */}
+          <Field label="Pekerjaan" value={data?.work} loading={isLoading} />
 
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">Pendidikan Terakhir</div>
-              <div>{isLoading ? <Skeleton className="w-32" /> : data?.last_education}</div>
-            </div>
+          {/* Pendidikan Terakhir */}
+          <Field label="Pendidikan Terakhir" value={data?.last_education} loading={isLoading} />
 
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">
-                Riwayat tempat pelayanan kesehatan sebelumnya
-              </div>
-              <div>{isLoading ? <Skeleton className="w-32" /> : data?.origin_disease}</div>
-            </div>
+          {/* Riwayat Tempat Pelayanan Kesehatan */}
+          <Field
+            label="Riwayat tempat pelayanan kesehatan sebelumnya"
+            value={data?.origin_disease}
+            loading={isLoading}
+          />
 
-            {/* <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">Tipe Pasien</div>
-              <div className="uppercase">
-                {isLoading ? <Skeleton className="w-32" /> : data?.patient_type}
-              </div>
-            </div> */}
+          {/* Riwayat Merokok */}
+          <Field
+            label="Riwayat Merokok"
+            value={data?.smoking_history}
+            loading={isLoading}
+          />
 
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">Lama Pelayanan Kesehatan</div>
-              <div>{isLoading ? <Skeleton className="w-32" /> : data?.disease_duration}</div>
-            </div>
+          {/* Berat Badan */}
+          <Field label="Berat Badan (kg)" value={data?.weight} loading={isLoading} />
 
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground">Terapi Yang Pernah Dijalani</div>
-              <div className="uppercase">
-                {isLoading ? (
-                  <Skeleton className="w-32" />
-                ) : data?.history_therapy?.toLowerCase() === "nothing" ? (
-                  "Tidak ada"
-                ) : (
-                  data?.history_therapy
-                )}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          {/* Tinggi Badan */}
+          <Field label="Tinggi Badan (cm)" value={data?.height} loading={isLoading} />
+
+          {/* BMI */}
+          <Field label="Indeks BMI" value={data?.bmi} loading={isLoading} />
+
+          {/* Riwayat Penyakit Jantung */}
+          <Field
+            label="Riwayat Penyakit Jantung"
+            value={getHeartDiseaseLabel(data?.heart_disease_history)}
+            loading={isLoading}
+          />
+
+          {/* Lama Terdiagnosis */}
+          <Field
+            label="Berapa Lama Terdiagnosis Diabetes Melitus dan Hipertensi"
+            value={data?.disease_duration}
+            loading={isLoading}
+          />
+
+          {/* Sudah Pernah Berobat */}
+          <Field
+  label="Apakah sudah pernah berobat ke dokter?"
+  value={
+    isLoading
+      ? undefined
+      : data?.history_therapy?.toLowerCase() === "nothing"
+      ? "Belum Pernah"
+      : data?.history_therapy
+      ? "Sudah"
+      : "-"
+  }
+  loading={isLoading}
+/>
+
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function Field({
+  label,
+  value,
+  loading,
+}: {
+  label: string;
+  value?: string | number | null;
+  loading: boolean;
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="text-muted-foreground">{label}</div>
+      <div>{loading ? <Skeleton className="w-32" /> : value || "-"}</div>
     </div>
   );
 }
