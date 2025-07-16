@@ -40,7 +40,7 @@ const getDiseaseTypeLabel = (type?: string) => {
     case "ALL":
       return "Hipertensi & Diabetes Melitus";
     default:
-      return "-";
+      return "Tidak ada Diagnosa Medis";
   }
 };
 
