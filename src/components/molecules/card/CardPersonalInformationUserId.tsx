@@ -16,6 +16,7 @@ import { id } from "date-fns/locale";
 interface CardPersonalInformationUserIdProps {
   data?: PersonalInformation;
   isLoading: boolean;
+  diseaseType?: string; // tambahkan props baru
 }
 
 const getGenderLabel = (gender?: "0" | "1") => {
@@ -30,9 +31,23 @@ const getHeartDiseaseLabel = (value?: "0" | "1") => {
   return "-";
 };
 
+const getDiseaseTypeLabel = (type?: string) => {
+  switch (type) {
+    case "HT":
+      return "Hipertensi";
+    case "DM":
+      return "Diabetes Melitus";
+    case "ALL":
+      return "Hipertensi & Diabetes Melitus";
+    default:
+      return "-";
+  }
+};
+
 export default function CardPersonalInformationUserId({
   data,
   isLoading,
+  diseaseType,
 }: CardPersonalInformationUserIdProps) {
   return (
     <Card>
@@ -44,6 +59,13 @@ export default function CardPersonalInformationUserId({
         <div className="grid grid-cols-1 space-y-4 md:grid-cols-2 md:space-y-6">
           {/* Nama Lengkap */}
           <Field label="Nama Lengkap" value={data?.name} loading={isLoading} />
+
+          {/* Diagnosa Medis */}
+          <Field
+            label="Diagnosa Medis"
+            value={getDiseaseTypeLabel(diseaseType)}
+            loading={isLoading}
+          />
 
           {/* Tempat Lahir */}
           <Field label="Tempat Lahir" value={data?.place_of_birth} loading={isLoading} />
@@ -125,19 +147,18 @@ export default function CardPersonalInformationUserId({
 
           {/* Sudah Pernah Berobat */}
           <Field
-  label="Apakah sudah pernah berobat ke dokter?"
-  value={
-    isLoading
-      ? undefined
-      : data?.history_therapy?.toLowerCase() === "nothing"
-      ? "Belum Pernah"
-      : data?.history_therapy
-      ? "Sudah"
-      : "-"
-  }
-  loading={isLoading}
-/>
-
+            label="Apakah sudah pernah berobat ke dokter?"
+            value={
+              isLoading
+                ? undefined
+                : data?.history_therapy?.toLowerCase() === "nothing"
+                ? "Belum Pernah"
+                : data?.history_therapy
+                ? "Sudah"
+                : "-"
+            }
+            loading={isLoading}
+          />
         </div>
       </CardContent>
     </Card>

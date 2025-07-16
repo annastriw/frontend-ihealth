@@ -1,3 +1,4 @@
+// src/http/users/get-detail-users.ts
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { api } from "@/lib/axios";

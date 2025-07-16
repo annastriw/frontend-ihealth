@@ -22,6 +22,10 @@ export default function DashboardAdminDetailUsersWrapper({
     enabled: status === "authenticated" && activeTab === "account-information",
   });
 
+  const { data: userDetail } = useGetDetailUser(id, session?.access_token as string, {
+    enabled: status === "authenticated" && activeTab === "personal-information",
+  });
+
   const { data: personal, isLoading: isPersonalLoading } =
     useGetPersonalInformationByUserId(session?.access_token as string, id, {
       enabled: status === "authenticated" && activeTab === "personal-information",
@@ -72,6 +76,7 @@ export default function DashboardAdminDetailUsersWrapper({
           <CardPersonalInformationUserId
             data={personal?.data}
             isLoading={isPersonalLoading || status === "loading"}
+            diseaseType={userDetail?.data?.disease_type}
           />
         </TabsContent>
       </Tabs>
