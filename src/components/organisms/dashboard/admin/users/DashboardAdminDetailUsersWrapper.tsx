@@ -1,3 +1,4 @@
+// src/components/organisms/dashboard/admin/users/DashboardAdminDetailUsersWrapper.tsx
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +8,8 @@ import { useGetDetailUser } from "@/http/users/get-detail-users";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import CardPersonalInformationUserId from "@/components/molecules/card/CardPersonalInformationUserId";
+import CardUserLocation from "@/components/molecules/card/CardUserLocation";
+
 
 interface DashboardAdminDetailUsersWrapperProps {
   id: string;
@@ -39,9 +42,10 @@ export default function DashboardAdminDetailUsersWrapper({
         onValueChange={(val) => setActiveTab(val)}
         className="w-full"
       >
-        <TabsList className="mb-2 grid w-fit grid-cols-2">
+        <TabsList className="mb-2 grid w-fit grid-cols-3">
           <TabsTrigger value="personal-information">Informasi Pribadi</TabsTrigger>
           <TabsTrigger value="account-information">Informasi Akun</TabsTrigger>
+          <TabsTrigger value="location-information">Informasi Alamat</TabsTrigger>
         </TabsList>
 
         <TabsContent value="account-information">
@@ -78,6 +82,10 @@ export default function DashboardAdminDetailUsersWrapper({
             isLoading={isPersonalLoading || status === "loading"}
             diseaseType={userDetail?.data?.disease_type}
           />
+        </TabsContent>
+
+        <TabsContent value="location-information">
+          <CardUserLocation userId={id} />
         </TabsContent>
       </Tabs>
     </div>
