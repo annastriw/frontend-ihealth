@@ -2,7 +2,10 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { getLatestScreeningDASS, ScreeningDASSLatest } from "@/http/screening-dass/get-all-screening-dass";
+import {
+  getLatestScreeningDASSHandler,
+  ScreeningDASSLatest,
+} from "@/http/screening-dass/get-all-screening-dass";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -16,16 +19,16 @@ export default function CardListScreeningDASS() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
-    if (
-      status === "authenticated" &&
-      session?.access_token &&
-      session?.user?.id
-    ) {
-      getLatestScreeningDASS(session.access_token, session.user.id)
-        .then((res) => setLatest(res))
-        .finally(() => setLoading(false));
-    }
-  }, [status, session]);
+    if (status !== "authenticated" || !session?.access_token) return;
+
+    getLatestScreeningDASSHandler(session.access_token)
+      .then((res) => {
+        console.log("✅ Latest DASS response:", res);
+        setLatest(res);
+      })
+      .catch((err) => console.error("❌ Error fetching latest DASS", err))
+      .finally(() => setLoading(false));
+  }, [status, session?.access_token]);
 
   if (loading) {
     return (
@@ -43,6 +46,16 @@ export default function CardListScreeningDASS() {
       </div>
     );
   }
+
+  const formattedDate = latest?.latest_submitted_at
+    ? new Date(Date.parse(latest.latest_submitted_at)).toLocaleString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : null;
 
   return (
     <>
@@ -62,17 +75,10 @@ export default function CardListScreeningDASS() {
                   Screening Kesehatan Mental (DASS-21)
                 </CardTitle>
 
-                {latest?.latest_submitted_at ? (
+                {formattedDate ? (
                   <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
                     <Check className="h-4 w-4 text-green-500" />
-                    Terakhir mengerjakan pada{" "}
-                    {new Date(latest.latest_submitted_at).toLocaleString("id-ID", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    Terakhir mengerjakan pada {formattedDate}
                   </div>
                 ) : (
                   <div className="text-muted-foreground text-sm font-medium">
@@ -89,7 +95,7 @@ export default function CardListScreeningDASS() {
       <DialogStartScreeningDASS
         open={dialogOpen}
         setOpen={setDialogOpen}
-        id={latest?.id?.toString() ?? ""}
+        id={latest?.id ?? ""}
       />
     </>
   );
