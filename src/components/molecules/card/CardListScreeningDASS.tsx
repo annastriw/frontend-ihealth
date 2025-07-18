@@ -1,4 +1,3 @@
-// src/components/molecules/card/CardListScreeningDASS.tsx
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -7,7 +6,7 @@ import { getLatestScreeningDASS, ScreeningDASSLatest } from "@/http/screening-da
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FileSearch, FileX2, Check } from "lucide-react";
+import { FileSearch, Check } from "lucide-react";
 import DialogStartScreeningDASS from "@/components/atoms/dialog/DialogStartScreeningDASS";
 
 export default function CardListScreeningDASS() {
@@ -17,8 +16,12 @@ export default function CardListScreeningDASS() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
-    if (status === "authenticated" && session?.access_token) {
-      getLatestScreeningDASS(session.access_token)
+    if (
+      status === "authenticated" &&
+      session?.access_token &&
+      session?.user?.id
+    ) {
+      getLatestScreeningDASS(session.access_token, session.user.id)
         .then((res) => setLatest(res))
         .finally(() => setLoading(false));
     }
@@ -84,11 +87,10 @@ export default function CardListScreeningDASS() {
 
       {/* Dialog Konfirmasi */}
       <DialogStartScreeningDASS
-  open={dialogOpen}
-  setOpen={setDialogOpen}
-  id={latest?.id?.toString() ?? ""}
-/>
-
+        open={dialogOpen}
+        setOpen={setDialogOpen}
+        id={latest?.id?.toString() ?? ""}
+      />
     </>
   );
 }

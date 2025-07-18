@@ -1,29 +1,36 @@
-import axios from "axios";
+// ❌ JANGAN pakai session token untuk authorization
+// ✅ LANGSUNG kirim user_id dari form / props
 
-export type DASSCategory = "Stres" | "Kecemasan" | "Depresi";
+import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { api } from "@/lib/axios";
+import { SubmitScreeningDASSValidatorType } from "@/validators/screening-dass/submit-screening-dass-validator";
+import { UserHistoryScreeningDASSDetail } from "@/types/screening-dass/screening-dass";
 
-export interface ScreeningDASSAnswer {
-  question_id: number;
-  answer: number;
-  type: DASSCategory;
-}
-
-export interface SubmitScreeningDASSRequest {
-  answers: ScreeningDASSAnswer[];
-}
-
+// Response dari backend
 export interface SubmitScreeningDASSResponse {
-  history_id: number;
+  historyId: number;
+  data: UserHistoryScreeningDASSDetail;
 }
 
-export async function submitScreeningDASS(
-  token: string,
-  data: SubmitScreeningDASSRequest
-): Promise<SubmitScreeningDASSResponse> {
-  const response = await axios.post("/api/screening-dass", data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+// Fungsi POST
+export const submitScreeningDASSHandler = async (
+  body: SubmitScreeningDASSValidatorType
+): Promise<SubmitScreeningDASSResponse> => {
+  const { data } = await api.post("/screening-dass/submit", body); // no token needed
+  return data;
+};
+
+// React Query Hook
+export const useSubmitScreeningDASS = (
+  options?: UseMutationOptions<
+    SubmitScreeningDASSResponse,
+    AxiosError<SubmitScreeningDASSResponse>,
+    SubmitScreeningDASSValidatorType
+  >
+) => {
+  return useMutation({
+    mutationFn: submitScreeningDASSHandler,
+    ...options,
   });
-  return response.data;
-}
+};
