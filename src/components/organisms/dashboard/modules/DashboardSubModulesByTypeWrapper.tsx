@@ -1,3 +1,4 @@
+// src/components/organisms/dashboard/modules/DashboardSubModulesByTypeWrapper.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,6 +10,7 @@ import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import ScreeningWrapper from "@/components/organisms/dashboard/screening/ScreeningWrapper";
 import ScreeningScoringWrapper from "@/components/organisms/dashboard/screening-scoring/ScreeningScoringWrapper";
 import DashboardSubModulesWrapper from "@/components/organisms/dashboard/sub-modules/DashboardSubModulesWrapper";
+import CardListScreeningDASS from "@/components/molecules/card/CardListScreeningDASS"; // ✅ tambahkan ini
 
 const typeMap: Record<string, string> = {
   "hipertensi": "HT",
@@ -73,7 +75,7 @@ export default function DashboardSubModulesByTypeWrapper({
         body={typeTitleMap[type]?.body || ""}
       />
 
-      {/* Screening (jika HT atau DM) */}
+      {/* Screening (HT dan DM) */}
       {withScreening && (selectedType === "HT" || selectedType === "DM") && (
         <div className="space-y-4">
           <ScreeningWrapper type={selectedType} />
@@ -81,7 +83,14 @@ export default function DashboardSubModulesByTypeWrapper({
         </div>
       )}
 
-      {/* Pretest → Konten Materi → Posttest per Submodul */}
+      {/* ✅ Screening DASS (khusus Kesehatan Mental) */}
+      {type === "mental-health" && (
+        <div className="space-y-4">
+          <CardListScreeningDASS />
+        </div>
+      )}
+
+      {/* Pretest → Materi → Posttest */}
       <div className="space-y-6">
         {filteredModules.map((module) =>
           module.sub_modules.map((subModule) => (
