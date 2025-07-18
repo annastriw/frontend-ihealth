@@ -1,5 +1,4 @@
-// ❌ JANGAN pakai session token untuk authorization
-// ✅ LANGSUNG kirim user_id dari form / props
+// src/http/screening-dass/submit-screening-dass.ts
 
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -9,8 +8,9 @@ import { UserHistoryScreeningDASSDetail } from "@/types/screening-dass/screening
 
 // Response dari backend
 export interface SubmitScreeningDASSResponse {
-  historyId: number;
-  data: UserHistoryScreeningDASSDetail;
+  data: {
+    id: string; // UUID hasil screening
+  };
 }
 
 // Fungsi POST

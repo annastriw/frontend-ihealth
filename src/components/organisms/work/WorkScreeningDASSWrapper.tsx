@@ -263,11 +263,11 @@ export default function WorkScreeningDASSWrapper() {
 
   const isAllAnswered = answers.every((val) => val !== -1);
 
-  const mutation = useSubmitScreeningDASS({
+ const mutation = useSubmitScreeningDASS({
   onSuccess: (res) => {
     console.log("Submit success response:", res);
     toast.success("Berhasil submit hasil DASS!");
-    router.replace(`/dashboard/history/screening-dass/${res.historyId}`);
+    router.replace(`/dashboard/history/screening-dass/${res.data.id}`);
   },
   onError: (error) => {
     console.error("Submit error response:", error);
