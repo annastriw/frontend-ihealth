@@ -1,4 +1,3 @@
-// src/http/screening-dass/get-screening-dass-detail.ts
 import axios from "axios";
 import { ScreeningDASSDetail } from "@/types/screening-dass/screening-dass-detail";
 
@@ -7,7 +6,7 @@ export async function getScreeningDASSDetail(
   token: string,
 ): Promise<ScreeningDASSDetail> {
   const res = await axios.get(
-    `http://localhost:8000/api/screening-dass-histories/${id}`,
+    `http://localhost:8000/api/admin/screening-dass-histories/${id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

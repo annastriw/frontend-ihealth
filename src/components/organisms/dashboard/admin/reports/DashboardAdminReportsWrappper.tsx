@@ -3,13 +3,14 @@
 import CardListReportHistoryPostTest from "@/components/molecules/card/CardListReportHistoryPostTest";
 import CardListReportHistoryPreTest from "@/components/molecules/card/CardListReportHistoryPreTest";
 import CardListReportHistoryScreening from "@/components/molecules/card/CardListReportHistoryScreening";
-import CardListReportHistoryScreeningScoring from "@/components/molecules/card/CardListReportHistoryScreeningScoring"; // ⬅️ pastikan ini ada
+import CardListReportHistoryScreeningScoring from "@/components/molecules/card/CardListReportHistoryScreeningScoring";
+import CardDASS21Overview from "@/components/molecules/card/CardDASS21Overview"; // ✅ tambahan komponen baru
 import ReportSearchAndFilter from "@/components/molecules/search/ReportSearchFilter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetAllScreening } from "@/http/screening/get-all-screening";
 import { useGetAllPreTest } from "@/http/test/get-all-pre-test";
 import { useGetAllPostTest } from "@/http/test/get-all-post-test";
-import { useGetAllScreeningScoring } from "@/http/screening-scoring/get-all-screening-scoring"; // ⬅️ pastikan ini tersedia
+import { useGetAllScreeningScoring } from "@/http/screening-scoring/get-all-screening-scoring";
 import { useSession } from "next-auth/react";
 import { useState, useMemo } from "react";
 
@@ -96,9 +97,10 @@ export default function DashboardAdminReportWrapper() {
           setTypeFilter("all");
         }}
       >
-        <TabsList className="mb-4 grid w-full max-w-lg grid-cols-4">
+        <TabsList className="mb-4 grid w-full max-w-4xl grid-cols-5">
           <TabsTrigger value="screening">Screening</TabsTrigger>
           <TabsTrigger value="screening-scoring">Scr Scoring</TabsTrigger>
+          <TabsTrigger value="dass-21">DASS-21</TabsTrigger>
           <TabsTrigger value="pre-test">Pre Test</TabsTrigger>
           <TabsTrigger value="post-test">Post Test</TabsTrigger>
         </TabsList>
@@ -137,6 +139,10 @@ export default function DashboardAdminReportWrapper() {
             data={filteredPostTest}
             isLoading={postTestIsPending}
           />
+        </TabsContent>
+
+        <TabsContent value="dass-21">
+          <CardDASS21Overview /> {/* ✅ Komponen DASS-21 */}
         </TabsContent>
       </Tabs>
     </div>

@@ -1,3 +1,4 @@
+// src/app/dashboard/admin/reports/history/screening/[id]/page.tsx
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardAdminReportHistoryScreeningWrapper from "@/components/organisms/dashboard/admin/reports/history/screening/DashboardAdminReportHistoryScreeningWrapper";
 

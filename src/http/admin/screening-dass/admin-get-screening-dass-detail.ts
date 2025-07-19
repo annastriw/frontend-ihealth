@@ -1,6 +1,6 @@
-// src/http/screening-dass/use-get-screening-dass-detail.ts
+// src/http/screening-dass/admin-get-screening-dass-detail.ts
 import { useQuery } from "@tanstack/react-query";
-import { getScreeningDASSDetail } from "./get-screening-dass-detail";
+import { getScreeningDASSDetail } from "./endpoint-screening-dass-detail";
 import { ScreeningDASSDetail } from "@/types/screening-dass/screening-dass-detail";
 
 export function useGetScreeningDASSDetail(
