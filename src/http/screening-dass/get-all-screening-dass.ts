@@ -1,3 +1,4 @@
+// src/http/screening-dass/get-all-screening-dass.ts
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { api } from "@/lib/axios";
