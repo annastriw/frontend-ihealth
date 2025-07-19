@@ -14,14 +14,16 @@ interface Patient {
   heart_disease?: number;
   smoking_history?: number;
   bmi?: number;
+  hypertension?: number; // Tambahkan hypertension
 }
 
 interface ScreeningData {
   patient_id: string;
+  age: number; // Tambahkan field age
   heart_disease: number;
   smoking_history: number;
   bmi: number;
-  blood_pressure: string;
+  hypertension: number; // Ubah dari blood_pressure string menjadi hypertension number
   blood_glucose_level: number;
 }
 
@@ -38,10 +40,11 @@ export default function MedicalDiabetesMelitusScreeningPage() {
   // Form data
   const [formData, setFormData] = useState<ScreeningData>({
     patient_id: "",
+    age: 0, // Tambahkan age di formData
     heart_disease: 0,
     smoking_history: 0,
     bmi: 0,
-    blood_pressure: "",
+    hypertension: 0, // Ubah dari blood_pressure ke hypertension
     blood_glucose_level: 0,
   });
 
@@ -52,7 +55,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
         setIsSearching(true);
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/patients/search?q=${searchTerm}`,
+            `http://localhost:8000/api/patients/search?q=${searchTerm}`,
             {
               headers: {
                 Authorization: `Bearer ${session?.access_token}`,
@@ -87,7 +90,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     setIsLoadingPatientData(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/patients/${patientId}`,
+        `http://localhost:8000/api/patients/${patientId}`,
         {
           headers: {
             Authorization: `Bearer ${session?.access_token}`,
@@ -104,11 +107,12 @@ export default function MedicalDiabetesMelitusScreeningPage() {
         setFormData((prev) => ({
           ...prev,
           patient_id: patientData.id,
+          age: patientData.age || 0, // Auto-fill age
           heart_disease: patientData.heart_disease || 0,
           smoking_history: patientData.smoking_history || 0,
           bmi: patientData.bmi || 0,
           // Keep manual input fields as they are
-          blood_pressure: prev.blood_pressure,
+          hypertension: prev.hypertension,
           blood_glucose_level: prev.blood_glucose_level,
         }));
 
@@ -143,10 +147,11 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     setShowSuggestions(false);
     setFormData({
       patient_id: "",
+      age: 0, // Reset age
       heart_disease: 0,
       smoking_history: 0,
       bmi: 0,
-      blood_pressure: "",
+      hypertension: 0, // Reset hypertension
       blood_glucose_level: 0,
     });
   };
@@ -173,7 +178,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/screening/diabetes`,
+        `http://localhost:8000/api/screening/diabetes`,
         {
           method: "POST",
           headers: {
@@ -193,10 +198,11 @@ export default function MedicalDiabetesMelitusScreeningPage() {
         // Reset form
         setFormData({
           patient_id: "",
+          age: 0,
           heart_disease: 0,
           smoking_history: 0,
           bmi: 0,
-          blood_pressure: "",
+          hypertension: 0,
           blood_glucose_level: 0,
         });
         clearPatient();
@@ -386,8 +392,10 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                 disabled={isLoadingPatientData}
               >
                 <option value="">Pilih riwayat merokok</option>
-                <option value="1">Ya</option>
-                <option value="0">Tidak</option>
+                <option value="0">Tidak Pernah Merokok</option>
+                <option value="1">Perokok Aktif</option>
+                <option value="2">Mantan Perokok</option>
+                <option value="3">Tidak Ada Informasi</option>
               </select>
             </div>
 
@@ -411,6 +419,48 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               />
             </div>
 
+            {/* Field Umur yang baru ditambahkan */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Umur (tahun)
+                <span className="ml-1 text-green-600">✓</span>
+                <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
+              </label>
+              <input
+                type="number"
+                value={formData.age || ""}
+                onChange={(e) =>
+                  handleInputChange("age", parseInt(e.target.value))
+                }
+                className="w-full rounded-md border border-gray-300 bg-green-50 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="Umur akan terisi otomatis"
+                required
+                disabled={isLoadingPatientData}
+              />
+            </div>
+
+            {/* Field Tekanan Darah (Manual Input) */}
+            <div className="md:col-span-2">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Tekanan Darah
+                <span className="ml-1 text-red-500">*</span>
+                <span className="ml-1 text-xs text-gray-500">
+                  (Input Manual)
+                </span>
+              </label>
+              <select
+                value={formData.hypertension}
+                onChange={(e) =>
+                  handleInputChange("hypertension", parseInt(e.target.value))
+                }
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+              >
+                <option value="0">Rendah</option>
+                <option value="1">Tinggi</option>
+              </select>
+            </div>
+
             <div className="md:col-span-2">
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Kadar Glukosa Darah (mg/dL)
@@ -430,26 +480,6 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                 }
                 className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 placeholder="Contoh: 150"
-                required
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Tekanan Darah (mmHg)
-                <span className="ml-1 text-red-500">*</span>
-                <span className="ml-1 text-xs text-gray-500">
-                  (Input Manual)
-                </span>
-              </label>
-              <input
-                type="text"
-                value={formData.blood_pressure}
-                onChange={(e) =>
-                  handleInputChange("blood_pressure", e.target.value)
-                }
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Contoh: 120/80"
                 required
               />
             </div>
