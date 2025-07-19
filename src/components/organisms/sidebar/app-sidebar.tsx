@@ -48,12 +48,18 @@ interface AppSidebarProps {
 export function AppSidebar({ session }: AppSidebarProps) {
   const pathname = usePathname();
 
-  const buttonClass = (href: string) =>
-    `hover:bg-primary/10 hover:text-primary dark:hover:bg-slate-900 ${
-      pathname.startsWith(href)
-        ? "bg-primary/10 text-primary dark:bg-slate-800"
-        : ""
+  const buttonClass = (href: string) => {
+    const exactMatch = pathname === href;
+    const isChildPath =
+      pathname.startsWith(href + "/") && !pathname.startsWith(href + "-");
+
+    const isActive = exactMatch || isChildPath;
+
+    return `hover:bg-primary/10 hover:text-primary dark:hover:bg-slate-900 ${
+      isActive ? "bg-primary/10 text-primary dark:bg-slate-800" : ""
     }`;
+  };
+
 
   const shouldCheckInformation = session?.user.role !== "admin";
 
@@ -202,19 +208,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
                   <SidebarGroupLabel>Manajemen Konten</SidebarGroupLabel>
                   <SidebarGroupContent>
                     <SidebarMenu>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton
-                          asChild
-                          className={buttonClass(
-                            "/dashboard/admin/question-banks",
-                          )}
-                        >
-                          <Link href="/dashboard/admin/question-banks">
-                            <BookOpen />
-                            <span>Bank Soal</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
+                      
                       
                       {/* <SidebarMenuItem>
                       // Disembunyikan sementara karena tidak digunakan, hanya fokus pada HT, DM, dan KM
@@ -241,6 +235,21 @@ export function AppSidebar({ session }: AppSidebarProps) {
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
+
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          className={buttonClass(
+                            "/dashboard/admin/question-banks",
+                          )}
+                        >
+                          <Link href="/dashboard/admin/question-banks">
+                            <BookOpen />
+                            <span>Bank Soal</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
@@ -252,6 +261,19 @@ export function AppSidebar({ session }: AppSidebarProps) {
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
+
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          className={buttonClass("/dashboard/admin/screening-scoring")}
+                        >
+                          <Link href="/dashboard/admin/screening-scoring">
+                            <SearchCheck />
+                            <span>Screening Skoring</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild

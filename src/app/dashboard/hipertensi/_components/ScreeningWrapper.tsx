@@ -1,3 +1,4 @@
+// src/app/dashboard/hipertensi/_components/ScreeningWrapper.tsx
 "use client";
 
 import CardListScreening from "@/components/molecules/card/CardListScreening";

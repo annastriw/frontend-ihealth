@@ -1,6 +1,6 @@
+// src/components/organisms/dashboard/booklet/DashboardModulesBookletWrapper.tsx
 "use client";
 
-import AlertDetailBookletModule from "@/components/atoms/alert/AlertDetailBookletModule";
 import DashboardTitleBold from "@/components/atoms/typography/DashboardTitleBold";
 import VideoYoutubeEmbed from "@/components/atoms/video/VideoYoutubeEmbed";
 import { Button } from "@/components/ui/button";
@@ -39,10 +39,10 @@ export default function DashboardModulesBookletWrapper({
           url={data?.data.video_url ?? ""}
           isLoading={isPending}
         />
-        <Tabs defaultValue="module-contents" className="w-full">
+        <Tabs defaultValue="content" className="w-full">
           <TabsList className="mb-4 grid w-fit max-w-sm grid-cols-2">
-            <TabsTrigger value="content">Konten Materi</TabsTrigger>
-            <TabsTrigger value="module-contents">File Booklet</TabsTrigger>
+            <TabsTrigger value="content">Penjelasan Singkat</TabsTrigger>
+            <TabsTrigger value="module-contents">Baca Booklet</TabsTrigger>
           </TabsList>
           <TabsContent value="content">
             <div
@@ -51,13 +51,13 @@ export default function DashboardModulesBookletWrapper({
           </TabsContent>
           <TabsContent value="module-contents">
             <div className="space-y-4">
-              <AlertDetailBookletModule />
+              
               {filePath && (
                 <>
                   <div>
                     <Link href={filePath} target="_blank" rel="noopener noreferrer">
                       <Button>
-                        <ArrowDownToLine className="mr-2" /> Download Booklet
+                        <ArrowDownToLine className="mr-2" /> Simpan Booklet
                       </Button>
                     </Link>
                   </div>

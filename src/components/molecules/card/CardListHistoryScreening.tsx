@@ -1,3 +1,4 @@
+// src/components/molecules/card/CardListHistoryScreening.tsx
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";

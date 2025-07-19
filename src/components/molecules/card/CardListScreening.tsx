@@ -1,3 +1,4 @@
+// src/components/molecules/card/CardListScreening.tsx
 import DialogStartScreening from "@/components/atoms/dialog/DialogStartScreening";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";

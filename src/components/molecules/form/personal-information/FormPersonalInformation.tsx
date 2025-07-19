@@ -1,3 +1,4 @@
+// src/components/molecules/form/personal-information/FormPersonalInformation.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -54,13 +55,15 @@ export default function FormCreatePersonalInformation() {
       work: "",
       last_education: "",
       origin_disease: "",
-      is_married: false,
+      is_married: true,
       // patient_type: undefined,
       disease_duration: "",
       history_therapy: "nothing",
       smoking_history: undefined,
       bmi: "",
       heart_disease_history: undefined,
+      weight: "",
+      height: "",
     },
     mode: "onChange",
   });
@@ -80,15 +83,30 @@ export default function FormCreatePersonalInformation() {
       },
     });
 
-  useEffect(() => {
-    const dateOfBirth = form.watch("date_of_birth");
+  const dateOfBirth = form.watch("date_of_birth");
+const weight = form.watch("weight");
+const height = form.watch("height");
 
-    if (dateOfBirth) {
-      const dob = new Date(dateOfBirth);
-      const age = differenceInYears(new Date(), dob);
-      form.setValue("age", String(age));
-    }
-  }, [form.watch("date_of_birth")]);
+useEffect(() => {
+  if (dateOfBirth) {
+    const dob = new Date(dateOfBirth);
+    const age = differenceInYears(new Date(), dob);
+    form.setValue("age", String(age));
+  }
+}, [dateOfBirth]);
+
+useEffect(() => {
+  const weightNum = parseFloat(weight);
+  const heightNum = parseFloat(height); // dalam cm
+
+  if (!isNaN(weightNum) && !isNaN(heightNum) && heightNum > 0) {
+    const heightInMeters = heightNum / 100;
+    const bmi = weightNum / (heightInMeters * heightInMeters);
+    form.setValue("bmi", bmi.toFixed(1));
+  }
+}, [weight, height]);
+
+
 
   const onSubmit = (body: PersonalInformationType) => {
     addNewQuestionTalkHandler({ ...body });
@@ -178,7 +196,7 @@ export default function FormCreatePersonalInformation() {
                                 date ? format(date, "yyyy-MM-dd") : "",
                               )
                             }
-                            fromYear={1960}
+                            fromYear={1925}
                             toYear={2030}
                           />
                         </PopoverContent>
@@ -305,21 +323,34 @@ export default function FormCreatePersonalInformation() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Pendidikan Terakhir{" "}
-                      <span className="text-red-500">*</span>
+                      Pendidikan Terakhir <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Masukkan pendidikan terakhir"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih pendidikan terakhir" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Pendidikan</SelectLabel>
+                            <SelectItem value="SD">SD</SelectItem>
+                            <SelectItem value="SMP">SMP</SelectItem>
+                            <SelectItem value="SMA/SMK">SMA / SMK</SelectItem>
+                            <SelectItem value="D1">D1</SelectItem>
+                            <SelectItem value="D2">D2</SelectItem>
+                            <SelectItem value="D3">D3</SelectItem>
+                            <SelectItem value="S1">S1</SelectItem>
+                            <SelectItem value="S2">S2</SelectItem>
+                            <SelectItem value="S3">S3</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="origin_disease"
@@ -384,31 +415,73 @@ export default function FormCreatePersonalInformation() {
               />
 
               <FormField
-                control={form.control}
-                name="bmi"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Indeks BMI (Body Mass Index){" "}
-                      <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        step="0.1"
-                        placeholder="Masukkan BMI (contoh: 22.3)"
-                        {...field}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      * Masukkan nilai BMI dalam format desimal (contoh: 22.3,
-                      20.8, 18.5)
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+  control={form.control}
+  name="weight"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Berat Badan (kg) <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Input
+          type="number"
+          placeholder="Masukkan berat badan dalam kilogram"
+          {...field}
+          value={field.value ?? ""}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+<FormField
+  control={form.control}
+  name="height"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Tinggi Badan (cm) <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Input
+          type="number"
+          placeholder="Masukkan tinggi badan dalam sentimeter"
+          {...field}
+          value={field.value ?? ""}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+<FormField
+  control={form.control}
+  name="bmi"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Indeks BMI (Body Mass Index){" "}
+        <span className="text-red-500">*</span>
+      </FormLabel>
+      <FormControl>
+        <Input
+          type="text"
+          placeholder="BMI akan dihitung otomatis"
+          {...field}
+          value={field.value ?? ""}
+          readOnly
+        />
+      </FormControl>
+      <FormDescription>
+        * BMI dihitung otomatis dari berat dan tinggi badan
+      </FormDescription>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
 
               <FormField
                 control={form.control}
@@ -440,52 +513,14 @@ export default function FormCreatePersonalInformation() {
                   </FormItem>
                 )}
               />
-              {/*ACEL*/}
-
-              {/* <FormField
-                control={form.control}
-                name="patient_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                        Anda saat ini sedang terdiagnosis penyakit apa?{" "}
-                      <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Jenis Diagnosis" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Diagnosis</SelectLabel>
-                            <SelectItem value="DM">
-                              Diabetes Melitus
-                            </SelectItem>
-                            <SelectItem value="HT">
-                              Hipertensi
-                            </SelectItem>
-                                                        <SelectItem value="ALL">
-                              Diabetes Melitus dan Hipertensi
-                            </SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
+              
               <FormField
                 control={form.control}
                 name="disease_duration"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Sejak kapan terdiagnosis Diabetes Melitus atau Hipertensi?{" "}
+                      Berapa lama anda telah terdiagnosis Diabetes Melitus atau Hipertensi?{" "}
                       <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>

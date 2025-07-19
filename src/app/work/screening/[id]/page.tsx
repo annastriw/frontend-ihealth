@@ -1,3 +1,4 @@
+// src/app/work/screening/[id]/page.tsx
 import WorkScreeningWrapper from "@/components/organisms/work/WorkScreeningWrapper";
 
 interface WorkScreeningProps {

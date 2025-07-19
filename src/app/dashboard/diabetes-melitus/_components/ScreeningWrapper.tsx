@@ -1,3 +1,4 @@
+// src/app/dashboard/diabetes-melitus/_components/ScreeningWrapper.tsx
 "use client";
 
 import CardListScreening from "@/components/molecules/card/CardListScreening";

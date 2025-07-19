@@ -1,10 +1,13 @@
+// src/components/organisms/dashboard/maps/DashboardMapsWrapper.tsx
 'use client';
 
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import L, { LatLngLiteral } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useMap, useMapEvents } from 'react-leaflet';
+import { useMap, useMapEvents, GeoJSON } from 'react-leaflet';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import { point } from '@turf/helpers';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
@@ -47,20 +50,29 @@ L.Icon.Default.mergeOptions({
 function FlyToUser({ coords }: { coords: LatLngLiteral }) {
   const map = useMap();
   useEffect(() => {
-    if (coords) {
-      map.flyTo([coords.lat, coords.lng], 15);
-    }
+    map.flyTo([coords.lat, coords.lng], 15);
   }, [coords, map]);
   return null;
 }
 
-function MapClickHandler({ setCoords }: { setCoords: (coords: LatLngLiteral) => void }) {
+function MapClickHandler({
+  setCoords,
+  setLocationChosen,
+  isInsidePolygon,
+}: {
+  setCoords: (coords: LatLngLiteral) => void;
+  setLocationChosen: (val: boolean) => void;
+  isInsidePolygon: (lat: number, lng: number) => boolean;
+}) {
   useMapEvents({
     click(e) {
-      setCoords({
-        lat: e.latlng.lat,
-        lng: e.latlng.lng,
-      });
+      const { lat, lng } = e.latlng;
+      const isInside = isInsidePolygon(lat, lng);
+      setCoords({ lat, lng });
+      setLocationChosen(isInside);
+      if (!isInside) {
+        toast.warning('Lokasi di luar Kecamatan Banyumanik. Geser ke dalam area.');
+      }
     },
   });
   return null;
@@ -77,23 +89,32 @@ function RefreshLocationButton({ onRefresh }: { onRefresh: () => void }) {
 }
 
 const kelurahanOptions = {
-  pedalangan: Array.from({ length: 11 }, (_, i) => `RW ${i + 1}`),
-  padangsari: Array.from({ length: 17 }, (_, i) => `RW ${i + 1}`),
+  Pedalangan: Array.from({ length: 11 }, (_, i) => `RW ${i + 1}`),
+  Padangsari: Array.from({ length: 17 }, (_, i) => `RW ${i + 1}`),
 };
 
 export default function DashboardMapsWrapper() {
   const [coords, setCoords] = useState<LatLngLiteral>({ lat: -7.071422, lng: 110.428874 });
   const [locationChosen, setLocationChosen] = useState(false);
+  const [polygon, setPolygon] = useState<any | null>(null);
   const queryClient = useQueryClient();
+
+  const isInsidePolygon = (lat: number, lng: number) => {
+    if (!polygon?.features?.length) return false;
+    return booleanPointInPolygon(point([lng, lat]), polygon.features[0]);
+  };
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const { latitude, longitude } = pos.coords;
-          const newCoords = { lat: latitude, lng: longitude };
-          setCoords(newCoords);
-          setLocationChosen(true);
+          setCoords({ lat: latitude, lng: longitude });
+          const inside = isInsidePolygon(latitude, longitude);
+          setLocationChosen(inside);
+          if (!inside) {
+            toast.warning('Lokasi Anda di luar Kecamatan Banyumanik. Silakan klik atau geser pada peta.');
+          }
         },
         (err) => {
           console.error('Gagal mendapatkan lokasi:', err.message);
@@ -104,8 +125,14 @@ export default function DashboardMapsWrapper() {
   };
 
   useEffect(() => {
-    getUserLocation();
+    fetch('/maps/banyumanik.geojson')
+      .then((res) => res.json())
+      .then((data) => setPolygon(data));
   }, []);
+
+  useEffect(() => {
+    if (polygon) getUserLocation();
+  }, [polygon]);
 
   const form = useForm<LocationFormType>({
     resolver: zodResolver(locationSchema),
@@ -129,11 +156,10 @@ export default function DashboardMapsWrapper() {
   });
 
   const onSubmit = (data: LocationFormType) => {
-    if (!locationChosen) {
-      toast.error("Silakan pilih lokasi di peta terlebih dahulu.");
+    if (!isInsidePolygon(coords.lat, coords.lng)) {
+      toast.error('Lokasi harus berada di dalam Kecamatan Banyumanik.');
       return;
     }
-
     mutate({
       latitude: coords.lat.toString(),
       longitude: coords.lng.toString(),
@@ -145,10 +171,7 @@ export default function DashboardMapsWrapper() {
 
   return (
     <div className="w-full h-screen overflow-y-auto flex flex-col gap-4 p-6 pt-20">
-      <DashboardTitle
-        head="Pilih Lokasi"
-        body="Pilih lokasi terlebih dahulu untuk melanjutkan"
-      />
+      <DashboardTitle head="Pilih Lokasi" body="Pilih lokasi terlebih dahulu untuk melanjutkan" />
 
       <div className="relative h-[80vh] w-full rounded-lg overflow-hidden">
         <MapContainer
@@ -158,12 +181,28 @@ export default function DashboardMapsWrapper() {
           className="h-full w-full z-0"
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {locationChosen && <FlyToUser coords={coords} />}
-          <MapClickHandler setCoords={(newCoords) => {
-            setCoords(newCoords);
-            setLocationChosen(true);
-          }} />
-          {locationChosen && <Marker position={[coords.lat, coords.lng]} />}
+          {polygon && 
+          <GeoJSON
+  data={polygon}
+  style={{
+    color: '#166534',                      // Outline hijau tua
+    fillColor: 'rgba(34, 197, 94, 0.2)',   // Isi hijau muda transparan
+    fillOpacity: 1,
+    weight: 2,
+  }}
+/>
+
+          
+          }
+          {polygon && (
+            <MapClickHandler
+              setCoords={setCoords}
+              setLocationChosen={setLocationChosen}
+              isInsidePolygon={isInsidePolygon}
+            />
+          )}
+          <Marker position={[coords.lat, coords.lng]} />
+          <FlyToUser coords={coords} />
         </MapContainer>
 
         <RefreshLocationButton onRefresh={getUserLocation} />
@@ -183,8 +222,8 @@ export default function DashboardMapsWrapper() {
                       <SelectValue placeholder="Pilih Kelurahan" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pedalangan">Pedalangan</SelectItem>
-                      <SelectItem value="padangsari">Padangsari</SelectItem>
+                      <SelectItem value="Pedalangan">Pedalangan</SelectItem>
+                      <SelectItem value="Padangsari">Padangsari</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -219,25 +258,21 @@ export default function DashboardMapsWrapper() {
           )}
 
           <FormField
-  control={form.control}
-  name="alamatLengkap"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Alamat Lengkap</FormLabel>
-      <FormControl>
-        <Input
-          placeholder="Masukkan alamat lengkap"
-          {...field}
-        />
-      </FormControl>
-      <FormMessage />
-      <p className="text-sm text-muted-foreground mt-1">
-        Contoh: Jl. Kenanga Barat No. 5 RT 02 RW 03, Kel. Pedalangan, Kec. Banyumanik
-      </p>
-    </FormItem>
-  )}
-/>
-
+            control={form.control}
+            name="alamatLengkap"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Alamat Lengkap</FormLabel>
+                <FormControl>
+                  <Input placeholder="Masukkan alamat lengkap" {...field} />
+                </FormControl>
+                <FormMessage />
+                <p className="text-sm text-muted-foreground mt-1">
+                  Contoh: Jl. Kenanga Barat No. 5 RT 02 RW 03, Kel. Pedalangan, Kec. Banyumanik
+                </p>
+              </FormItem>
+            )}
+          />
 
           <Button type="submit" className="w-full" disabled={isPending}>
             {isPending ? 'Menyimpan...' : 'Pilih Lokasi'}

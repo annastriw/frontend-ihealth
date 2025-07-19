@@ -10,6 +10,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useUpdateAccount } from "@/http/auth/update-account";
 import {
   updateAccountSchema,
@@ -27,6 +34,8 @@ interface FormUpdateAccountProps {
 
 export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
   const router = useRouter();
+  const role = session.user.role;
+  const isUser = role === "user";
 
   const form = useForm<UpdateAccountType>({
     resolver: zodResolver(updateAccountSchema),
@@ -35,23 +44,23 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
       email: session.user.email || "",
       username: session.user.username || "",
       phone_number: session.user.phone_number || "",
+      disease_type: (session.user.disease_type as "HT" | "DM" | "ALL" | "GENERAL") || "GENERAL",
     },
     mode: "onChange",
   });
 
   const { mutate: updateAccountHandler, isPending } = useUpdateAccount({
-    onError: () => {
-      toast.error("Gagal mengupdate akun!");
-    },
+    onError: () => toast.error("Gagal mengupdate akun!"),
     onSuccess: () => {
       toast.success("Berhasil mengupdate akun!");
       router.refresh();
     },
   });
 
-  const onSubmit = (body: UpdateAccountType) => {
-    updateAccountHandler({ ...body });
+  const onSubmit = (data: UpdateAccountType) => {
+    updateAccountHandler(data);
   };
+
   return (
     <div>
       <Form {...form}>
@@ -81,7 +90,7 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
                   Email <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="Masukkan nama" {...field} />
+                  <Input type="email" placeholder="Masukkan email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,11 +106,7 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
                   Username <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="Masukkan username"
-                    {...field}
-                  />
+                  <Input type="text" placeholder="Masukkan username" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -117,16 +122,40 @@ export default function FormUpdateAccount({ session }: FormUpdateAccountProps) {
                   Nomor Telepon <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="Masukkan nomor telepon"
-                    {...field}
-                  />
+                  <Input type="text" placeholder="Masukkan nomor telepon" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          {isUser && (
+            <FormField
+              control={form.control}
+              name="disease_type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Diagnosa Medis <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih diagnosa medis" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="DM">Diabetes Melitus</SelectItem>
+                        <SelectItem value="HT">Hipertensi</SelectItem>
+                        <SelectItem value="ALL">Diabetes Melitus dan Hipertensi</SelectItem>
+                        <SelectItem value="GENERAL">Pengguna Umum</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           <div className="flex justify-end">
             <Button type="submit" disabled={isPending}>

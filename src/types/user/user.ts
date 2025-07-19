@@ -1,3 +1,5 @@
+// src/types/user/user.ts
+
 export interface User {
   id: string;
   login: string;
@@ -8,4 +10,5 @@ export interface User {
   password: string;
   role: string;
   created_at: Date;
+  disease_type: "HT" | "DM" | "ALL" | "GENERAL" | "";
 }

@@ -4,7 +4,7 @@ export const locationSchema = z.object({
   kelurahan: z
     .string()
     .min(1, { message: 'Kelurahan wajib dipilih.' })
-    .refine((val) => ['pedalangan', 'padangsari'].includes(val), {
+    .refine((val) => ['Pedalangan', 'Padangsari'].includes(val), {
       message: 'Kelurahan tidak valid.',
     }),
 

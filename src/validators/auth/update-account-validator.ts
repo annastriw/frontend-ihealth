@@ -1,3 +1,4 @@
+// src/validators/auth/update-account-validator.ts
 import { z } from "zod";
 
 export const updateAccountSchema = z.object({
@@ -19,6 +20,12 @@ export const updateAccountSchema = z.object({
     .min(1, { message: "Nomor telepon harus diisi." })
     .regex(/^08\d{8,11}$/, {
       message: "Format nomor telepon tidak valid. Gunakan format 08xxxxxxxxx.",
+    }),
+  disease_type: z
+    .enum(["HT", "DM", "ALL", "GENERAL"])
+    .optional()
+    .refine((val) => val === undefined || ["HT", "DM", "ALL", "GENERAL"].includes(val), {
+      message: "Diagnosa medis tidak valid.",
     }),
 });
 

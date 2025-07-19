@@ -1,3 +1,4 @@
+// src/components/organisms/dashboard/screening/ScreeningWrapper.tsx
 "use client";
 
 import CardListScreening from "@/components/molecules/card/CardListScreening";
