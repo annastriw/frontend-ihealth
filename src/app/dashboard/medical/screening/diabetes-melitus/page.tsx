@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import type React from "react";
+import { useState, useEffect } from "react";
 import { Search, User, X, Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -10,20 +11,21 @@ interface Patient {
   age: number;
   phone?: string;
   email?: string;
-  gender?: string;
+  gender?: number; // 0=Laki-laki, 1=Perempuan
   heart_disease?: number;
-  smoking_history?: number;
+  smoking_history?: string; // String langsung dari database
   bmi?: number;
-  hypertension?: number; // Tambahkan hypertension
+  hypertension?: number;
 }
 
 interface ScreeningData {
   patient_id: string;
-  age: number; // Tambahkan field age
+  gender: number; // 0=Laki-laki, 1=Perempuan (akan dikonversi di backend)
+  age: number;
   heart_disease: number;
-  smoking_history: number;
+  smoking_history: string; // String langsung untuk ML API
   bmi: number;
-  hypertension: number; // Ubah dari blood_pressure string menjadi hypertension number
+  hypertension: number;
   blood_glucose_level: number;
 }
 
@@ -37,14 +39,15 @@ export default function MedicalDiabetesMelitusScreeningPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingPatientData, setIsLoadingPatientData] = useState(false);
 
-  // Form data
+  // Form data dengan nilai default yang benar
   const [formData, setFormData] = useState<ScreeningData>({
     patient_id: "",
-    age: 0, // Tambahkan age di formData
+    gender: 0,
+    age: 0,
     heart_disease: 0,
-    smoking_history: 0,
+    smoking_history: "tidak ada informasi", // Default string value
     bmi: 0,
-    hypertension: 0, // Ubah dari blood_pressure ke hypertension
+    hypertension: 0,
     blood_glucose_level: 0,
   });
 
@@ -63,7 +66,6 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               },
             },
           );
-
           if (response.ok) {
             const data = await response.json();
             setFilteredPatients(data.data || []);
@@ -80,12 +82,11 @@ export default function MedicalDiabetesMelitusScreeningPage() {
         setFilteredPatients([]);
         setShowSuggestions(false);
       }
-    }, 300); // Debounce 300ms
+    }, 300);
 
     return () => clearTimeout(timeoutId);
   }, [searchTerm, session?.access_token]);
 
-  // Fetch detailed patient data including personal information
   const fetchPatientDetails = async (patientId: string) => {
     setIsLoadingPatientData(true);
     try {
@@ -98,24 +99,24 @@ export default function MedicalDiabetesMelitusScreeningPage() {
           },
         },
       );
-
       if (response.ok) {
         const data = await response.json();
         const patientData = data.data;
 
-        // Auto-fill form data with patient's personal information
+        // Auto-fill form data dengan semua field
         setFormData((prev) => ({
           ...prev,
           patient_id: patientData.id,
-          age: patientData.age || 0, // Auto-fill age
+          gender: patientData.gender || 0,
+          age: patientData.age || 0,
           heart_disease: patientData.heart_disease || 0,
-          smoking_history: patientData.smoking_history || 0,
+          smoking_history:
+            patientData.smoking_history || "tidak pernah merokok", // String langsung
           bmi: patientData.bmi || 0,
-          // Keep manual input fields as they are
+          // Keep manual input fields
           hypertension: prev.hypertension,
           blood_glucose_level: prev.blood_glucose_level,
         }));
-
         return patientData;
       } else {
         console.error("Failed to fetch patient details");
@@ -133,8 +134,6 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     setSelectedPatient(patient);
     setSearchTerm(patient.name);
     setShowSuggestions(false);
-
-    // Fetch detailed patient data and auto-fill form
     const detailedPatient = await fetchPatientDetails(patient.id);
     if (detailedPatient) {
       setSelectedPatient(detailedPatient);
@@ -147,11 +146,12 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     setShowSuggestions(false);
     setFormData({
       patient_id: "",
-      age: 0, // Reset age
+      gender: 0,
+      age: 0,
       heart_disease: 0,
-      smoking_history: 0,
+      smoking_history: "tidak pernah merokok",
       bmi: 0,
-      hypertension: 0, // Reset hypertension
+      hypertension: 0,
       blood_glucose_level: 0,
     });
   };
@@ -174,9 +174,27 @@ export default function MedicalDiabetesMelitusScreeningPage() {
       return;
     }
 
+    // Validasi form data
+    if (!formData.age || formData.age <= 0) {
+      alert("Umur harus diisi dengan benar");
+      return;
+    }
+
+    if (!formData.bmi || formData.bmi <= 0) {
+      alert("BMI harus diisi dengan benar");
+      return;
+    }
+
+    if (!formData.blood_glucose_level || formData.blood_glucose_level <= 0) {
+      alert("Kadar glukosa darah harus diisi dengan benar");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
+      console.log("Sending data:", formData); // Debug log
+
       const response = await fetch(
         `http://localhost:8000/api/screening/diabetes`,
         {
@@ -184,31 +202,29 @@ export default function MedicalDiabetesMelitusScreeningPage() {
           headers: {
             Authorization: `Bearer ${session?.access_token}`,
             "Content-Type": "application/json",
+            Accept: "application/json",
           },
           body: JSON.stringify(formData),
         },
       );
 
-      if (response.ok) {
-        const result = await response.json();
-        alert(
-          `Screening berhasil! Hasil prediksi: ${result.data.prediction === 1 ? "Berisiko Diabetes" : "Tidak Berisiko"}`,
-        );
+      const result = await response.json();
+      console.log("Response:", result); // Debug log
 
+      if (response.ok) {
+        const predictionText =
+          result.data.prediction === 1
+            ? "Berisiko Diabetes"
+            : "Tidak Berisiko Diabetes";
+        alert(
+          `Screening berhasil!\nHasil prediksi: ${predictionText}\nTingkat risiko: ${result.data.risk_level || "N/A"}`,
+        );
         // Reset form
-        setFormData({
-          patient_id: "",
-          age: 0,
-          heart_disease: 0,
-          smoking_history: 0,
-          bmi: 0,
-          hypertension: 0,
-          blood_glucose_level: 0,
-        });
         clearPatient();
       } else {
-        const error = await response.json();
-        alert(`Error: ${error.message || "Gagal melakukan screening"}`);
+        alert(
+          `Error: ${result.meta?.message || result.message || "Gagal melakukan screening"}`,
+        );
       }
     } catch (error) {
       console.error("Error submitting screening:", error);
@@ -281,7 +297,6 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                         </div>
                         <div className="text-sm text-gray-500">
                           ID: {patient.id} • Usia: {patient.age} tahun
-                          {patient.phone && ` • ${patient.phone}`}
                         </div>
                       </div>
                     </div>
@@ -289,33 +304,14 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                 ))}
               </div>
             )}
-
-            {showSuggestions &&
-              filteredPatients.length === 0 &&
-              searchTerm.length > 2 &&
-              !isSearching && (
-                <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-300 bg-white shadow-lg">
-                  <div className="px-4 py-3 text-center text-gray-500">
-                    Pasien tidak ditemukan
-                  </div>
-                </div>
-              )}
           </div>
 
           {/* Patient Info Display */}
           {selectedPatient && (
             <div className="rounded-md border border-blue-200 bg-blue-50 p-4">
-              <div className="mb-2 flex items-center justify-between">
-                <h3 className="font-medium text-blue-900">
-                  Data Pasien Terpilih:
-                </h3>
-                {isLoadingPatientData && (
-                  <div className="flex items-center text-blue-600">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    <span className="text-sm">Memuat data pasien...</span>
-                  </div>
-                )}
-              </div>
+              <h3 className="mb-2 font-medium text-blue-900">
+                Data Pasien Terpilih:
+              </h3>
               <div className="grid grid-cols-1 gap-2 text-sm md:grid-cols-3">
                 <div>
                   <span className="font-medium text-blue-800">ID:</span>{" "}
@@ -329,118 +325,67 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                   <span className="font-medium text-blue-800">Usia:</span>{" "}
                   {selectedPatient.age} tahun
                 </div>
-                {selectedPatient.gender && (
-                  <div>
-                    <span className="font-medium text-blue-800">
-                      Jenis Kelamin:
-                    </span>{" "}
-                    {selectedPatient.gender}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Loading indicator for patient data */}
-          {isLoadingPatientData && (
-            <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4">
-              <div className="flex items-center">
-                <Loader2 className="mr-2 h-5 w-5 animate-spin text-yellow-600" />
-                <span className="text-yellow-800">
-                  Sedang memuat data personal pasien...
-                </span>
+                <div>
+                  <span className="font-medium text-blue-800">
+                    Jenis Kelamin:
+                  </span>{" "}
+                  {selectedPatient.gender == 1 ? "Perempuan" : "Laki-laki"}
+                </div>
               </div>
             </div>
           )}
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* Auto-filled Fields */}
+            {/* Gender Field */}
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
-                Riwayat Penyakit Jantung
+                Jenis Kelamin
+                <span className="ml-1 text-red-500">*</span>
                 <span className="ml-1 text-green-600">✓</span>
                 <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
               </label>
               <select
-                value={formData.heart_disease}
+                value={formData.gender}
                 onChange={(e) =>
-                  handleInputChange("heart_disease", parseInt(e.target.value))
+                  handleInputChange("gender", Number.parseInt(e.target.value))
                 }
                 className="w-full rounded-md border border-gray-300 bg-green-50 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 required
                 disabled={isLoadingPatientData}
               >
-                <option value="">Pilih riwayat penyakit jantung</option>
-                <option value="1">Ya</option>
-                <option value="0">Tidak</option>
+                <option value="0">Laki-laki</option>
+                <option value="1">Perempuan</option>
               </select>
             </div>
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Riwayat Merokok
-                <span className="ml-1 text-green-600">✓</span>
-                <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
-              </label>
-              <select
-                value={formData.smoking_history}
-                onChange={(e) =>
-                  handleInputChange("smoking_history", parseInt(e.target.value))
-                }
-                className="w-full rounded-md border border-gray-300 bg-green-50 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                required
-                disabled={isLoadingPatientData}
-              >
-                <option value="">Pilih riwayat merokok</option>
-                <option value="0">Tidak Pernah Merokok</option>
-                <option value="1">Perokok Aktif</option>
-                <option value="2">Mantan Perokok</option>
-                <option value="3">Tidak Ada Informasi</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                BMI
-                <span className="ml-1 text-green-600">✓</span>
-                <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                value={formData.bmi || ""}
-                onChange={(e) =>
-                  handleInputChange("bmi", parseFloat(e.target.value))
-                }
-                className="w-full rounded-md border border-gray-300 bg-green-50 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="BMI akan terisi otomatis"
-                required
-                disabled={isLoadingPatientData}
-              />
-            </div>
-
-            {/* Field Umur yang baru ditambahkan */}
+            {/* Age Field */}
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Umur (tahun)
+                <span className="ml-1 text-red-500">*</span>
                 <span className="ml-1 text-green-600">✓</span>
                 <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
               </label>
               <input
                 type="number"
+                min="1"
+                max="120"
                 value={formData.age || ""}
                 onChange={(e) =>
-                  handleInputChange("age", parseInt(e.target.value))
+                  handleInputChange("age", Number.parseInt(e.target.value))
                 }
                 className="w-full rounded-md border border-gray-300 bg-green-50 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Umur akan terisi otomatis"
+                placeholder="Contoh: 24"
                 required
                 disabled={isLoadingPatientData}
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Masukkan angka saja, contoh: 24
+              </p>
             </div>
 
-            {/* Field Tekanan Darah (Manual Input) */}
-            <div className="md:col-span-2">
+            {/* Hypertension - Manual Input */}
+            <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Tekanan Darah
                 <span className="ml-1 text-red-500">*</span>
@@ -451,7 +396,10 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               <select
                 value={formData.hypertension}
                 onChange={(e) =>
-                  handleInputChange("hypertension", parseInt(e.target.value))
+                  handleInputChange(
+                    "hypertension",
+                    Number.parseInt(e.target.value),
+                  )
                 }
                 className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 required
@@ -461,9 +409,88 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               </select>
             </div>
 
+            {/* Heart Disease */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Riwayat Penyakit Jantung
+                <span className="ml-1 text-red-500">*</span>
+                <span className="ml-1 text-green-600">✓</span>
+                <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
+              </label>
+              <select
+                value={formData.heart_disease}
+                onChange={(e) =>
+                  handleInputChange(
+                    "heart_disease",
+                    Number.parseInt(e.target.value),
+                  )
+                }
+                className="w-full rounded-md border border-gray-300 bg-green-50 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+                disabled={isLoadingPatientData}
+              >
+                <option value="0">Tidak</option>
+                <option value="1">Ya</option>
+              </select>
+            </div>
+
+            {/* Smoking History - SEKARANG MENGGUNAKAN STRING */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Riwayat Merokok
+                <span className="ml-1 text-red-500">*</span>
+                <span className="ml-1 text-green-600">✓</span>
+                <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
+              </label>
+              <select
+                value={formData.smoking_history}
+                onChange={(e) =>
+                  handleInputChange("smoking_history", e.target.value)
+                }
+                className="w-full rounded-md border border-gray-300 bg-green-50 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+                disabled={isLoadingPatientData}
+              >
+                <option value="tidak pernah merokok">
+                  Tidak Pernah Merokok
+                </option>
+                <option value="perokok aktif">Perokok Aktif</option>
+                <option value="mantan perokok">Mantan Perokok</option>
+                <option value="tidak ada informasi">Tidak Ada Informasi</option>
+              </select>
+            </div>
+
+            {/* BMI */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                BMI
+                <span className="ml-1 text-red-500">*</span>
+                <span className="ml-1 text-green-600">✓</span>
+                <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
+              </label>
+              <input
+                type="number"
+                step="0.1"
+                min="10"
+                max="50"
+                value={formData.bmi || ""}
+                onChange={(e) =>
+                  handleInputChange("bmi", Number.parseFloat(e.target.value))
+                }
+                className="w-full rounded-md border border-gray-300 bg-green-50 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="Contoh: 22.3"
+                required
+                disabled={isLoadingPatientData}
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Contoh: 22.3, 20.8, 18.5
+              </p>
+            </div>
+
+            {/* Blood Glucose Level - Manual Input */}
             <div className="md:col-span-2">
               <label className="mb-1 block text-sm font-medium text-gray-700">
-                Kadar Glukosa Darah (mg/dL)
+                Gula Darah Sewaktu (mg/dL)
                 <span className="ml-1 text-red-500">*</span>
                 <span className="ml-1 text-xs text-gray-500">
                   (Input Manual)
@@ -471,17 +498,22 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               </label>
               <input
                 type="number"
+                min="50"
+                max="400"
                 value={formData.blood_glucose_level || ""}
                 onChange={(e) =>
                   handleInputChange(
                     "blood_glucose_level",
-                    parseFloat(e.target.value),
+                    Number.parseFloat(e.target.value),
                   )
                 }
                 className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Contoh: 150"
+                placeholder="Contoh: 116"
                 required
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Contoh: 116, 220, 178
+              </p>
             </div>
           </div>
 
