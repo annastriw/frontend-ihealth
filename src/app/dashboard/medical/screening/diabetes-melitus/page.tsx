@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Search, User, X, Loader2 } from "lucide-react";
+import {
+  Search,
+  User,
+  X,
+  Loader2,
+  CheckCircle,
+  AlertCircle,
+  TrendingUp,
+} from "lucide-react";
 import { useSession } from "next-auth/react";
 
 interface Patient {
@@ -10,19 +18,30 @@ interface Patient {
   age: number;
   phone?: string;
   email?: string;
-  gender?: string;
+  gender?: number; // 0=Laki-laki, 1=Perempuan
   heart_disease?: number;
-  smoking_history?: number;
+  smoking_history?: string; // String langsung dari database
   bmi?: number;
+  hypertension?: number;
 }
 
 interface ScreeningData {
   patient_id: string;
+  gender: number; // 0=Laki-laki, 1=Perempuan
+  age: number;
   heart_disease: number;
-  smoking_history: number;
+  smoking_history: string; // String langsung untuk ML API
   bmi: number;
-  blood_pressure: string;
+  hypertension: number;
   blood_glucose_level: number;
+}
+
+interface PredictionResult {
+  prediction: number;
+  risk_level: string;
+  risk_score: number;
+  recommendation: string;
+  screening_id?: string;
 }
 
 export default function MedicalDiabetesMelitusScreeningPage() {
@@ -35,13 +54,20 @@ export default function MedicalDiabetesMelitusScreeningPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingPatientData, setIsLoadingPatientData] = useState(false);
 
-  // Form data
+  // State untuk hasil prediksi
+  const [showResult, setShowResult] = useState(false);
+  const [predictionResult, setPredictionResult] =
+    useState<PredictionResult | null>(null);
+
+  // Form data dengan nilai default yang benar
   const [formData, setFormData] = useState<ScreeningData>({
     patient_id: "",
+    gender: 0,
+    age: 0,
     heart_disease: 0,
-    smoking_history: 0,
+    smoking_history: "tidak pernah merokok", // Default string value
     bmi: 0,
-    blood_pressure: "",
+    hypertension: 0,
     blood_glucose_level: 0,
   });
 
@@ -50,16 +76,22 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     const timeoutId = setTimeout(async () => {
       if (searchTerm.length > 2) {
         setIsSearching(true);
+        // DEBUG: Log values
+        console.log("Search term:", searchTerm);
+        console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+        console.log("Session:", session);
+        console.log("Access token:", session?.access_token);
+        
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/patients/search?q=${searchTerm}`;
+        console.log("Full API URL:", apiUrl);
+        
         try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/patients/search?q=${searchTerm}`,
-            {
-              headers: {
-                Authorization: `Bearer ${session?.access_token}`,
-                "Content-Type": "application/json",
-              },
+          const response = await fetch(apiUrl, {
+            headers: {
+              Authorization: `Bearer ${session?.access_token}`,
+              "Content-Type": "application/json",
             },
-          );
+          });
 
           if (response.ok) {
             const data = await response.json();
@@ -87,7 +119,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     setIsLoadingPatientData(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/patients/${patientId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/patients/${patientId}`,
         {
           headers: {
             Authorization: `Bearer ${session?.access_token}`,
@@ -100,15 +132,18 @@ export default function MedicalDiabetesMelitusScreeningPage() {
         const data = await response.json();
         const patientData = data.data;
 
-        // Auto-fill form data with patient's personal information
+        // Auto-fill form data dengan semua field
         setFormData((prev) => ({
           ...prev,
           patient_id: patientData.id,
+          gender: patientData.gender || 0,
+          age: patientData.age || 0,
           heart_disease: patientData.heart_disease || 0,
-          smoking_history: patientData.smoking_history || 0,
+          smoking_history:
+            patientData.smoking_history || "tidak pernah merokok", // String langsung
           bmi: patientData.bmi || 0,
-          // Keep manual input fields as they are
-          blood_pressure: prev.blood_pressure,
+          // Keep manual input fields
+          hypertension: prev.hypertension,
           blood_glucose_level: prev.blood_glucose_level,
         }));
 
@@ -129,6 +164,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     setSelectedPatient(patient);
     setSearchTerm(patient.name);
     setShowSuggestions(false);
+    setShowResult(false); // Hide previous results
 
     // Fetch detailed patient data and auto-fill form
     const detailedPatient = await fetchPatientDetails(patient.id);
@@ -141,12 +177,16 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     setSelectedPatient(null);
     setSearchTerm("");
     setShowSuggestions(false);
+    setShowResult(false);
+    setPredictionResult(null);
     setFormData({
       patient_id: "",
+      gender: 0,
+      age: 0,
       heart_disease: 0,
-      smoking_history: 0,
+      smoking_history: "tidak pernah merokok",
       bmi: 0,
-      blood_pressure: "",
+      hypertension: 0,
       blood_glucose_level: 0,
     });
   };
@@ -161,6 +201,35 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     }));
   };
 
+  const getDefaultRecommendation = (prediction: number): string => {
+    if (prediction === 1) {
+      return "Hasil screening menunjukkan risiko diabetes. Disarankan untuk segera konsultasi dengan dokter untuk pemeriksaan lebih lanjut dan mulai menerapkan pola hidup sehat.";
+    } else {
+      return "Hasil screening menunjukkan risiko diabetes rendah. Tetap pertahankan pola hidup sehat dengan diet seimbang dan olahraga teratur.";
+    }
+  };
+
+  const getRiskColor = (prediction: number, riskLevel: string) => {
+    if (prediction === 1 || riskLevel?.toLowerCase() === "tinggi") {
+      return "bg-red-100 border-red-200 text-red-800";
+    } else {
+      return "bg-green-100 border-green-200 text-green-800";
+    }
+  };
+
+  const getRiskIcon = (prediction: number, riskLevel: string) => {
+    if (prediction === 1 || riskLevel?.toLowerCase() === "tinggi") {
+      return <AlertCircle className="h-6 w-6 text-red-600" />;
+    } else {
+      return <CheckCircle className="h-6 w-6 text-green-600" />;
+    }
+  };
+
+  const viewDashboard = () => {
+    // Redirect ke dashboard atau buka di tab baru
+    window.open("/dashboard/diabetes", "_blank");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -169,40 +238,73 @@ export default function MedicalDiabetesMelitusScreeningPage() {
       return;
     }
 
+    // Validasi form data
+    if (!formData.age || formData.age <= 0) {
+      alert("Umur harus diisi dengan benar");
+      return;
+    }
+
+    if (!formData.bmi || formData.bmi <= 0) {
+      alert("BMI harus diisi dengan benar");
+      return;
+    }
+
+    if (!formData.blood_glucose_level || formData.blood_glucose_level <= 0) {
+      alert("Kadar glukosa darah harus diisi dengan benar");
+      return;
+    }
+
     setIsSubmitting(true);
+    setShowResult(false);
 
     try {
+      console.log("Sending data:", formData); // Debug log
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/screening/diabetes`,
+        `${process.env.NEXT_PUBLIC_API_URL}/screening/diabetes`,
         {
           method: "POST",
           headers: {
             Authorization: `Bearer ${session?.access_token}`,
             "Content-Type": "application/json",
+            Accept: "application/json",
           },
           body: JSON.stringify(formData),
         },
       );
 
-      if (response.ok) {
-        const result = await response.json();
-        alert(
-          `Screening berhasil! Hasil prediksi: ${result.data.prediction === 1 ? "Berisiko Diabetes" : "Tidak Berisiko"}`,
-        );
+      const result = await response.json();
+      console.log("Response:", result); // Debug log
 
-        // Reset form
-        setFormData({
-          patient_id: "",
-          heart_disease: 0,
-          smoking_history: 0,
-          bmi: 0,
-          blood_pressure: "",
-          blood_glucose_level: 0,
+      if (response.ok) {
+        // Simpan hasil prediksi ke state
+        setPredictionResult({
+          prediction: result.data.prediction,
+          risk_level:
+            result.data.risk_level ||
+            (result.data.prediction === 1 ? "Tinggi" : "Rendah"),
+          risk_score:
+            result.data.risk_score || (result.data.prediction === 1 ? 75 : 25),
+          recommendation:
+            result.data.recommendation ||
+            getDefaultRecommendation(result.data.prediction),
+          screening_id: result.data.screening_id || result.data.id,
         });
-        clearPatient();
+
+        // Tampilkan hasil
+        setShowResult(true);
+
+        // Scroll ke hasil
+        setTimeout(() => {
+          const resultElement = document.getElementById("prediction-result");
+          if (resultElement) {
+            resultElement.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 100);
       } else {
-        const error = await response.json();
-        alert(`Error: ${error.message || "Gagal melakukan screening"}`);
+        alert(
+          `Error: ${result.meta?.message || result.message || "Gagal melakukan screening"}`,
+        );
       }
     } catch (error) {
       console.error("Error submitting screening:", error);
@@ -323,12 +425,12 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                   <span className="font-medium text-blue-800">Usia:</span>{" "}
                   {selectedPatient.age} tahun
                 </div>
-                {selectedPatient.gender && (
+                {selectedPatient.gender !== undefined && (
                   <div>
                     <span className="font-medium text-blue-800">
                       Jenis Kelamin:
                     </span>{" "}
-                    {selectedPatient.gender}
+                    {selectedPatient.gender === 1 ? "Perempuan" : "Laki-laki"}
                   </div>
                 )}
               </div>
@@ -348,10 +450,81 @@ export default function MedicalDiabetesMelitusScreeningPage() {
           )}
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* Auto-filled Fields */}
+            {/* Gender Field */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Jenis Kelamin
+                <span className="ml-1 text-red-500">*</span>
+                <span className="ml-1 text-green-600">✓</span>
+                <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
+              </label>
+              <select
+                value={formData.gender}
+                onChange={(e) =>
+                  handleInputChange("gender", parseInt(e.target.value))
+                }
+                className="w-full rounded-md border border-gray-300 bg-green-50 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+                disabled={isLoadingPatientData}
+              >
+                <option value="0">Laki-laki</option>
+                <option value="1">Perempuan</option>
+              </select>
+            </div>
+
+            {/* Age Field */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Umur (tahun)
+                <span className="ml-1 text-red-500">*</span>
+                <span className="ml-1 text-green-600">✓</span>
+                <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="120"
+                value={formData.age || ""}
+                onChange={(e) =>
+                  handleInputChange("age", parseInt(e.target.value))
+                }
+                className="w-full rounded-md border border-gray-300 bg-green-50 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="Contoh: 24"
+                required
+                disabled={isLoadingPatientData}
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Masukkan angka saja, contoh: 24
+              </p>
+            </div>
+
+            {/* Hypertension - Manual Input */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Tekanan Darah
+                <span className="ml-1 text-red-500">*</span>
+                <span className="ml-1 text-xs text-gray-500">
+                  (Input Manual)
+                </span>
+              </label>
+              <select
+                value={formData.hypertension}
+                onChange={(e) =>
+                  handleInputChange("hypertension", parseInt(e.target.value))
+                }
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+              >
+                <option value="0">Rendah</option>
+                <option value="1">Tinggi</option>
+              </select>
+            </div>
+
+            {/* Heart Disease */}
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Riwayat Penyakit Jantung
+                <span className="ml-1 text-red-500">*</span>
                 <span className="ml-1 text-green-600">✓</span>
                 <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
               </label>
@@ -364,42 +537,50 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                 required
                 disabled={isLoadingPatientData}
               >
-                <option value="">Pilih riwayat penyakit jantung</option>
-                <option value="1">Ya</option>
                 <option value="0">Tidak</option>
+                <option value="1">Ya</option>
               </select>
             </div>
 
+            {/* Smoking History */}
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Riwayat Merokok
+                <span className="ml-1 text-red-500">*</span>
                 <span className="ml-1 text-green-600">✓</span>
                 <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
               </label>
               <select
                 value={formData.smoking_history}
                 onChange={(e) =>
-                  handleInputChange("smoking_history", parseInt(e.target.value))
+                  handleInputChange("smoking_history", e.target.value)
                 }
                 className="w-full rounded-md border border-gray-300 bg-green-50 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 required
                 disabled={isLoadingPatientData}
               >
-                <option value="">Pilih riwayat merokok</option>
-                <option value="1">Ya</option>
-                <option value="0">Tidak</option>
+                <option value="tidak pernah merokok">
+                  Tidak Pernah Merokok
+                </option>
+                <option value="perokok aktif">Perokok Aktif</option>
+                <option value="mantan perokok">Mantan Perokok</option>
+                <option value="tidak ada informasi">Tidak Ada Informasi</option>
               </select>
             </div>
 
+            {/* BMI */}
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 BMI
+                <span className="ml-1 text-red-500">*</span>
                 <span className="ml-1 text-green-600">✓</span>
                 <span className="ml-1 text-xs text-gray-500">(Auto-fill)</span>
               </label>
               <input
                 type="number"
                 step="0.1"
+                min="10"
+                max="50"
                 value={formData.bmi || ""}
                 onChange={(e) =>
                   handleInputChange("bmi", parseFloat(e.target.value))
@@ -409,11 +590,15 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                 required
                 disabled={isLoadingPatientData}
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Contoh: 22.3, 20.8, 18.5
+              </p>
             </div>
 
+            {/* Blood Glucose Level - Manual Input */}
             <div className="md:col-span-2">
               <label className="mb-1 block text-sm font-medium text-gray-700">
-                Kadar Glukosa Darah (mg/dL)
+                Gula Darah Sewaktu (mg/dL)
                 <span className="ml-1 text-red-500">*</span>
                 <span className="ml-1 text-xs text-gray-500">
                   (Input Manual)
@@ -421,6 +606,8 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               </label>
               <input
                 type="number"
+                min="50"
+                max="400"
                 value={formData.blood_glucose_level || ""}
                 onChange={(e) =>
                   handleInputChange(
@@ -429,29 +616,12 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                   )
                 }
                 className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Contoh: 150"
+                placeholder="Contoh: 116"
                 required
               />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Tekanan Darah (mmHg)
-                <span className="ml-1 text-red-500">*</span>
-                <span className="ml-1 text-xs text-gray-500">
-                  (Input Manual)
-                </span>
-              </label>
-              <input
-                type="text"
-                value={formData.blood_pressure}
-                onChange={(e) =>
-                  handleInputChange("blood_pressure", e.target.value)
-                }
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Contoh: 120/80"
-                required
-              />
+              <p className="mt-1 text-xs text-gray-500">
+                Contoh: 116, 220, 178
+              </p>
             </div>
           </div>
 
@@ -475,6 +645,126 @@ export default function MedicalDiabetesMelitusScreeningPage() {
             </button>
           </div>
         </form>
+
+        {/* Hasil Prediksi */}
+        {showResult && predictionResult && (
+          <div
+            id="prediction-result"
+            className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-6"
+          >
+            <h3 className="mb-4 text-xl font-semibold text-gray-900">
+              🏥 Hasil Screening Diabetes
+            </h3>
+
+            {/* Hasil Utama */}
+            <div
+              className={`mb-4 rounded-md border p-4 ${getRiskColor(predictionResult.prediction, predictionResult.risk_level)}`}
+            >
+              <div className="flex items-center">
+                {getRiskIcon(
+                  predictionResult.prediction,
+                  predictionResult.risk_level,
+                )}
+                <div className="ml-3">
+                  <h4 className="text-lg font-medium">
+                    {predictionResult.prediction === 1
+                      ? "Berisiko Diabetes"
+                      : "Tidak Berisiko Diabetes"}
+                  </h4>
+                  <p className="text-sm">
+                    Tingkat Risiko:{" "}
+                    <span className="font-semibold">
+                      {predictionResult.risk_level}
+                    </span>
+                    {predictionResult.risk_score && (
+                      <span className="ml-2">
+                        ({predictionResult.risk_score}%)
+                      </span>
+                    )}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Data Pasien yang di-screening */}
+            <div className="mb-4 rounded-md border bg-white p-4">
+              <h5 className="mb-2 font-medium text-gray-900">
+                Data Screening:
+              </h5>
+              <div className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
+                <div>
+                  <span className="text-gray-600">Pasien:</span>
+                  <p className="font-medium">{selectedPatient?.name}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Usia:</span>
+                  <p className="font-medium">{formData.age} tahun</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">BMI:</span>
+                  <p className="font-medium">{formData.bmi}</p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Gula Darah:</span>
+                  <p className="font-medium">
+                    {formData.blood_glucose_level} mg/dL
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Rekomendasi */}
+            <div className="mb-4 rounded-md border border-blue-200 bg-blue-50 p-4">
+              <h5 className="mb-2 font-medium text-blue-900">
+                💡 Rekomendasi:
+              </h5>
+              <p className="text-sm text-blue-800">
+                {predictionResult.recommendation}
+              </p>
+            </div>
+
+            {/* Disclaimer */}
+            <div className="mb-4 rounded-md border border-yellow-200 bg-yellow-50 p-3">
+              <p className="text-xs text-yellow-800">
+                ⚠ <strong>Disclaimer:</strong> Hasil ini hanya prediksi dan
+                tidak menggantikan diagnosis medis profesional. Konsultasikan
+                dengan dokter untuk pemeriksaan lebih lanjut.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={viewDashboard}
+                className="flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:outline-none"
+              >
+                <TrendingUp className="h-4 w-4" />
+                Lihat Dashboard
+              </button>
+              <button
+                type="button"
+                onClick={clearPatient}
+                className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              >
+                Screening Pasien Lain
+              </button>
+            </div>
+
+            {/* Success Message */}
+            <div className="mt-4 text-center">
+              <p className="text-sm font-medium text-green-600">
+                ✅ Data screening berhasil disimpan ke database
+                {predictionResult.screening_id && (
+                  <span className="text-gray-500">
+                    {" "}
+                    (ID: {predictionResult.screening_id})
+                  </span>
+                )}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
