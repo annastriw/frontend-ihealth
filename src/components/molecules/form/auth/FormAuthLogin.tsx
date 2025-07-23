@@ -1,3 +1,4 @@
+// src/components/molecules/form/auth/FormAuthLogin.tsx
 "use client";
 
 import { signIn } from "next-auth/react";
@@ -47,10 +48,7 @@ export default function FormAuthLogin() {
 
     if (!res || res.error) {
       toast.error("Login Gagal", {
-        description:
-          res?.error === "CredentialsSignin"
-            ? "Email atau password salah."
-            : "An error occurred, please try again.",
+        description: res?.error ?? "Terjadi kesalahan, silakan coba lagi.",
       });
       return;
     }
