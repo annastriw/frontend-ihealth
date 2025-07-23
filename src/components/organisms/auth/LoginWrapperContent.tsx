@@ -23,12 +23,13 @@ export default function LoginWrapperContent() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20" />
         <div className="relative z-20 flex items-center gap-x-3 text-lg font-medium">
           <Link href={"/"} className="flex items-center gap-2">
-            <Image
-              src={"/images/assets/bg-about-us.png"}
+             <Image
+              src="/images/assets/bg-about-us.png"
               alt="iHealth Edu"
-              width={37}
-              height={37}
-            />
+              width={48}
+              height={48}
+              className="w-12 h-12 object-contain"
+              />
             <h1 className="font-semibold tracking-tight">
               iHealth Edu
             </h1>
