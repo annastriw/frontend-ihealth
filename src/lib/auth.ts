@@ -1,3 +1,4 @@
+// src/lib/auth.ts
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getAuthApiHandler } from "@/http/auth/get-auth";
@@ -29,15 +30,11 @@ export const authOptions: NextAuthOptions = {
         if (!login || !password) return null;
 
         try {
-          const user = await loginApiHandler({
-            login,
-            password,
-          });
-
-          if (!user) return null;
+          const user = await loginApiHandler({ login, password });
           return user;
-        } catch {
-          return null;
+        } catch (error: any) {
+          // Tangkap pesan dari backend
+          throw new Error(error.response?.data?.message || "Login gagal");
         }
       },
     }),
