@@ -1,9 +1,11 @@
+// src/components/organisms/dashboard/history/DashboardHistoryWrapper.tsx
 "use client";
 
 import CardListHistoryPostTest from "@/components/molecules/card/CardListHistoryPostTest";
 import CardListHistoryPreTest from "@/components/molecules/card/CardListHistoryPreTest";
 import CardListHistoryScreening from "@/components/molecules/card/CardListHistoryScreening";
-import CardListHistoryScreeningScoring from "@/components/molecules/card/CardListHistoryScreeningScoring"; // pastikan file ini ada
+import CardListHistoryScreeningScoring from "@/components/molecules/card/CardListHistoryScreeningScoring";
+import CardListHistoryScreeningDASS from "@/components/molecules/card/CardListHistoryScreeningDASS"; // ← Tambahkan ini
 import {
   Tabs,
   TabsContent,
@@ -12,8 +14,9 @@ import {
 } from "@/components/ui/tabs";
 import { useGetAllHistoryPostTest } from "@/http/history/post-test/get-history-post-test";
 import { useGetAllHistoryScreening } from "@/http/screening/get-history-all-screening";
-import { useGetAllHistoryScreeningScoring } from "@/http/screening-scoring/get-history-all-screening-scoring"; // tambahkan ini
+import { useGetAllHistoryScreeningScoring } from "@/http/screening-scoring/get-history-all-screening-scoring";
 import { useGetAllHistoryPreTest } from "@/http/test/get-history-pre-test";
+import { useGetAllHistoryScreeningDASS } from "@/http/screening-dass/get-history-all-screening-dass";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
@@ -45,6 +48,13 @@ export default function DashboardHistoryWrapper() {
     enabled: status === "authenticated" && selectedTab === "screening-scoring",
   });
 
+  const {
+    data: screeningDASS,
+    isPending: screeningDASSIsPending,
+  } = useGetAllHistoryScreeningDASS(session?.access_token as string, {
+    enabled: status === "authenticated" && selectedTab === "dass-21",
+  });
+
   return (
     <div>
       <Tabs
@@ -52,9 +62,10 @@ export default function DashboardHistoryWrapper() {
         className="space-y-2"
         onValueChange={(value) => setSelectedTab(value)}
       >
-        <TabsList className="grid w-full max-w-[340px] grid-cols-4">
+        <TabsList className="grid w-full max-w-[430px] grid-cols-5">
           <TabsTrigger value="screening">Screening</TabsTrigger>
           <TabsTrigger value="screening-scoring">Scr Scoring</TabsTrigger>
+          <TabsTrigger value="dass-21">DASS-21</TabsTrigger> {/* ← Baru */}
           <TabsTrigger value="pre-test">Pre Test</TabsTrigger>
           <TabsTrigger value="post-test">Post Test</TabsTrigger>
         </TabsList>
@@ -71,6 +82,13 @@ export default function DashboardHistoryWrapper() {
             data={screeningScoring?.data || []}
             isLoading={screeningScoringIsPending}
           />
+        </TabsContent>
+
+        <TabsContent value="dass-21">
+          <CardListHistoryScreeningDASS
+  data={screeningDASS || []} // ✅ langsung array
+  isLoading={screeningDASSIsPending}
+/>
         </TabsContent>
 
         <TabsContent value="pre-test">
