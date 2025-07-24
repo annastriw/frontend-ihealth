@@ -3,7 +3,13 @@
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardAdminHistoryScreeningHSMBQDetailWrapper from "@/components/organisms/dashboard/admin/reports/history/screening-hsmbq/DashboardAdminHistoryScreeningHSMBQDetailWrapper";
 
-export default function Page({ params }: { params: { id: string } }) {
+interface Params {
+  params: {
+    id: string;
+  };
+}
+
+export default function Page({ params }: Params) {
   const { id } = params;
 
   return (
