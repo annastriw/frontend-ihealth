@@ -1,4 +1,4 @@
-// src/components/molecules/card/CardListHistoryQuestionScreeningHSMBQ.tsx
+// src/components/molecules/card/CardListHistoryQuestionScreeningDSMQ.tsx
 "use client";
 
 import {
@@ -17,26 +17,41 @@ import {
   Legend,
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { HSMBQ_QUESTIONS } from "@/constants/hsmbq-questions";
+import { DSMQ_QUESTIONS } from "@/constants/dsmq-questions";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 /* ---------- types ---------- */
-type Interpretation = "Kurang" | "Cukup" | "Baik";
+type Interpretation = "Buruk" | "Cukup" | "Baik";
 
 interface Answer {
   question_id: number;
-  score: number; // 0-4
+  score: number; // Sudah dikalkulasi backend
 }
 
 interface Props {
   answers: Answer[];
-  score: number; // 0-160
+  score: number; // Total 0–48
   interpretation: Interpretation;
   description: string;
   createdAt?: string | Date;
   isLoading?: boolean;
 }
+
+/* ---------- constants ---------- */
+const FAVORABLE_IDS = [
+  1, 2, 3, 4, 6, 8, 9, 14,
+];
+const NON_FAVORABLE_IDS = [
+  5, 7, 10, 11, 12, 13, 15, 16,
+];
+
+const OPTION_LABELS = [
+  "A. Tidak Sesuai",
+  "B. Cukup Sesuai",
+  "C. Sesuai",
+  "D. Sangat Sesuai",
+];
 
 /* ---------- utils ---------- */
 function formatCreatedAt(value: string | Date): string {
@@ -48,7 +63,7 @@ function formatCreatedAt(value: string | Date): string {
 
 function getColor(level: Interpretation | string) {
   switch (level) {
-    case "Kurang":
+    case "Buruk":
       return { text: "text-red-600", chart: "#ef4444", emoji: "😟" };
     case "Cukup":
       return { text: "text-yellow-500", chart: "#eab308", emoji: "🙂" };
@@ -63,7 +78,7 @@ const chartConfig = (value: number, color: string) => ({
   labels: [],
   datasets: [
     {
-      data: [value, 160 - value],
+      data: [value, 48 - value],
       backgroundColor: [color, "#e5e7eb"],
       borderWidth: 0,
       cutout: "70%",
@@ -71,19 +86,23 @@ const chartConfig = (value: number, color: string) => ({
   ],
 });
 
-const scoreToLabel = (score: number): string => {
-  const labels = [
-    "A. Tidak dilakukan",
-    "B. Tidak pernah",
-    "C. Jarang",
-    "D. Kadang-kadang",
-    "E. Selalu",
-  ];
-  return labels[score] ?? "-";
-};
+/**
+ * Konversi skor backend ke label jawaban (0-3 => A-D),
+ * memperhitungkan apakah soal termasuk favorable atau tidak.
+ */
+function getLabelByQuestionType(questionId: number, score: number): string {
+  if (FAVORABLE_IDS.includes(questionId)) {
+    return OPTION_LABELS[score] ?? "-";
+  } else if (NON_FAVORABLE_IDS.includes(questionId)) {
+    const reversedScore = 3 - score;
+    return OPTION_LABELS[reversedScore] ?? "-";
+  } else {
+    return "-";
+  }
+}
 
 /* ---------- component ---------- */
-export default function CardListHistoryQuestionScreeningHSMBQ({
+export default function CardListHistoryQuestionScreeningDSMQ({
   answers = [],
   score,
   interpretation,
@@ -108,7 +127,7 @@ export default function CardListHistoryQuestionScreeningHSMBQ({
       {/* Ringkasan dan chart */}
       <Card>
         <CardHeader>
-          <CardTitle>Hasil Screening HSMBQ</CardTitle>
+          <CardTitle>Hasil Screening DSMQ</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
           {createdAt && (
@@ -140,19 +159,18 @@ export default function CardListHistoryQuestionScreeningHSMBQ({
           <p className={`text-sm ${color.text}`}>{description}</p>
 
           <p className="pt-2 text-foreground">
-            Hasil ini memberikan gambaran kepatuhan Anda terhadap manajemen diri
-            hipertensi. Konsultasikan hasil ini dengan tenaga kesehatan untuk
-            tindak lanjut.
+            Hasil ini memberikan gambaran manajemen diri Anda terhadap diabetes.
+            Konsultasikan hasil ini dengan tenaga kesehatan untuk tindak lanjut.
           </p>
         </CardContent>
       </Card>
 
       {/* Detail pertanyaan */}
-      {HSMBQ_QUESTIONS.map((question, idx) => {
+      {DSMQ_QUESTIONS.map((question, idx) => {
         const matchedAnswer = answers.find(
           (ans) => ans.question_id === question.id
         );
-        const selectedScore = matchedAnswer?.score ?? -1;
+        const rawScore = matchedAnswer?.score ?? -1;
 
         return (
           <Card key={question.id}>
@@ -162,9 +180,16 @@ export default function CardListHistoryQuestionScreeningHSMBQ({
             <CardContent className="space-y-4">
               <p className="font-medium">{question.text}</p>
               <div className="space-y-2">
-                {[0, 1, 2, 3, 4].map((val) => {
-                  const label = scoreToLabel(val);
-                  const isSelected = selectedScore === val;
+                {[0, 1, 2, 3].map((val) => {
+                  const label = OPTION_LABELS[val];
+                  let isSelected = false;
+
+                  if (FAVORABLE_IDS.includes(question.id)) {
+                    isSelected = rawScore === val;
+                  } else if (NON_FAVORABLE_IDS.includes(question.id)) {
+                    isSelected = rawScore === 3 - val;
+                  }
+
                   return (
                     <div
                       key={val}

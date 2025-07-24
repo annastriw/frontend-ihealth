@@ -6,7 +6,8 @@ import CardListReportHistoryPreTest from "@/components/molecules/card/CardListRe
 import CardListReportHistoryScreening from "@/components/molecules/card/CardListReportHistoryScreening";
 import CardListReportHistoryScreeningScoring from "@/components/molecules/card/CardListReportHistoryScreeningScoring";
 import CardDASS21Overview from "@/components/molecules/card/CardDASS21Overview";
-import CardHSMBQOverview from "@/components/molecules/card/CardHSMBQOverview"; // ✅ tambahkan import komponen baru
+import CardHSMBQOverview from "@/components/molecules/card/CardHSMBQOverview";
+import CardDSMQOverview from "@/components/molecules/card/CardDSMQOverview";
 import ReportSearchAndFilter from "@/components/molecules/search/ReportSearchFilter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetAllScreening } from "@/http/screening/get-all-screening";
@@ -98,11 +99,12 @@ export default function DashboardAdminReportWrapper() {
           setTypeFilter("all");
         }}
       >
-        <TabsList className="mb-4 grid w-full max-w-5xl grid-cols-6">
+        <TabsList className="mb-4 grid w-full max-w-6xl grid-cols-7">
           <TabsTrigger value="screening">Screening</TabsTrigger>
           <TabsTrigger value="screening-scoring">Scr Scoring</TabsTrigger>
           <TabsTrigger value="dass-21">DASS-21</TabsTrigger>
-          <TabsTrigger value="hsmbq">HSMBQ</TabsTrigger> {/* ✅ tab HSMBQ */}
+          <TabsTrigger value="hsmbq">HSMBQ</TabsTrigger>
+          <TabsTrigger value="dsmq">DSMQ</TabsTrigger>
           <TabsTrigger value="pre-test">Pre Test</TabsTrigger>
           <TabsTrigger value="post-test">Post Test</TabsTrigger>
         </TabsList>
@@ -134,7 +136,11 @@ export default function DashboardAdminReportWrapper() {
         </TabsContent>
 
         <TabsContent value="hsmbq">
-          <CardHSMBQOverview /> {/* ✅ konten tab HSMBQ */}
+          <CardHSMBQOverview />
+        </TabsContent>
+
+        <TabsContent value="dsmq">
+          <CardDSMQOverview />
         </TabsContent>
 
         <TabsContent value="pre-test">
