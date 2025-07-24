@@ -40,10 +40,10 @@ export default function HasilScreeningPage() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      console.log('✅ Data received:', data);
+      const result = await response.json();
+      console.log('✅ Data received:', result);
       
-      setScreeningData(Array.isArray(data) ? data : []);
+      setScreeningData(Array.isArray(result.data) ? result.data : []);
       
     } catch (err) {
       console.error('❌ Error:', err);
@@ -164,7 +164,13 @@ export default function HasilScreeningPage() {
     );
   }
 
-  const latestScreening = screeningData[0];
+  const sortedScreeningData = screeningData.sort((a, b) => {
+  const dateA = new Date(a.created_at || 0).getTime();
+  const dateB = new Date(b.created_at || 0).getTime();
+  return dateB - dateA; // Sort descending (terbaru dulu)
+});
+
+  const latestScreening = sortedScreeningData[0];
   const riskInfo = getRiskInfo(latestScreening.prediction_result, latestScreening.prediction_score);
 
   return (
@@ -200,7 +206,7 @@ export default function HasilScreeningPage() {
             </div>
           </div>
 
-          {/* Risk Status */}
+          {/*Risk Status*/}
           <div className={`${riskInfo.bgColor} ${riskInfo.borderColor} border rounded-lg p-4 mb-6`}>
             <div className="flex items-center">
               <span className="text-2xl mr-3">{riskInfo.emoji}</span>
@@ -209,7 +215,7 @@ export default function HasilScreeningPage() {
                   {riskInfo.text}
                 </h3>
                 <p className={`text-sm ${riskInfo.textColor}`}>
-                  Skor: {latestScreening.prediction_score?.toFixed(1) || 'N/A'}%
+                  Skor: {latestScreening.prediction_score || 'N/A'}%
                 </p>
               </div>
             </div>
@@ -286,7 +292,7 @@ export default function HasilScreeningPage() {
                           </span>
                         </td>
                         <td className="px-4 py-4 text-sm text-gray-900">
-                          {screening.prediction_score?.toFixed(1) || 'N/A'}%
+                          {screening.prediction_score || 'N/A'}%
                         </td>
                       </tr>
                     );
