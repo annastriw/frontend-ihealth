@@ -3,13 +3,10 @@
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardAdminHistoryScreeningHSMBQDetailWrapper from "@/components/organisms/dashboard/admin/reports/history/screening-hsmbq/DashboardAdminHistoryScreeningHSMBQDetailWrapper";
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
+// tambahkan ini untuk memastikan dynamic routing aman
+export const dynamicParams = true;
 
-export default function Page({ params }: Params) {
+export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;
 
   return (
