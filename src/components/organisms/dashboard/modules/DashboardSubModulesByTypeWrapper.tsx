@@ -11,6 +11,7 @@ import ScreeningWrapper from "@/components/organisms/dashboard/screening/Screeni
 import ScreeningScoringWrapper from "@/components/organisms/dashboard/screening-scoring/ScreeningScoringWrapper";
 import DashboardSubModulesWrapper from "@/components/organisms/dashboard/sub-modules/DashboardSubModulesWrapper";
 import CardListScreeningDASS from "@/components/molecules/card/CardListScreeningDASS";
+import CardListScreeningHSMBQ from "@/components/molecules/card/CardListScreeningHSMBQ";
 
 const typeMap: Record<string, string> = {
   "hipertensi": "HT",
@@ -87,6 +88,13 @@ export default function DashboardSubModulesByTypeWrapper({
       {type === "mental-health" && (
         <div className="space-y-4">
           <CardListScreeningDASS />
+        </div>
+      )}
+
+      {/* ✅ Screening HSMBQ (khusus Hipertensi) */}
+      {type === "hipertensi" && (
+        <div className="space-y-4">
+          <CardListScreeningHSMBQ />
         </div>
       )}
 
