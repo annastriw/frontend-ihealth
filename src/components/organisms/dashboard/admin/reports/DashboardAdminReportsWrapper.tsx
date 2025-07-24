@@ -5,7 +5,8 @@ import CardListReportHistoryPostTest from "@/components/molecules/card/CardListR
 import CardListReportHistoryPreTest from "@/components/molecules/card/CardListReportHistoryPreTest";
 import CardListReportHistoryScreening from "@/components/molecules/card/CardListReportHistoryScreening";
 import CardListReportHistoryScreeningScoring from "@/components/molecules/card/CardListReportHistoryScreeningScoring";
-import CardDASS21Overview from "@/components/molecules/card/CardDASS21Overview"; // ✅ tambahan komponen baru
+import CardDASS21Overview from "@/components/molecules/card/CardDASS21Overview";
+import CardHSMBQOverview from "@/components/molecules/card/CardHSMBQOverview"; // ✅ tambahkan import komponen baru
 import ReportSearchAndFilter from "@/components/molecules/search/ReportSearchFilter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetAllScreening } from "@/http/screening/get-all-screening";
@@ -29,13 +30,10 @@ export default function DashboardAdminReportWrapper() {
     },
   );
 
-  const { data: screeningScoring, isPending: screeningScoringIsPending } = useGetAllScreeningScoring(
-    session?.access_token as string,
-    undefined,
-    {
+  const { data: screeningScoring, isPending: screeningScoringIsPending } =
+    useGetAllScreeningScoring(session?.access_token as string, undefined, {
       enabled: status === "authenticated" && activeTab === "screening-scoring",
-    }
-  );
+    });
 
   const { data: preTest, isPending: preTestIsPending } = useGetAllPreTest(
     session?.access_token as string,
@@ -81,7 +79,9 @@ export default function DashboardAdminReportWrapper() {
 
   const filteredScreeningScoring = useMemo(() => {
     return (screeningScoring?.data ?? []).filter((item) => {
-      const matchSearch = item.name.toLowerCase().includes(search.toLowerCase());
+      const matchSearch = item.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
       const matchType = typeFilter === "all" || item.type === typeFilter;
       return matchSearch && matchType;
     });
@@ -98,10 +98,11 @@ export default function DashboardAdminReportWrapper() {
           setTypeFilter("all");
         }}
       >
-        <TabsList className="mb-4 grid w-full max-w-4xl grid-cols-5">
+        <TabsList className="mb-4 grid w-full max-w-5xl grid-cols-6">
           <TabsTrigger value="screening">Screening</TabsTrigger>
           <TabsTrigger value="screening-scoring">Scr Scoring</TabsTrigger>
           <TabsTrigger value="dass-21">DASS-21</TabsTrigger>
+          <TabsTrigger value="hsmbq">HSMBQ</TabsTrigger> {/* ✅ tab HSMBQ */}
           <TabsTrigger value="pre-test">Pre Test</TabsTrigger>
           <TabsTrigger value="post-test">Post Test</TabsTrigger>
         </TabsList>
@@ -128,6 +129,14 @@ export default function DashboardAdminReportWrapper() {
           />
         </TabsContent>
 
+        <TabsContent value="dass-21">
+          <CardDASS21Overview />
+        </TabsContent>
+
+        <TabsContent value="hsmbq">
+          <CardHSMBQOverview /> {/* ✅ konten tab HSMBQ */}
+        </TabsContent>
+
         <TabsContent value="pre-test">
           <CardListReportHistoryPreTest
             data={filteredPreTest}
@@ -140,10 +149,6 @@ export default function DashboardAdminReportWrapper() {
             data={filteredPostTest}
             isLoading={postTestIsPending}
           />
-        </TabsContent>
-
-        <TabsContent value="dass-21">
-          <CardDASS21Overview /> {/* ✅ Komponen DASS-21 */}
         </TabsContent>
       </Tabs>
     </div>
