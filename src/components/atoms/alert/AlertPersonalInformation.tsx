@@ -8,7 +8,7 @@ export default function AlertPersonalInformation() {
       <AlertTitle>Belum Mengisi</AlertTitle>
       <AlertDescription>
         Anda belum mengisi informasi pribadi, silahkan isi terlebih dahulu
-        sebelum mengakses halaman dashboard.
+        sebelum mengakses halaman utama.
       </AlertDescription>
     </Alert>
   );

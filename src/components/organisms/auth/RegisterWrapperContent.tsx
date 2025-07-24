@@ -24,10 +24,11 @@ export default function RegisterWrapperContent() {
         <div className="relative z-20 flex items-center gap-x-3 text-lg font-medium">
           <Link href={"/"} className="flex items-center gap-2">
             <Image
-              src={"/images/assets/bg-about-us.png"}
-              alt="iHealth Edu"
-              width={37}
-              height={37}
+            src="/images/assets/bg-about-us.png"
+            alt="iHealth Edu"
+            width={48}
+            height={48}
+            className="w-12 h-12 object-contain"
             />
             <h1 className="font-semibold tracking-tight">
               iHealth Edu
