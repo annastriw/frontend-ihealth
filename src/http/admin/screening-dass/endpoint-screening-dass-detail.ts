@@ -9,7 +9,7 @@ export async function getScreeningDASSDetail(
   id: string,
   token: string,
 ): Promise<ScreeningDASSDetail> {
-  const res = await api.get(`/api/admin/screening-dass-histories/${id}`, {
+  const res = await api.get(`/admin/screening-dass-histories/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

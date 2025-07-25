@@ -10,7 +10,7 @@ export async function getScreeningDSMQDetail(
   id: string,
   token: string,
 ): Promise<ScreeningDSMQDetail> {
-  const res = await api.get(`/api/screening-dsmq-histories/${id}`, {
+  const res = await api.get(`/screening-dsmq-histories/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
