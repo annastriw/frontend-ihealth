@@ -243,7 +243,7 @@ export default function WorkScreeningDSMQWrapper() {
               if (selectedQuestionIndex > 0) {
                 setSelectedQuestionIndex((prev) => prev - 1);
               } else {
-                router.push("/dashboard/diabetes");
+                router.push("/dashboard/diabetes-melitus");
               }
             }}
             currentIndex={selectedQuestionIndex}

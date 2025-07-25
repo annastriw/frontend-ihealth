@@ -227,7 +227,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
 
   const viewDashboard = () => {
     // Redirect ke dashboard atau buka di tab baru
-    window.open("/dashboard/diabetes", "_blank");
+    window.open("/dashboard/diabetes-melitus", "_blank");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
