@@ -35,10 +35,12 @@ export default function DashboardModulesBookletWrapper({
     <>
       <DashboardTitleBold head={data?.data.name ?? ""} />
       <div className="space-y-6">
+        {data?.data.video_url !== "-" && (
         <VideoYoutubeEmbed
           url={data?.data.video_url ?? ""}
           isLoading={isPending}
         />
+        )}
         <Tabs defaultValue="content" className="w-full">
           <TabsList className="mb-4 grid w-fit max-w-sm grid-cols-2">
             <TabsTrigger value="content">Penjelasan Singkat</TabsTrigger>

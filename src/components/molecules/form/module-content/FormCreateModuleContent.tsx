@@ -1,8 +1,11 @@
+// src/components/molecules/form/module-content/FormCreateModuleContent.tsx
 "use client";
 
 import QuillEditor from "@/components/atoms/quill/QuillEditor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from "react";
 import {
   Form,
   FormControl,
@@ -49,6 +52,7 @@ export default function FormCreateModuleContent() {
     mode: "onChange",
   });
 
+  const [isNoVideo, setIsNoVideo] = useState(false);
   const { data: session, status } = useSession();
   const { data } = useGetAllSubModulesNoCategory(
     session?.access_token as string,
@@ -171,13 +175,34 @@ export default function FormCreateModuleContent() {
                       type="text"
                       placeholder="Masukkan url video dari youtube"
                       {...field}
+                      value={isNoVideo ? "-" : field.value}
+                      disabled={isNoVideo}
                     />
                   </FormControl>
                   <FormMessage />
                   <FormDescription>
-                    * Contoh: https://www.youtube.com/watch?v=QdU7Ztdd-sw, yang
-                    dimasukkan QdU7Ztdd-sw
+                    * Contoh: https://www.youtube.com/watch?v=y55Wupx2ZDU, yang dimasukkan <code>y55Wupx2ZDU</code>
                   </FormDescription>
+                  <div className="mt-2 flex items-center space-x-2">
+                    <Checkbox
+                      id="no-video"
+                      checked={isNoVideo}
+                      onCheckedChange={(checked) => {
+                        setIsNoVideo(!!checked);
+                        if (checked) {
+                          form.setValue("video_url", "-");
+                        } else {
+                          form.setValue("video_url", "");
+                        }
+                      }}
+                    />
+                    <label
+                      htmlFor="no-video"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Centang jika konten tanpa menggunakan video Youtube
+                    </label>
+                  </div>
                 </FormItem>
               )}
             />
