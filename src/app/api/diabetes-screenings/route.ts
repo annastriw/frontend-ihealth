@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
       }, { status: 401 });
     }
 
-    const baseUrl = process.env.LARAVEL_API_URL || 'http://localhost:8000';
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
     const userId = (session as any).user?.id;
     const userRole = (session as any).user?.role;
     const accessToken = (session as any).access_token;
@@ -39,14 +39,14 @@ export async function GET(request: NextRequest) {
     let endpoint;
     if (userRole === 'admin') {
       // Admin can access all data
-      endpoint = '/api/user-screening-new-admin';
+      endpoint = '/user-screening-new-admin';
     } else {
       // Regular user - get their own data
       if (userId) {
-        endpoint = `/api/user-screening-new/${userId}`;
+        endpoint = `/user-screening-new/${userId}`;
       } else {
         // Fallback to other endpoints
-        endpoint = '/api/screening/diabetes/history';
+        endpoint = '/screening/diabetes/history';
       }
     }
 
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
       if (response.status === 403 || response.status === 404) {
         console.log('🔄 Trying alternative endpoint...');
         
-        const alternativeResponse = await fetch(`${baseUrl}/api/screening/diabetes/history`, {
+        const alternativeResponse = await fetch(`${baseUrl}/screening/diabetes/history`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
