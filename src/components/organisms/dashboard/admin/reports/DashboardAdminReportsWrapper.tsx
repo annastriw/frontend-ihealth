@@ -99,9 +99,13 @@ export default function DashboardAdminReportWrapper() {
           setTypeFilter("all");
         }}
       >
-        <TabsList className="mb-4 grid w-full max-w-6xl grid-cols-7">
+        <TabsList className="mb-4 grid w-full max-w-6xl grid-cols-5">
+          {/* Disembunyikan sementara karena belum digunakan */}
+          {/*
           <TabsTrigger value="screening">Screening</TabsTrigger>
           <TabsTrigger value="screening-scoring">Scr Scoring</TabsTrigger>
+          */}
+          
           <TabsTrigger value="dass-21">DASS-21</TabsTrigger>
           <TabsTrigger value="hsmbq">HSMBQ</TabsTrigger>
           <TabsTrigger value="dsmq">DSMQ</TabsTrigger>

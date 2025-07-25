@@ -77,13 +77,15 @@ export default function DashboardSubModulesByTypeWrapper({
         body={typeTitleMap[type]?.body || ""}
       />
 
-      {/* Screening (jika HT atau DM) */}
+     
+      {/*
+      // Disembunyikan sementara karena belum digunakan
       {withScreening && (selectedType === "HT" || selectedType === "DM") && (
         <div className="space-y-4">
           <ScreeningWrapper type={selectedType} />
           <ScreeningScoringWrapper type={selectedType} />
         </div>
-      )}
+      )} */}
 
       {/* ✅ Screening DASS (khusus Kesehatan Mental) */}
       {type === "mental-health" && (
