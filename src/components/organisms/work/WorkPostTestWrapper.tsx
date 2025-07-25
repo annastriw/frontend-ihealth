@@ -1,3 +1,4 @@
+// src/components/organisms/work/WorkPostTestWrapper.tsx
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -81,7 +82,8 @@ export default function WorkPostTestWrapper({ id }: WorkPostTestWrapperProps) {
               onBack={() => {
                 if (selectedQuestionIndex > 0) {
                   setSelectedQuestionIndex((prev) => prev - 1);
-                }
+                } else {
+                  router.back();}
               }}
               currentIndex={selectedQuestionIndex}
               totalQuestions={questions.length}
