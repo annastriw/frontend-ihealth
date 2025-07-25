@@ -734,6 +734,8 @@ export default function MedicalDiabetesMelitusScreeningPage() {
 
             {/* Action Buttons */}
             <div className="flex justify-end gap-3">
+              {/*
+              // Disembunyikan sementara
               <button
                 type="button"
                 onClick={viewDashboard}
@@ -742,6 +744,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                 <TrendingUp className="h-4 w-4" />
                 Lihat Dashboard
               </button>
+              */}
               <button
                 type="button"
                 onClick={clearPatient}
