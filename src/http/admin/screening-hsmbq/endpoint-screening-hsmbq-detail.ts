@@ -1,19 +1,20 @@
 // src/http/admin/screening-hsmbq/endpoint-screening-hsmbq-detail.ts
-import axios from "axios";
+
+import { UseQueryOptions, useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+
+import { api } from "@/lib/axios";
 import { ScreeningHSMBQDetail } from "@/types/screening-hsmbq/screening-hsmbq-detail";
 
 export async function getScreeningHSMBQDetail(
   id: string,
   token: string,
 ): Promise<ScreeningHSMBQDetail> {
-  const res = await axios.get(
-    `http://localhost:8000/api/admin/screening-hsmbq-histories/${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  const res = await api.get(`/api/admin/screening-hsmbq-histories/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
+  });
 
   const data = res.data.data;
 
