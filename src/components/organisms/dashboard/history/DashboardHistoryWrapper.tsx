@@ -82,12 +82,16 @@ export default function DashboardHistoryWrapper() {
         className="space-y-2"
         onValueChange={(value) => setSelectedTab(value)}
       >
-        <TabsList className="grid w-full max-w-[630px] grid-cols-7">
+        <TabsList className="grid w-full max-w-[630px] grid-cols-5">
+          {/* Disembunyikan sementara karena belum digunakan */}
+          {/*
           <TabsTrigger value="screening">Screening</TabsTrigger>
           <TabsTrigger value="screening-scoring">Scr Scoring</TabsTrigger>
-          <TabsTrigger value="dass-21">DASS-21</TabsTrigger>
+          */}
+          
+          <TabsTrigger value="dsmq">DSMQ</TabsTrigger>
           <TabsTrigger value="hsmbq">HSMBQ</TabsTrigger>
-          <TabsTrigger value="dsmq">DSMQ</TabsTrigger> {/* ✅ Tambah ini */}
+          <TabsTrigger value="dass-21">DASS-21</TabsTrigger>
           <TabsTrigger value="pre-test">Pre Test</TabsTrigger>
           <TabsTrigger value="post-test">Post Test</TabsTrigger>
         </TabsList>

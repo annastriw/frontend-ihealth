@@ -253,7 +253,8 @@ export function AppSidebar({ session }: AppSidebarProps) {
                         </SidebarMenuButton>
                       </SidebarMenuItem>
 
-                      <SidebarMenuItem>
+                      {/* <SidebarMenuItem>
+                      // Disembunyikan sementara karena tidak digunakan
                         <SidebarMenuButton
                           asChild
                           className={buttonClass("/dashboard/admin/screening")}
@@ -263,9 +264,10 @@ export function AppSidebar({ session }: AppSidebarProps) {
                             <span>Screening</span>
                           </Link>
                         </SidebarMenuButton>
-                      </SidebarMenuItem>
+                      </SidebarMenuItem> */}
 
-                      <SidebarMenuItem>
+                      {/* <SidebarMenuItem>
+                      // Disembunyikan sementara karena tidak digunakan
                         <SidebarMenuButton
                           asChild
                           className={buttonClass("/dashboard/admin/screening-scoring")}
@@ -275,7 +277,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
                             <span>Screening Skoring</span>
                           </Link>
                         </SidebarMenuButton>
-                      </SidebarMenuItem>
+                      </SidebarMenuItem> */}
 
                       <SidebarMenuItem>
                         <SidebarMenuButton
