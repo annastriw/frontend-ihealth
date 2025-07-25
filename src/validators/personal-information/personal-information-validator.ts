@@ -57,6 +57,9 @@ export const personalInformationSchema = z.object({
     .min(1, "BMI harus diisi")
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
       message: "BMI harus berupa angka yang valid. Contoh: 22.3",
+    })
+    .refine((val) => Number(val) <= 50, {
+      message: "BMI tidak boleh lebih dari 50",
     }),
 
   heart_disease_history: z.enum(["0", "1"], {

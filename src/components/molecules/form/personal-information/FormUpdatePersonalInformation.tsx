@@ -53,6 +53,11 @@ export default function FormUpdatePersonalInformation() {
       enabled: status === "authenticated" && !!session?.access_token,
     }
   );
+  const toBinaryString = (val: any): "0" | "1" | undefined => {
+  if (val === 0 || val === "0") return "0";
+  if (val === 1 || val === "1") return "1";
+  return undefined;
+};
 
   const form = useForm<PersonalInformationType>({
     resolver: zodResolver(personalInformationSchema),
@@ -75,7 +80,7 @@ export default function FormUpdatePersonalInformation() {
       history_therapy: data?.data.history_therapy ?? "",
       smoking_history: data?.data.smoking_history ?? undefined,
       bmi: data?.data.bmi ?? "",
-      heart_disease_history: data?.data.heart_disease_history ?? undefined,
+      heart_disease_history: toBinaryString(data?.data.heart_disease_history),
       weight: data?.data.weight ?? "",
       height: data?.data.height ?? "",
     },
@@ -104,7 +109,8 @@ export default function FormUpdatePersonalInformation() {
     if (dateOfBirth) {
       const dob = new Date(dateOfBirth);
       const age = differenceInYears(new Date(), dob);
-      form.setValue("age", String(age));
+      form.setValue("age", String(age), { shouldValidate: true });
+      form.trigger("date_of_birth");
     }
   }, [dateOfBirth]);
 
@@ -115,12 +121,15 @@ export default function FormUpdatePersonalInformation() {
     if (!isNaN(parsedWeight) && !isNaN(parsedHeight) && parsedHeight > 0) {
       const heightInMeters = parsedHeight / 100;
       const bmi = parsedWeight / (heightInMeters * heightInMeters);
-      form.setValue("bmi", bmi.toFixed(1));
+      form.setValue("bmi", bmi.toFixed(1), { shouldValidate: true });
+      form.trigger("bmi");
     }
   }, [weight, height]);
 
   const onSubmit = (body: PersonalInformationType) => {
-    editPersonalInformationHandler({ ...body });
+    editPersonalInformationHandler({ ...body,
+      heart_disease_history: body.heart_disease_history,
+     });
   };
 
   return (
@@ -173,34 +182,28 @@ export default function FormUpdatePersonalInformation() {
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground",
-                              )}
-                            >
-                              {field.value ? (
-                                format(new Date(field.value), "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-[240px] pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground",
+                            )}
+                          >
+                            {field.value ? (
+                              format(new Date(field.value), "PPP")
+                            ) : (
+                              <span>Pilih tanggal</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
                             captionLayout="dropdown-buttons"
-                            selected={
-                              field.value ? new Date(field.value) : undefined
-                            }
+                            selected={field.value ? new Date(field.value) : undefined}
                             onSelect={(date) =>
-                              field.onChange(
-                                date ? format(date, "yyyy-MM-dd") : "",
-                              )
+                              field.onChange(date ? format(date, "yyyy-MM-dd") : "")
                             }
                             fromYear={1925}
                             toYear={2030}
@@ -208,9 +211,14 @@ export default function FormUpdatePersonalInformation() {
                         </PopoverContent>
                       </Popover>
                     </FormControl>
+
+                    {/* WAJIB ADA INI */}
+                    <FormMessage />
+
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="age"
@@ -476,7 +484,7 @@ export default function FormUpdatePersonalInformation() {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              />              
 
               <FormField
                 control={form.control}
@@ -484,13 +492,12 @@ export default function FormUpdatePersonalInformation() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Riwayat Penyakit Jantung{" "}
-                      <span className="text-red-500">*</span>
+                      Riwayat Penyakit Jantung <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value}
+                        value={field.value !== undefined ? String(field.value) : ""}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Pilih riwayat penyakit jantung" />
@@ -508,7 +515,7 @@ export default function FormUpdatePersonalInformation() {
                   </FormItem>
                 )}
               />
-              
+
 
               <FormField
                 control={form.control}

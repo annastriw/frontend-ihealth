@@ -103,11 +103,12 @@ useEffect(() => {
   if (!isNaN(weightNum) && !isNaN(heightNum) && heightNum > 0) {
     const heightInMeters = heightNum / 100;
     const bmi = weightNum / (heightInMeters * heightInMeters);
-    form.setValue("bmi", bmi.toFixed(1));
+    const bmiFormatted = bmi.toFixed(1);
+
+    form.setValue("bmi", bmiFormatted, { shouldValidate: true });
+    form.trigger("bmi"); // ⬅️ ini penting supaya error langsung muncul
   }
 }, [weight, height]);
-
-
 
   const onSubmit = (body: PersonalInformationType) => {
     addNewQuestionTalkHandler({ ...body });
