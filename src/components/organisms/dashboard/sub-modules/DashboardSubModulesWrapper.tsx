@@ -1,3 +1,4 @@
+// src/components/organisms/dashboard/sub-modules/DashboardSubModulesWrapper.tsx
 "use client";
 
 import CardListModuleContent from "@/components/molecules/card/CardListModuleContent";
@@ -45,18 +46,10 @@ export default function DashboardSubModulesWrapper({ id }: DashboardSubModulesWr
     { enabled: status === "authenticated" }
   );
 
-  // Identifikasi pretest yang sudah selesai
-  const preTestIds = preTest?.data.map((p) => p.id) || [];
-
-  const completedPreTests =
-    historyPreTest?.data.filter((h) => preTestIds.includes(h.pre_test.id)) || [];
-
-  const isPreTestCompleted = completedPreTests.length === preTestIds.length;
+  const isLocked = data?.data?.isLocked ?? true;
 
   return (
     <div>
-      
-
       <div className="space-y-4">
         {/* Pretest */}
         <CardListPreTest
@@ -65,19 +58,19 @@ export default function DashboardSubModulesWrapper({ id }: DashboardSubModulesWr
           history={historyPreTest?.data || []}
         />
 
-        {/* Materi (terkunci jika pretest belum semua dikerjakan) */}
+        {/* Materi - tetap tampil meskipun terkunci */}
         <CardListModuleContent
           data={data?.data.module_contents || []}
           isLoading={isPending}
-          isLocked={!isPreTestCompleted}
+          isLocked={isLocked}
         />
 
-        {/* Posttest (juga terkunci jika pretest belum selesai semua) */}
+        {/* Posttest - tetap tampil meskipun terkunci */}
         <CardListPostTest
           data={postTest?.data || []}
           isLoading={postTestIsPending}
           history={historyPostTest?.data || []}
-          isLocked={!isPreTestCompleted}
+          isLocked={isLocked}
         />
       </div>
     </div>

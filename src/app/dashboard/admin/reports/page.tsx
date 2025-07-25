@@ -1,5 +1,5 @@
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
-import DashboardAdminReportWrapper from "@/components/organisms/dashboard/admin/reports/DashboardAdminReportsWrappper";
+import DashboardAdminReportWrapper from "@/components/organisms/dashboard/admin/reports/DashboardAdminReportsWrapper";
 
 export default function DashboardAdminReportsPage() {
   return (

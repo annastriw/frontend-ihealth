@@ -28,6 +28,7 @@ export type SubModules = {
   description: string;
   created_at: Date;
   updated_at: Date;
+  isLocked: boolean;
   module: Modules;
   module_contents: ModuleContent[];
 };

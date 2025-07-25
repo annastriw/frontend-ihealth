@@ -4,6 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
+
 import {
   Form,
   FormControl,
@@ -172,7 +173,7 @@ useEffect(() => {
                               variant={"outline"}
                               className={cn(
                                 "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground",
+                                !field.value && "text-muted-foreground"
                               )}
                             >
                               {field.value ? (
@@ -191,11 +192,13 @@ useEffect(() => {
                             selected={
                               field.value ? new Date(field.value) : undefined
                             }
-                            onSelect={(date) =>
-                              field.onChange(
-                                date ? format(date, "yyyy-MM-dd") : "",
-                              )
-                            }
+                            onSelect={(date) => {
+                              const formatted = date ? format(date, "yyyy-MM-dd") : "";
+                              field.onChange(formatted);
+
+                              // ⬇️ Tambahkan ini supaya validasi langsung berjalan
+                              form.trigger("date_of_birth");
+                            }}
                             fromYear={1925}
                             toYear={2030}
                           />
@@ -206,6 +209,7 @@ useEffect(() => {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="age"

@@ -38,9 +38,9 @@ export default function BreadcrumbWorkScoring({
             <Image
               src="/images/assets/bg-about-us.png"
               alt="Screening"
-              width={37}
-              height={37}
-              className="hidden md:block"
+              width={48}
+              height={48}
+              className="hidden md:block w-12 h-12 object-contain"
             />
             <h1 className="line-clamp-2 text-sm sm:text-base font-semibold uppercase">
               {data.name}

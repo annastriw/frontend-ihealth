@@ -56,17 +56,18 @@ export default function NavButton({ links }: NavHeaderProps) {
           </SheetTrigger>
 
           <SheetContent className="flex flex-col">
-            <div className="mx-auto my-8">
-              <Link href={"/"} className="flex items-center gap-2">
-                <Image
-                  src={"/images/assets/bg-about-us.png"}
-                  alt="iHealth Edu"
-                  width={37}
-                  height={37}
-                />
-                <h1 className="font-bold">iHealth Edu</h1>
-              </Link>
-            </div>
+          <div className="mx-auto my-8">
+            <Link href="/" className="flex items-center gap-2">
+              <Image
+                src="/images/assets/bg-about-us.png"
+                alt="iHealth Edu"
+                width={48}
+                height={48}
+                className="w-12 h-12 object-contain"
+              />
+              <h1 className="font-bold text-base">iHealth Edu</h1>
+            </Link>
+          </div>
             {session ? (
               <div className="w-full gap-2 px-4">
                 <Link href={"/dashboard"}>

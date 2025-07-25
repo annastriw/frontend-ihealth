@@ -29,9 +29,11 @@ export default function DashboardAdminDiscussionWrapper() {
     <>
       <div className="space-y-4">
         <div>
+          {/* 
+          // Disembunyikan sementara karena belum digunakan
           <Button onClick={handleDialogCreateDiscussionOpen}>
             <Plus /> Tambah Topik Diskusi
-          </Button>
+          </Button> */}
         </div>
         <DataTable
           data={data?.data ?? []}
