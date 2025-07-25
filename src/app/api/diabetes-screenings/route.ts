@@ -110,6 +110,15 @@ export async function GET(request: NextRequest) {
       endpoint: endpoint
     });
 
+    // START OF MODIFIED CODE
+    if (data && Array.isArray(data.data)) {
+      data.data = data.data.map((item: any) => ({
+        ...item,
+        // Pastikan patient_name selalu string, dengan fallback yang lebih kuat
+        patient_name: item.name || `Pasien ${item.name || item.id || "Tidak Diketahui"}`,
+      }))
+    }
+    
     return NextResponse.json(data);
 
   } catch (error: any) {
