@@ -10,7 +10,7 @@ export async function getScreeningDASSDetail(
   id: string,
   token: string,
 ): Promise<ScreeningDASSDetail> {
-  const res = await api.get(`/api/screening-dass-histories/${id}`, {
+  const res = await api.get(`/screening-dass-histories/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

@@ -10,7 +10,7 @@ export async function getScreeningHSMBQDetail(
   id: string,
   token: string,
 ): Promise<ScreeningHSMBQDetail> {
-  const res = await api.get(`/api/screening-hsmbq-histories/${id}`, {
+  const res = await api.get(`/screening-hsmbq-histories/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
