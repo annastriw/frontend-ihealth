@@ -1,20 +1,20 @@
 // src/http/admin/screening-dsmq/endpoint-screening-dsmq-detail.ts
 
-import axios from "axios";
+import { UseQueryOptions, useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+
+import { api } from "@/lib/axios";
 import { ScreeningDSMQDetail } from "@/types/screening-dsmq/screening-dsmq-detail";
 
 export async function getScreeningDSMQDetail(
   id: string,
   token: string,
 ): Promise<ScreeningDSMQDetail> {
-  const res = await axios.get(
-    `http://localhost:8000/api/admin/screening-dsmq-histories/${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  const res = await api.get(`/api/admin/screening-dsmq-histories/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
+  });
 
   const data = res.data.data;
 
