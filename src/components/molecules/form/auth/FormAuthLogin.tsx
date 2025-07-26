@@ -61,7 +61,7 @@ export default function FormAuthLogin() {
   return (
     <Card className="w-full border-0 shadow-none dark:bg-transparent">
       <CardHeader className="text-center space-y-1">
-        <CardTitle className="text-2xl font-bold text-primary tracking-tight">
+        <CardTitle className="text-2xl font-bold text-black tracking-tight">
           Masuk
         </CardTitle>
         <CardDescription className="text-muted-foreground">
