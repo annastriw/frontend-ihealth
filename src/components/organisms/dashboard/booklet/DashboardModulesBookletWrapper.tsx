@@ -65,10 +65,14 @@ export default function DashboardModulesBookletWrapper({
 </TabsList>
 
           <TabsContent value="content">
-            <div
-              dangerouslySetInnerHTML={{ __html: data?.data.content ?? "" }}
-            />
-          </TabsContent>
+  <div className="rounded-xl border bg-white px-6 py-6 shadow-sm">
+    <div
+      className="prose prose-base max-w-none text-gray-800 prose-headings:font-semibold prose-headings:text-primary prose-a:text-primary hover:prose-a:underline prose-img:rounded-lg"
+      dangerouslySetInnerHTML={{ __html: data?.data.content ?? "" }}
+    />
+  </div>
+</TabsContent>
+
           <TabsContent value="module-contents">
             <div className="space-y-4">
               {filePath && (
