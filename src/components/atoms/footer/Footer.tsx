@@ -1,24 +1,24 @@
+"use client";
+
+import { Instagram, Music2 } from "lucide-react";
+
 export default function Footer() {
   return (
-    <footer className="relative mt-20 w-full overflow-hidden bg-black">
-      {/* Background Image */}
+    <footer className="relative mt-20 w-full overflow-hidden bg-black text-white">
+      {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url(/images/assets/bg-footer.png)",
-        }}
+        style={{ backgroundImage: "url(/images/assets/bg-footer.png)" }}
       />
-
-      {/* Overlay turquoise transparan */}
       <div className="absolute inset-0 bg-[#0bb79acc]" />
 
-      {/* Konten Footer */}
-      <div className="relative z-10 w-full px-6 py-10 text-white sm:px-10 md:px-12 lg:px-16">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-y-10 gap-x-6 text-sm md:grid-cols-2 lg:grid-cols-3">
-          {/* Kolom 1 */}
-          <div className="break-words">
-            <h2 className="mb-2 text-base font-semibold sm:text-lg">KKN-T IBDU 26 UNDIP</h2>
-            <p className="text-white/90 text-sm sm:text-base">
+      {/* Konten */}
+      <div className="relative z-10 w-full px-6 py-12 sm:px-10 md:px-14 lg:px-20">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Info KKN */}
+          <div>
+            <h2 className="mb-2 text-lg font-semibold sm:text-xl">KKN-T IBDU 26 UNDIP</h2>
+            <p className="text-white/90 text-sm sm:text-base leading-relaxed">
               Kelurahan Pedalangan & Padangsari
               <br />
               Kecamatan Banyumanik
@@ -27,37 +27,39 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Kolom 2 */}
-          <div className="break-words">
-            <h2 className="mb-2 text-base font-semibold sm:text-lg">Ikuti Kami</h2>
-            <ul className="space-y-1 text-white/90 text-sm sm:text-base">
-              <li>
+          {/* Sosial Media */}
+          <div>
+            <h2 className="mb-2 text-lg font-semibold sm:text-xl">Ikuti Kami</h2>
+            <ul className="space-y-3 text-white/90 text-sm sm:text-base">
+              <li className="flex items-center gap-2 hover:text-white transition">
+                <Instagram className="h-5 w-5" />
                 <a
                   href="https://instagram.com/ihealthkkn26"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition hover:text-white hover:underline"
+                  className="hover:underline"
                 >
-                  Instagram: @ihealthkkn26
+                  @ihealthkkn26
                 </a>
               </li>
-              <li>
+              <li className="flex items-center gap-2 hover:text-white transition">
+                <Music2 className="h-5 w-5" />
                 <a
                   href="https://www.tiktok.com/@kknt.sehatademsari"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition hover:text-white hover:underline"
+                  className="hover:underline"
                 >
-                  TikTok: @kknt.sehatademsari
+                  @kknt.sehatademsari
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Kolom 3 */}
-          <div className="break-words">
-            <h2 className="mb-2 text-base font-semibold sm:text-lg">Hak Cipta</h2>
-            <p className="text-white/90 text-sm sm:text-base">
+          {/* Hak Cipta */}
+          <div>
+            <h2 className="mb-2 text-lg font-semibold sm:text-xl">Hak Cipta</h2>
+            <p className="text-white/90 text-sm sm:text-base leading-relaxed">
               © {new Date().getFullYear()} KKN Tim 26 Universitas Diponegoro.
               <br />
               Seluruh hak cipta dilindungi undang-undang.
@@ -65,8 +67,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Footer bawah */}
-        <div className="mt-10 border-t border-white/50 pt-4 text-center text-xs text-white/80 sm:text-sm">
+        {/* Bawah */}
+        <div className="mt-12 border-t border-white/30 pt-4 text-center text-xs sm:text-sm text-white/70">
           Dibuat oleh Tim IT KKN-T IBDU 26 UNDIP 💻
         </div>
       </div>

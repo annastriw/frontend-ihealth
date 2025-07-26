@@ -1,91 +1,135 @@
+"use client";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 
 export default function DashboardGeneral() {
   return (
-    <div>
+    <section className="w-full px-4 py-10 md:px-12 lg:px-32 xl:px-52 2xl:px-64 bg-white">
       <Tabs defaultValue="hipertensi" className="w-full">
-        <TabsList className="mb-4 grid w-fit grid-cols-3">
-          <TabsTrigger value="hipertensi">
-            <span className="block md:hidden">Hipertensi</span>
-            <span className="hidden md:block">Penjelasan Hipertensi</span>
-          </TabsTrigger>
-          <TabsTrigger value="diabetes">
-            <span className="block md:hidden">Diabetes</span>
-            <span className="hidden md:block">Penjelasan Diabetes Melitus</span>
-          </TabsTrigger>
-          <TabsTrigger value="mental">
-            <span className="block md:hidden">Mental</span>
-            <span className="hidden md:block">Penjelasan Kesehatan Mental</span>
-          </TabsTrigger>
+        {/* Tabs Trigger */}
+        <TabsList className="mx-auto mb-10 flex flex-wrap items-center justify-center gap-3 rounded-xl bg-gray-100 px-4 py-2 shadow-md backdrop-blur-sm">
+          {[
+            { value: "hipertensi", short: "Hipertensi", full: "Penjelasan Hipertensi" },
+            { value: "diabetes", short: "Diabetes", full: "Penjelasan Diabetes Melitus" },
+            { value: "mental", short: "Mental", full: "Penjelasan Kesehatan Mental" },
+          ].map((tab) => (
+            <TabsTrigger
+              key={tab.value}
+              value={tab.value}
+              className="rounded-md px-5 py-2 text-sm font-semibold text-black transition-all duration-200 hover:bg-primary/20 data-[state=active]:bg-primary data-[state=active]:text-black"
+            >
+              <span className="block md:hidden">{tab.short}</span>
+              <span className="hidden md:block">{tab.full}</span>
+            </TabsTrigger>
+          ))}
         </TabsList>
 
+        {/* HIPERTENSI */}
         <TabsContent value="hipertensi">
-          <div className="space-y-4 text-justify">
+          <article className="space-y-6 px-2 md:px-4 text-justify leading-relaxed tracking-wide text-gray-800">
             <Image
-              src={"/images/content/hipertensi.jpg"}
+              src="/images/content/hipertensi.jpg"
               alt="Hipertensi"
-              width={1000}
-              height={1000}
-              loading="lazy"
-              className="rounded-xl md:max-w-[700px]"
+              width={1200}
+              height={800}
+              className="mx-auto rounded-xl shadow-lg"
             />
-            <div>
-              Hipertensi adalah kondisi ketika tekanan darah dalam arteri meningkat secara kronis. Ini sering disebut sebagai “silent killer” karena dapat tidak menunjukkan gejala tetapi menyebabkan komplikasi serius seperti penyakit jantung, stroke, dan gagal ginjal.
-            </div>
-            <div>
-              Faktor risiko hipertensi meliputi pola makan tinggi garam, kurang aktivitas fisik, stres, merokok, dan faktor genetik. Hipertensi dapat dicegah dan dikontrol dengan perubahan gaya hidup sehat serta pengobatan jika diperlukan.
-            </div>
-            <div>
-              Pemantauan tekanan darah secara rutin, mengurangi asupan garam, menjaga berat badan ideal, serta mengelola stres merupakan bagian penting dari pencegahan dan penanganan hipertensi.
-            </div>
-          </div>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-green-600 bg-clip-text text-transparent">
+  Apa Itu Hipertensi?
+</h2>
+
+            <p>
+              Hipertensi, atau tekanan darah tinggi, adalah kondisi kronis di mana tekanan darah terhadap dinding arteri meningkat. Sering kali disebut “silent killer” karena tidak memiliki gejala yang nyata.
+            </p>
+            <p>
+              Jika dibiarkan, hipertensi dapat memicu komplikasi serius seperti stroke, penyakit jantung, dan gagal ginjal. Nilai tekanan darah ≥140/90 mmHg dianggap sebagai hipertensi.
+            </p>
+            <h3 className="text-xl font-semibold">Pencegahan dan Pengelolaan</h3>
+            <ul className="list-disc list-inside mt-2">
+              <li>Konsumsi makanan rendah garam dan lemak</li>
+              <li>Olahraga teratur minimal 30 menit per hari</li>
+              <li>Kelola stres dengan teknik relaksasi</li>
+              <li>Hindari merokok dan alkohol</li>
+              <li>Rutin memeriksa tekanan darah</li>
+            </ul>
+          </article>
         </TabsContent>
 
+        {/* DIABETES */}
         <TabsContent value="diabetes">
-          <div className="space-y-4 text-justify">
+          <article className="space-y-6 px-2 md:px-4 text-justify leading-relaxed tracking-wide text-gray-800">
             <Image
-              src={"/images/content/diabetes.jpg"}
+              src="/images/content/diabetes.jpg"
               alt="Diabetes Melitus"
-              width={1000}
-              height={1000}
-              loading="lazy"
-              className="rounded-xl md:max-w-[700px]"
+              width={1200}
+              height={800}
+              className="mx-auto rounded-xl shadow-lg"
             />
-            <div>
-              Diabetes Melitus adalah gangguan metabolik kronis yang ditandai dengan tingginya kadar gula darah. Ini terjadi karena gangguan produksi insulin atau resistensi terhadap insulin.
-            </div>
-            <div>
-              Terdapat dua tipe utama: Diabetes Tipe 1 yang biasanya terjadi sejak anak-anak dan membutuhkan insulin seumur hidup, serta Diabetes Tipe 2 yang umumnya terjadi karena pola hidup tidak sehat.
-            </div>
-            <div>
-              Manajemen diabetes melibatkan pola makan sehat, aktivitas fisik teratur, pengendalian berat badan, serta pemantauan kadar glukosa darah secara berkala. Pencegahan komplikasi memerlukan edukasi dan perawatan jangka panjang.
-            </div>
-          </div>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-green-600 bg-clip-text text-transparent">
+  Apa Itu Diabetes Melitus?
+</h2>
+
+            <p>
+              Diabetes Melitus adalah penyakit kronis yang ditandai dengan kadar gula darah tinggi. Terjadi karena tubuh tidak memproduksi atau tidak dapat menggunakan insulin dengan efektif.
+            </p>
+            <blockquote className="border-l-4 border-primary pl-4 italic text-gray-600">
+              “Gula darah yang tidak terkontrol dapat menyebabkan kerusakan jangka panjang pada berbagai organ vital.”
+            </blockquote>
+            <p>
+              Ada dua tipe utama:
+            </p>
+            <ul className="list-disc list-inside mt-2">
+              <li><strong>Tipe 1:</strong> Tidak ada produksi insulin (umumnya sejak kecil)</li>
+              <li><strong>Tipe 2:</strong> Produksi atau penggunaan insulin tidak efektif</li>
+            </ul>
+
+            <h3 className="text-xl font-semibold">Tips Menjaga Gula Darah</h3>
+            <ul className="list-disc list-inside mt-2">
+              <li>Konsumsi makanan berserat tinggi</li>
+              <li>Aktivitas fisik secara teratur</li>
+              <li>Kontrol gula darah harian</li>
+              <li>Minum obat sesuai resep dokter</li>
+              <li>Hindari stres dan tidur cukup</li>
+            </ul>
+          </article>
         </TabsContent>
 
+        {/* KESEHATAN MENTAL */}
         <TabsContent value="mental">
-          <div className="space-y-4 text-justify">
+          <article className="space-y-6 px-2 md:px-4 text-justify leading-relaxed tracking-wide text-gray-800">
             <Image
-              src={"/images/content/mental-health.jpg"}
+              src="/images/content/mental-health.jpg"
               alt="Kesehatan Mental"
-              width={1000}
-              height={1000}
-              loading="lazy"
-              className="rounded-xl md:max-w-[700px]"
+              width={1200}
+              height={800}
+              className="mx-auto rounded-xl shadow-lg"
             />
-            <div>
-              Kesehatan mental adalah kondisi kesejahteraan emosional, psikologis, dan sosial seseorang. Hal ini memengaruhi cara berpikir, merasa, bertindak, serta bagaimana seseorang mengelola stres dan berinteraksi dengan orang lain.
-            </div>
-            <div>
-              Gangguan kesehatan mental seperti depresi, kecemasan, dan stres kronis dapat berdampak negatif terhadap kualitas hidup. Faktor risiko meliputi tekanan hidup, trauma, isolasi sosial, serta kurangnya dukungan.
-            </div>
-            <div>
-              Menjaga kesehatan mental dapat dilakukan melalui komunikasi terbuka, aktivitas fisik, tidur cukup, dan mencari bantuan profesional saat dibutuhkan. Masyarakat perlu meningkatkan kesadaran dan empati terhadap isu kesehatan mental.
-            </div>
-          </div>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-green-600 bg-clip-text text-transparent">
+  Mengapa Kesehatan Mental Penting?
+</h2>
+
+            <p>
+              Kesehatan mental memengaruhi cara kita berpikir, merasa, dan bertindak. Hal ini mencakup kesejahteraan emosional, psikologis, dan sosial.
+            </p>
+            <p>
+              Gangguan mental seperti depresi dan kecemasan dapat dipicu oleh tekanan hidup, konflik, trauma, atau ketidakseimbangan biologis. Menjaga keseimbangan mental sama pentingnya dengan fisik.
+            </p>
+
+            <h3 className="text-xl font-semibold">Cara Menjaga Kesehatan Mental</h3>
+            <ul className="list-disc list-inside mt-2">
+              <li>Lakukan aktivitas menyenangkan secara rutin</li>
+              <li>Tidur cukup dan teratur</li>
+              <li>Jaga koneksi sosial</li>
+              <li>Hindari isolasi dan cari bantuan profesional bila perlu</li>
+              <li>Berlatih mindfulness atau meditasi</li>
+            </ul>
+            <p className="text-sm text-muted-foreground">
+              Dukungan sosial dan akses ke layanan psikolog adalah kunci menjaga stabilitas emosional.
+            </p>
+          </article>
         </TabsContent>
       </Tabs>
-    </div>
+    </section>
   );
 }
