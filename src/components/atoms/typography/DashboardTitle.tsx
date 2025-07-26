@@ -5,9 +5,9 @@ interface DashboardTitleProps {
 
 export default function DashboardTitle({ head, body }: DashboardTitleProps) {
   return (
-    <div className="mb-7 w-full max-w-xl">
-      <h1 className="font-paytone text-3xl">{head}</h1>
-      <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+    <div className="mb-7 w-full max-w-4xl mx-auto flex flex-col items-center text-center md:items-start md:text-left md:mx-0">
+      <h1 className="font-paytone text-3xl text-black">{head}</h1>
+      <p className="mt-2 text-sm leading-relaxed text-black/80">
         {body}
       </p>
     </div>
