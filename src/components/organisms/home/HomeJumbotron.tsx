@@ -1,43 +1,57 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function HomeJumbotron() {
   return (
-    <div className="flex items-center md:min-h-screen">
-      <div className="flex w-full flex-col items-center gap-16 md:min-h-screen lg:flex-row lg:items-center">
-        <div className="flex w-full flex-col gap-10 text-start md:text-center lg:w-1/2 lg:text-start">
-          <h1 className="font-paytone mt-12 text-3xl font-bold uppercase md:leading-[72px] lg:-mt-24 lg:text-5xl">
-            <span>Platform Edukasi</span>
-            <span className="from-primary to-secondary inline-block bg-gradient-to-r bg-clip-text text-4xl text-transparent md:text-6xl">
+    <section className="w-full bg-white px-4 py-16 sm:px-6 md:px-10 lg:px-20">
+      <div className="mx-auto flex max-w-7xl flex-col-reverse items-center gap-16 md:flex-col-reverse lg:flex-row lg:items-center">
+        {/* Text Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="flex flex-1 flex-col items-center text-center lg:items-start lg:text-left"
+        >
+          <h1 className="font-paytone text-3xl font-bold uppercase leading-snug text-gray-900 sm:text-4xl md:text-5xl lg:text-6xl">
+            Platform Edukasi{" "}
+            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               iHealth Edu
             </span>
           </h1>
-          <p className="text-md">
-            iHealth Edu adalah website edukasi kesehatan yang menyediakan informasi
-            terpercaya mengenai Hipertensi, Diabetes Melitus, dan Kesehatan Mental.
-            Konten kami disusun berbasis ilmu keperawatan dan psikologi agar mudah
-            dipahami oleh pasien, keluarga, dan masyarakat luas. Kami bertujuan untuk
-            meningkatkan kesadaran, pengetahuan, dan kepedulian terhadap kesehatan
-            secara menyeluruh.
+          <p className="mt-4 max-w-md text-base text-gray-600 sm:text-lg md:text-xl lg:max-w-xl">
+            iHealth Edu adalah website edukasi kesehatan yang menyediakan informasi terpercaya mengenai Hipertensi, Diabetes Melitus, dan Kesehatan Mental.
+            Disusun berbasis ilmu keperawatan & psikologi, mudah dipahami pasien, keluarga, dan masyarakat luas.
           </p>
-          <div>
-            <Link href={"/login"}>
-              <Button size={"lg"} className="min-w-[200px]">
-                Coba Sekarang
-              </Button>
+          <div className="mt-6">
+            <Link href="/login">
+              <Button className="w-full sm:w-auto bg-[#00b39f] text-white px-6 py-2 rounded-md font-semibold transition-transform duration-200 hover:scale-105 active:scale-95">
+  Coba Sekarang
+</Button>
             </Link>
           </div>
-        </div>
-        <div className="hidden w-full md:block lg:w-1/2">
+        </motion.div>
+
+        {/* Image Section */}
+        <motion.div
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="flex flex-1 items-center justify-center"
+        >
           <Image
-            src={"/images/assets/bg-hero.png"}
+            src="/images/assets/bg-hero.png"
             alt="Hero iHealth Edu"
-            width={1024}
-            height={1024}
+            width={512}
+            height={512}
+            className="w-full max-w-[320px] sm:max-w-[400px] md:max-w-[480px] lg:max-w-[550px]"
+            priority
           />
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </section>
   );
 }
