@@ -1,3 +1,4 @@
+// src/http/auth/get-auth.ts
 import { api } from "@/lib/axios";
 import { User } from "@/types/user/user";
 

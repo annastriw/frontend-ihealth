@@ -1,7 +1,6 @@
 // src/lib/auth.ts
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getAuthApiHandler } from "@/http/auth/get-auth";
 import { loginApiHandler } from "@/http/auth/login";
 import { User as Auth } from "@/types/user/user";
 import { LoginType } from "@/validators/auth/login-validator";
@@ -14,6 +13,11 @@ declare module "next-auth" {
   interface Session {
     user: Auth;
     access_token: string;
+  }
+
+  interface JWT {
+    access_token?: string;
+    user?: Auth;
   }
 }
 
@@ -33,29 +37,29 @@ export const authOptions: NextAuthOptions = {
           const user = await loginApiHandler({ login, password });
           return user;
         } catch (error: any) {
-          // Tangkap pesan dari backend
           throw new Error(error.response?.data?.message || "Login gagal");
         }
       },
     }),
   ],
   callbacks: {
+    // Simpan access_token dan user ke JWT saat login
     jwt: async ({ token, user }) => {
       if (user) {
         token.access_token = user.token;
-        token.sub = user.id;
+        token.user = user;
       }
       return token;
     },
-    session: async ({ session, token }) => {
-      const access_token = token.access_token as string;
-      const auth = await getAuthApiHandler(access_token);
 
-      return { ...session, user: auth, access_token };
+    // Ambil user dan access_token dari JWT, tanpa request ulang ke backend
+    session: async ({ session, token }) => {
+      session.access_token = token.access_token as string;
+      session.user = token.user as Auth;
+      return session;
     },
   },
 };
 
 const authHandler = NextAuth(authOptions);
-
 export default authHandler;
