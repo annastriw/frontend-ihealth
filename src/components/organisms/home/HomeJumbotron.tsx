@@ -30,14 +30,14 @@ export default function HomeJumbotron() {
           </p>
           <div className="mt-6">
             <Link href="/login">
-              <Button className="w-full rounded-md bg-[#00b39f] px-6 py-2 font-semibold text-white transition-transform duration-200 hover:scale-105 active:scale-95 sm:w-auto">
+              <Button className="w-full px-6 py-2 text-base transition-transform duration-300 hover:scale-105 sm:w-auto">
                 Coba Sekarang
               </Button>
             </Link>
           </div>
         </motion.div>
 
-        {/* Image Section with faster hover animation */}
+        {/* Image Section */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}

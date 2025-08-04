@@ -1,31 +1,102 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import NavLink from "@/components/atoms/nav/NavLink";
 import NavLogo from "@/components/atoms/nav/NavLogo";
 import NavButton from "@/components/atoms/nav/NavButton";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const links = useMemo(() => [
-    { href: "/about-us", label: "Tentang Kami", active: pathname === "/about-us" },
-    { href: "/dashboard/modules", label: "Materi", active: pathname.startsWith("/dashboard/modules") },
-    { href: "/dashboard/screening", label: "Screening", active: pathname.startsWith("/dashboard/screening") },
-  ], [pathname]);
+  // Tambahkan efek scroll untuk memperkuat bayangan navbar
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const links = useMemo(
+    () => [
+      {
+        href: "/about-us",
+        label: "Tentang Kami",
+        active: pathname === "/about-us",
+      },
+      {
+        href: "/dashboard/modules",
+        label: "Materi",
+        active: pathname.startsWith("/dashboard/modules"),
+      },
+      {
+        href: "/dashboard/screening",
+        label: "Screening",
+        active: pathname.startsWith("/dashboard/screening"),
+      },
+    ],
+    [pathname],
+  );
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-white/80 border-b border-muted shadow-md transition-all duration-300">
+    <motion.header
+      initial={{ y: -40, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className={`sticky top-0 z-50 w-full border-b border-gray-200 bg-white/70 backdrop-blur-md ${
+        isScrolled ? "shadow-md" : "shadow-sm"
+      } transition-shadow duration-300`}
+    >
       <div className="mx-auto flex max-w-screen-xl items-center justify-between px-4 py-3 md:px-8 md:py-4">
-        <NavLogo />
-        <nav className="hidden md:flex items-center gap-8">
+        {/* Logo dengan animasi masuk */}
+        <motion.div
+          initial={{ x: -30, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.1 }}
+        >
+          <NavLogo />
+        </motion.div>
+
+        {/* Link navigasi dengan efek stagger */}
+        <motion.nav
+          className="hidden items-center gap-8 md:flex"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.1 },
+            },
+          }}
+        >
           {links.map((link) => (
-            <NavLink key={link.href} {...link} />
+            <motion.div
+              key={link.href}
+              variants={{
+                hidden: { opacity: 0, y: -10 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+            >
+              <NavLink {...link} />
+            </motion.div>
           ))}
-        </nav>
-        <NavButton links={links} />
+        </motion.nav>
+
+        {/* Tombol responsif dengan animasi kanan */}
+        <motion.div
+          initial={{ x: 30, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <NavButton links={links} />
+        </motion.div>
       </div>
-    </header>
+    </motion.header>
   );
 }

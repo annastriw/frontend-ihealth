@@ -1,6 +1,7 @@
 // root: /frontend-ihealth/tailwind.config.ts
 import type { Config } from "tailwindcss";
-import typography from "@tailwindcss/typography"; // import plugin
+import typography from "@tailwindcss/typography";
+import scrollbarHide from "tailwind-scrollbar-hide";
 
 const config: Config = {
   content: [
@@ -11,20 +12,14 @@ const config: Config = {
   theme: {
     extend: {
       backgroundImage: {
-        'auth-pattern': "url('/images/assets/bg-about-us.png')",
-      },
-      colors: {
-        primary: "#22c55e", // hijau iHealth
-        secondary: "#facc15", // opsional: kuning contoh
+        "auth-pattern": "url('/images/assets/bg-about-us.png')",
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"], // contoh font modern
+        sans: ["Inter", "sans-serif"],
       },
     },
   },
-  plugins: [
-    typography, // aktifkan plugin typography
-  ],
+  plugins: [typography, scrollbarHide],
 };
 
 export default config;
