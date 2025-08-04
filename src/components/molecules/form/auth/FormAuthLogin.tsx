@@ -26,22 +26,31 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function FormAuthLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
   const form = useForm<LoginType>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { login: "", password: "" },
+    defaultValues: {
+      login: "",
+      password: "",
+    },
     mode: "onChange",
   });
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
   const onSubmit = async (body: LoginType) => {
     setIsLoading(true);
-    const res = await signIn("credentials", { ...body, redirect: false });
+    const res = await signIn("credentials", {
+      ...body,
+      redirect: false,
+    });
     setIsLoading(false);
 
     if (!res || res.error) {
@@ -60,17 +69,19 @@ export default function FormAuthLogin() {
 
   return (
     <Card className="w-full border-0 shadow-none dark:bg-transparent">
-      <CardHeader className="text-center space-y-1">
-        <CardTitle className="text-2xl font-bold text-black tracking-tight">
+      <CardHeader className="space-y-1 text-center">
+        <CardTitle className="text-2xl font-bold tracking-tight text-black">
           Masuk
         </CardTitle>
         <CardDescription className="text-muted-foreground">
           Selamat datang! Masukkan email dan password Anda.
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         <Form {...form}>
           <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
+            {/* Input Login */}
             <FormField
               control={form.control}
               name="login"
@@ -78,16 +89,14 @@ export default function FormAuthLogin() {
                 <FormItem>
                   <FormLabel>Email / Username / Nomor Telepon</FormLabel>
                   <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="m@example.com"
-                      {...field}
-                    />
+                    <Input type="text" placeholder="m@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* Input Password dengan toggle visibility */}
             <FormField
               control={form.control}
               name="password"
@@ -122,19 +131,35 @@ export default function FormAuthLogin() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isLoading}>
+
+            {/* Tombol Masuk dengan animasi scale */}
+            <motion.button
+              type="submit"
+              className="bg-primary w-full rounded-md px-4 py-2 text-sm font-medium text-white transition-all"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              disabled={isLoading}
+            >
               {isLoading ? "Loading..." : "Masuk"}
-            </Button>
+            </motion.button>
           </form>
         </Form>
+
+        {/* Link Daftar Sekarang dengan animasi scale */}
         <div className="mt-6 text-center text-sm">
           Belum punya akun?{" "}
-          <Link
-            href="/register"
-            className="text-primary underline underline-offset-4"
+          <motion.span
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-block"
           >
-            Daftar Sekarang
-          </Link>
+            <Link
+              href="/register"
+              className="text-primary hover:text-secondary underline underline-offset-4 transition-colors"
+            >
+              Daftar Sekarang
+            </Link>
+          </motion.span>
         </div>
       </CardContent>
     </Card>

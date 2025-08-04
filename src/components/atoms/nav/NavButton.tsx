@@ -7,6 +7,7 @@ import { Menu } from "lucide-react";
 import NavLink from "./NavLink";
 import NavLogo from "./NavLogo";
 import { useSession } from "next-auth/react";
+import { motion } from "framer-motion";
 
 interface NavHeaderProps {
   links: { href: string; label: string; active?: boolean }[];
@@ -15,23 +16,42 @@ interface NavHeaderProps {
 export default function NavButton({ links }: NavHeaderProps) {
   const { data: session } = useSession();
 
+  const MotionButton = motion(Button);
+
   return (
     <>
       {/* Tombol untuk desktop */}
-      <div className="hidden md:flex items-center gap-4">
+      <div className="hidden items-center gap-4 md:flex">
         {session ? (
           <Link href="/dashboard">
-            <Button size="sm">Dashboard</Button>
+            <MotionButton
+              size="sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Dashboard
+            </MotionButton>
           </Link>
         ) : (
           <>
             <Link href="/login">
-              <Button variant="outline" size="sm">
+              <MotionButton
+                variant="outline"
+                size="sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 Masuk
-              </Button>
+              </MotionButton>
             </Link>
             <Link href="/register">
-              <Button size="sm">Daftar</Button>
+              <MotionButton
+                size="sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Daftar
+              </MotionButton>
             </Link>
           </>
         )}
@@ -44,13 +64,13 @@ export default function NavButton({ links }: NavHeaderProps) {
             <Button
               variant="outline"
               size="icon"
-              className="bg-white border-0 shadow-none"
+              className="border-0 bg-white shadow-none"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
 
-          <SheetContent className="flex flex-col pt-6 space-y-6">
+          <SheetContent className="flex flex-col space-y-6 pt-6">
             {/* Logo */}
             <div className="px-4">
               <NavLogo />
@@ -67,17 +87,34 @@ export default function NavButton({ links }: NavHeaderProps) {
             <div className="px-4">
               {session ? (
                 <Link href="/dashboard">
-                  <Button className="w-full">Dashboard</Button>
+                  <MotionButton
+                    className="w-full"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Dashboard
+                  </MotionButton>
                 </Link>
               ) : (
                 <div className="flex gap-2">
                   <Link href="/login" className="w-full">
-                    <Button variant="outline" className="w-full">
+                    <MotionButton
+                      variant="outline"
+                      className="w-full"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
                       Masuk
-                    </Button>
+                    </MotionButton>
                   </Link>
                   <Link href="/register" className="w-full">
-                    <Button className="w-full">Daftar</Button>
+                    <MotionButton
+                      className="w-full"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Daftar
+                    </MotionButton>
                   </Link>
                 </div>
               )}

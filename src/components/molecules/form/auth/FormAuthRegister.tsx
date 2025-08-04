@@ -57,7 +57,10 @@ export default function FormAuthRegister() {
 
   const [isDialogAgreementOpen, setIsDialogAgreementOpen] = useState(false);
   const [formData, setFormData] = useState<RegisterType | null>(null);
-  const [showPassword, setShowPassword] = useState({ main: false, confirm: false });
+  const [showPassword, setShowPassword] = useState({
+    main: false,
+    confirm: false,
+  });
   const router = useRouter();
 
   const errorMessages: Record<string, string> = {
@@ -127,14 +130,19 @@ export default function FormAuthRegister() {
       <Card className="w-full border-0 shadow-transparent">
         <div className="w-full">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold tracking-tight">Daftar</CardTitle>
+            <CardTitle className="text-2xl font-bold tracking-tight">
+              Daftar
+            </CardTitle>
             <CardDescription>
               Selamat datang! Silahkan daftar menggunakan akun anda.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
+              <form
+                className="space-y-5"
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
                 <FormField
                   control={form.control}
                   name="name"
@@ -184,14 +192,16 @@ export default function FormAuthRegister() {
                     <FormItem>
                       <FormLabel>Nomor Telepon</FormLabel>
                       <FormControl>
-                        <Input placeholder="Masukkan nomor telepon" {...field} />
+                        <Input
+                          placeholder="Masukkan nomor telepon"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* ✅ Diagnosa Medis */}
                 <FormField
                   control={form.control}
                   name="disease_type"
@@ -199,15 +209,22 @@ export default function FormAuthRegister() {
                     <FormItem>
                       <FormLabel>Diagnosa Medis</FormLabel>
                       <FormControl>
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Pilih jenis diagnosa medis" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="DM">Diabetes Melitus</SelectItem>
                             <SelectItem value="HT">Hipertensi</SelectItem>
-                            <SelectItem value="ALL">Diabetes Melitus dan Hipertensi</SelectItem>
-                            <SelectItem value="GENERAL">Pengguna Umum</SelectItem>
+                            <SelectItem value="ALL">
+                              Diabetes Melitus dan Hipertensi
+                            </SelectItem>
+                            <SelectItem value="GENERAL">
+                              Pengguna Umum
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -237,7 +254,11 @@ export default function FormAuthRegister() {
                             className="absolute top-1/2 right-2 -translate-y-1/2"
                             onClick={() => togglePassword("main")}
                           >
-                            {showPassword.main ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            {showPassword.main ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
                           </Button>
                         </div>
                       </FormControl>
@@ -267,7 +288,11 @@ export default function FormAuthRegister() {
                             className="absolute top-1/2 right-2 -translate-y-1/2"
                             onClick={() => togglePassword("confirm")}
                           >
-                            {showPassword.confirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            {showPassword.confirm ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
                           </Button>
                         </div>
                       </FormControl>
@@ -276,15 +301,24 @@ export default function FormAuthRegister() {
                   )}
                 />
 
-                <Button type="submit" className="w-full" disabled={isPending}>
+                {/* ✅ Tombol Daftar dengan efek hover scale */}
+                <Button
+                  type="submit"
+                  disabled={isPending}
+                  className="hover:bg-primary/90 w-full transform transition-transform duration-200 hover:scale-105"
+                >
                   {isPending ? "Loading..." : "Daftar"}
                 </Button>
               </form>
             </Form>
 
+            {/* ✅ Link Masuk Sekarang dengan efek hover */}
             <div className="mt-6 text-center text-sm">
               Sudah punya akun?{" "}
-              <Link href="/login" className="text-primary underline underline-offset-4">
+              <Link
+                href="/login"
+                className="text-primary inline-block underline underline-offset-4 transition-transform duration-200 hover:scale-105"
+              >
                 Masuk Sekarang
               </Link>
             </div>
