@@ -48,7 +48,6 @@ export default function HomeIntroduction() {
       behavior: "smooth",
     });
 
-    // Update scrollDirection on edge
     if (scrollLeft + clientWidth >= scrollWidth - 20) {
       setScrollDirection("left");
     } else if (scrollLeft <= 20) {
@@ -66,13 +65,12 @@ export default function HomeIntroduction() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isHovered) scroll(scrollDirection);
-    }, 1700);
-
+    }, 4000);
     return () => clearInterval(interval);
   }, [isHovered, scrollDirection]);
 
   return (
-    <section className="relative space-y-10 py-12 md:py-20">
+    <section className="relative scroll-mt-24 space-y-6 bg-[oklch(var(--primary)/0.03)] px-4 py-6 sm:px-6 md:px-10 md:py-12 lg:px-20">
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -82,31 +80,30 @@ export default function HomeIntroduction() {
         <SectionTitle title="Penjelasan Secara Umum" />
       </motion.div>
 
-      <div className="group relative px-4 md:px-8">
-        {/* Navigasi Panah */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 left-0 z-30 hidden items-center justify-between lg:flex">
-          <div
+      <div className="group relative">
+        {/* Panah Navigasi */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 left-0 z-30 flex items-center justify-between px-2">
+          <button
             onClick={() => scroll("left")}
-            className="pointer-events-auto flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-green-300 bg-white opacity-0 shadow-sm transition-opacity duration-300 group-hover:opacity-100"
+            className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-xl border border-green-300 bg-white opacity-0 shadow-md transition-all duration-300 group-hover:opacity-100 hover:bg-green-50 hover:shadow-lg dark:bg-neutral-900"
             aria-label="Scroll kiri"
           >
-            <ChevronLeft className="h-4 w-4 text-green-600" />
-          </div>
-
-          <div
+            <ChevronLeft className="h-5 w-5 text-green-700 dark:text-green-400" />
+          </button>
+          <button
             onClick={() => scroll("right")}
-            className="pointer-events-auto flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-green-300 bg-white opacity-0 shadow-sm transition-opacity duration-300 group-hover:opacity-100"
+            className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-xl border border-green-300 bg-white opacity-0 shadow-md transition-all duration-300 group-hover:opacity-100 hover:bg-green-50 hover:shadow-lg dark:bg-neutral-900"
             aria-label="Scroll kanan"
           >
-            <ChevronRight className="h-4 w-4 text-green-600" />
-          </div>
+            <ChevronRight className="h-5 w-5 text-green-700 dark:text-green-400" />
+          </button>
         </div>
 
         {/* Gradasi */}
-        <div className="pointer-events-none absolute top-0 left-0 z-10 h-full w-10 bg-gradient-to-r from-white via-white to-transparent" />
-        <div className="pointer-events-none absolute top-0 right-0 z-10 h-full w-10 bg-gradient-to-l from-white via-white to-transparent" />
+        <div className="pointer-events-none absolute top-0 left-0 z-10 h-full w-8 bg-gradient-to-r from-white via-white to-transparent dark:from-neutral-900 dark:via-neutral-900" />
+        <div className="pointer-events-none absolute top-0 right-0 z-10 h-full w-8 bg-gradient-to-l from-white via-white to-transparent dark:from-neutral-900 dark:via-neutral-900" />
 
-        {/* Wrapper */}
+        {/* Konten scroll */}
         <div
           {...handlers}
           ref={scrollRef}
@@ -114,7 +111,7 @@ export default function HomeIntroduction() {
           onMouseLeave={() => setIsHovered(false)}
           className="scrollbar-hide snap-x snap-mandatory scroll-px-6 overflow-x-auto scroll-smooth"
         >
-          <div className="flex min-w-full gap-6 pt-2 pr-6 pb-2 pl-6 md:gap-8">
+          <div className="flex w-max gap-6 px-6 py-4 md:gap-8 lg:mx-auto lg:w-full lg:justify-center">
             {data.map((item, idx) => (
               <motion.div
                 key={item.title}
@@ -122,7 +119,7 @@ export default function HomeIntroduction() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.15, duration: 0.6 }}
-                className="w-[260px] flex-shrink-0 snap-center sm:w-[300px] md:w-[340px] lg:w-[360px] xl:w-[380px]"
+                className="flex-shrink-0 snap-center"
               >
                 <CardIntroduction {...item} />
               </motion.div>

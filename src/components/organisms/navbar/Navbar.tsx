@@ -11,7 +11,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Tambahkan efek scroll untuk memperkuat bayangan navbar
+  // Tambahkan efek bayangan saat scroll
   useEffect(() => {
     const onScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -20,6 +20,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Daftar link navigasi utama
   const links = useMemo(
     () => [
       {
@@ -43,15 +44,15 @@ export default function Navbar() {
 
   return (
     <motion.header
-      initial={{ y: -40, opacity: 0 }}
+      initial={{ y: -30, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`sticky top-0 z-50 w-full border-b border-gray-200 bg-white/70 backdrop-blur-md ${
+      className={`border-border sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-xl dark:bg-neutral-900/70 ${
         isScrolled ? "shadow-md" : "shadow-sm"
       } transition-shadow duration-300`}
     >
       <div className="mx-auto flex max-w-screen-xl items-center justify-between px-4 py-3 md:px-8 md:py-4">
-        {/* Logo dengan animasi masuk */}
+        {/* Logo */}
         <motion.div
           initial={{ x: -30, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -60,7 +61,7 @@ export default function Navbar() {
           <NavLogo />
         </motion.div>
 
-        {/* Link navigasi dengan efek stagger */}
+        {/* Desktop Navigation */}
         <motion.nav
           className="hidden items-center gap-8 md:flex"
           initial="hidden"
@@ -88,7 +89,7 @@ export default function Navbar() {
           ))}
         </motion.nav>
 
-        {/* Tombol responsif dengan animasi kanan */}
+        {/* Tombol Login / Daftar */}
         <motion.div
           initial={{ x: 30, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}

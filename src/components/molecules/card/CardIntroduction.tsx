@@ -22,16 +22,16 @@ export default function CardIntroduction({
     <motion.div
       whileHover={{ scale: 1.02 }}
       transition={{ type: "spring", stiffness: 180, damping: 18 }}
-      className="z-10 flex h-full max-w-full flex-col overflow-hidden rounded-2xl border border-green-300 bg-white shadow-md transition-shadow hover:z-20 hover:bg-[oklch(var(--primary)/0.05)] hover:shadow-lg md:flex-row"
+      className="z-10 flex h-full w-full max-w-[260px] flex-shrink-0 flex-col overflow-hidden rounded-2xl border border-green-300 bg-white shadow-md transition-shadow hover:z-20 hover:bg-[oklch(var(--primary)/0.05)] hover:shadow-lg sm:max-w-[300px] md:max-w-[340px] md:flex-row"
     >
       {/* Gambar */}
-      <div className="flex items-center justify-center bg-green-50 p-6 md:w-[140px] md:p-6 lg:w-[160px]">
+      <div className="flex items-center justify-center bg-green-50 p-4 sm:p-5 md:w-[150px] lg:w-[170px]">
         <div className="overflow-hidden rounded-xl">
           <Image
             src={image}
             alt={title}
-            width={120}
-            height={120}
+            width={110}
+            height={110}
             className="object-contain"
             priority
           />
@@ -39,17 +39,16 @@ export default function CardIntroduction({
       </div>
 
       {/* Konten */}
-      <div className="flex flex-1 flex-col justify-between space-y-3 px-5 py-4 md:px-4 md:py-3">
-        <h3 className="text-lg leading-tight font-semibold text-green-700 md:text-xl">
+      <div className="flex flex-1 flex-col justify-between space-y-2 px-4 py-3 sm:px-5 sm:py-4">
+        <h3 className="bg-gradient-to-r from-green-700 via-green-600 to-emerald-500 bg-clip-text text-sm leading-snug font-semibold text-transparent sm:text-base md:text-lg">
           {title}
         </h3>
-        <p className="text-muted-foreground text-sm leading-relaxed">
+        <p className="text-muted-foreground text-xs leading-normal sm:text-sm">
           {description}
         </p>
-
-        <div className="mt-auto pt-2">
-          <Link href={href}>
-            <Button className="w-full bg-[oklch(var(--primary))] px-5 py-1.5 text-sm text-[oklch(var(--primary-foreground))] transition-transform duration-300 hover:scale-105 hover:bg-[oklch(var(--primary-dark))] sm:w-auto">
+        <div className="mt-auto pt-3">
+          <Link href={href} aria-label={`Baca lebih lanjut tentang ${title}`}>
+            <Button className="w-full rounded-lg bg-[oklch(var(--primary))] px-5 py-2 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-[oklch(var(--primary-dark))] sm:w-auto">
               Baca Selengkapnya
             </Button>
           </Link>

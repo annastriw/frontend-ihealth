@@ -8,63 +8,76 @@ import { motion } from "framer-motion";
 
 export default function HomeScreeningInvitation() {
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      viewport={{ once: true, amount: 0.3 }}
-      className="w-full scroll-mt-24 bg-[oklch(var(--primary)/0.03)] px-4 py-24 sm:px-6 md:px-10"
-    >
-      <div className="mx-auto max-w-6xl">
+    <section className="w-full scroll-mt-24 bg-[oklch(var(--primary)/0.03)] px-4 py-6 sm:px-6 md:px-10 md:py-10 lg:px-20">
+      <div className="mx-auto max-w-5xl">
         <motion.div
-          whileHover={{ scale: 1.01 }}
-          transition={{ type: "spring", stiffness: 200 }}
-          className="relative overflow-hidden rounded-2xl border border-green-300 bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl dark:bg-neutral-900"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          whileHover={{ scale: 1.005 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="relative overflow-hidden rounded-3xl border border-green-300 bg-[oklch(var(--primary)/0.1)] shadow-md transition-shadow duration-300 hover:shadow-xl dark:bg-[oklch(var(--primary-dark)/0.15)]"
         >
-          <CardContent className="p-6 sm:p-8 md:p-10 lg:p-12">
+          {/* Dekoratif blob */}
+          <div className="to-primary/30 pointer-events-none absolute -top-14 right-0 z-0 h-64 w-64 rotate-45 rounded-full bg-gradient-to-tr from-green-400/20 blur-2xl" />
+
+          {/* Konten utama */}
+          <CardContent className="relative z-10 px-6 py-12 sm:px-10 sm:py-16 md:px-16 md:py-20">
             <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
-              {/* TEXT */}
+              {/* TEKS */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
                 viewport={{ once: true }}
-                className="space-y-5 text-center md:text-left"
+                className="space-y-6 text-center md:text-left"
               >
-                <h1 className="font-paytone text-primary text-3xl leading-snug sm:text-4xl">
-                  Cek Kesehatanmu,
-                  <br />
-                  <span className="text-green-700">Mulai dari Sini!</span>
-                </h1>
-                <p className="text-muted-foreground mx-auto max-w-prose text-base leading-relaxed font-normal sm:text-lg md:mx-0">
+                <h2 className="text-primary text-2xl leading-tight font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl dark:text-white">
+                  Cek Kesehatanmu, <br />
+                  <span className="text-green-700 dark:text-green-400">
+                    Mulai dari Sini!
+                  </span>
+                </h2>
+                <p className="text-muted-foreground mx-auto max-w-xl text-sm leading-relaxed sm:text-base md:mx-0 md:text-lg">
                   Cukup dengan beberapa klik, kamu bisa mengenali kondisi
                   kesehatanmu. Jawab pertanyaan ringan dan dapatkan gambaran
                   awal tentang kesejahteraan tubuhmu.
                 </p>
-                <Link href="/login">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Button className="text-primary border-primary hover:bg-primary rounded-lg border bg-white px-6 py-3 font-medium transition-colors duration-300 hover:text-white">
-                      Mulai Sekarang
-                    </Button>
-                  </motion.div>
-                </Link>
+
+                <div className="mt-4 flex justify-center md:justify-start">
+                  <Link href="/login">
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 18,
+                      }}
+                    >
+                      <Button
+                        size="default"
+                        className="bg-primary hover:bg-primary/90 dark:hover:bg-primary-dark rounded-lg px-5 py-2 text-sm font-medium text-white transition-colors duration-300 sm:text-base"
+                      >
+                        Mulai Sekarang
+                      </Button>
+                    </motion.div>
+                  </Link>
+                </div>
               </motion.div>
 
-              {/* IMAGE */}
+              {/* GAMBAR */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
+                transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
                 viewport={{ once: true }}
                 className="flex justify-center md:justify-end"
               >
                 <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ type: "spring", stiffness: 150 }}
-                  className="relative aspect-square w-full max-w-[260px] sm:max-w-[300px] md:max-w-[340px]"
+                  whileHover={{ scale: 1.025 }}
+                  transition={{ type: "spring", stiffness: 160, damping: 14 }}
+                  className="relative aspect-square w-full max-w-[260px] sm:max-w-[300px] md:max-w-[340px] lg:max-w-[400px]"
                 >
                   <Image
                     src="/images/assets/doctor.png"
@@ -79,6 +92,6 @@ export default function HomeScreeningInvitation() {
           </CardContent>
         </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

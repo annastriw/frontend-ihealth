@@ -10,157 +10,103 @@
 @custom-variant dark (&:is(.dark *));
 
 /* --------------------------------------------------------------
-   THEME VARIABLE MAPPING FOR UTILITY SUPPORT
+   THEME VARIABLE MAPPING
 ----------------------------------------------------------------*/
 @theme inline {
-  /* Patterns */
   --auth-pattern: url("/images/background/bg-auth-remove.png");
   --bg-footer-pattern: url("/images/assets/bg-footer.png");
 
-  /* Fonts */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
 
-  /* General Colors */
+  /* Color Tokens */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Sidebar (if used) */
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  /* Chart Support */
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-
   /* Border Radius */
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
 }
 
 /* --------------------------------------------------------------
-   LIGHT THEME DEFAULTS (ROOT)
+   LIGHT THEME DEFAULTS
 ----------------------------------------------------------------*/
 :root {
-  --radius: 0.625rem;
+  --radius: 10px;
 
   --background: oklch(1 0 0);
-  --foreground: oklch(0.1 0.005 145);
+  --foreground: oklch(0.15 0.01 145);
 
   --card: var(--background);
   --card-foreground: var(--foreground);
-  --popover: var(--card);
-  --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.595 0.206 145);
-  --primary-dark: oklch(0.5 0.2 130);
-  --primary-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.6 0.18 145); /* Green-educational */
+  --primary-dark: oklch(0.48 0.15 145);
+  --primary-foreground: oklch(0.98 0.01 145);
 
-  --secondary: oklch(0.5 0.15 145);
-  --secondary-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.9 0.04 145);
+  --accent-foreground: oklch(0.2 0.01 145);
 
-  --accent: oklch(0.45 0.12 145);
-  --accent-foreground: oklch(0.985 0 0);
-
-  --muted: oklch(0.9 0.005 145);
+  --muted: oklch(0.96 0.005 145);
   --muted-foreground: oklch(0.4 0.01 145);
 
-  --destructive: oklch(0.577 0.245 27.325);
-
-  --border: oklch(0.85 0.004 145);
+  --border: oklch(0.88 0.004 145);
   --input: var(--border);
   --ring: oklch(0.65 0.015 145);
-
-  --sidebar: var(--accent);
-  --sidebar-foreground: var(--primary-foreground);
-  --sidebar-primary: var(--primary);
-  --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: var(--secondary);
-  --sidebar-accent-foreground: var(--secondary-foreground);
-  --sidebar-border: var(--border);
-  --sidebar-ring: var(--ring);
 }
 
 /* --------------------------------------------------------------
-   DARK THEME OVERRIDES (.dark)
+   DARK THEME
 ----------------------------------------------------------------*/
 .dark {
-  --background: oklch(0.1 0.01 145);
-  --foreground: oklch(0.985 0 0);
+  --background: oklch(0.12 0.01 145);
+  --foreground: oklch(0.98 0.01 145);
 
-  --card: oklch(0.15 0.01 145);
+  --card: oklch(0.16 0.01 145);
   --card-foreground: var(--foreground);
-  --popover: var(--card);
-  --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.595 0.206 145);
-  --primary-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.6 0.18 145);
+  --primary-foreground: oklch(0.98 0.01 145);
 
-  --secondary: oklch(0.5 0.15 145);
-  --secondary-foreground: oklch(0.985 0 0);
-
-  --accent: oklch(0.45 0.12 145);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.3 0.04 145);
+  --accent-foreground: oklch(0.98 0.01 145);
 
   --muted: oklch(0.2 0.01 145);
   --muted-foreground: oklch(0.65 0.015 145);
 
-  --destructive: oklch(0.704 0.191 22.216);
-
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.552 0.016 285.938);
+  --border: oklch(0.3 0.005 145 / 30%);
+  --input: oklch(0.35 0.005 145 / 25%);
+  --ring: oklch(0.5 0.01 145);
 }
 
 /* --------------------------------------------------------------
    BASE STYLES
 ----------------------------------------------------------------*/
-body {
-  font-family: var(--font-geist-sans);
+@layer base {
+  * {
+    @apply border-border outline-ring/40;
+  }
+  body {
+    font-family: var(--font-sans);
+    @apply bg-background text-foreground;
+  }
 }
 
 .font-paytone {
-  font-family: var(--font-paytone-one);
-}
-
-.rdp-vhidden {
-  @apply hidden;
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+  font-family: var(--font-paytone-one), sans-serif;
 }
 
 /* --------------------------------------------------------------
@@ -169,9 +115,25 @@ body {
 @layer utilities {
   .bg-auth-pattern {
     background-image: var(--auth-pattern);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
   }
+
   .bg-footer-pattern {
     background-image: var(--bg-footer-pattern);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -180,22 +142,10 @@ body {
 ----------------------------------------------------------------*/
 @layer components {
   .pad-x {
-    @apply mx-auto max-w-[1280px] px-4 md:px-[4%];
+    @apply mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8;
   }
 
   .pad-x-xl {
-    @apply px-4 md:px-[6%] lg:px-[10%] xl:px-[12%];
+    @apply px-4 md:px-8 lg:px-16 xl:px-20;
   }
-}
-
-/* --------------------------------------------------------------
-   SCROLLBAR HIDE UTILITY
-----------------------------------------------------------------*/
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
 }
