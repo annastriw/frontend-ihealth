@@ -213,8 +213,9 @@ export function AppSidebar({ session }: AppSidebarProps) {
                     <SidebarMenu>
                       
                       
-                      {/* <SidebarMenuItem>
-                      // Disembunyikan sementara karena tidak digunakan, hanya fokus pada HT, DM, dan KM
+                      {/* [HIDE] Menu Modul disembunyikan sementara karena tidak digunakan, hanya fokus pada HT, DM, dan KM */}
+                      {/*
+                      <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
                           className={buttonClass("/dashboard/admin/modules")}
@@ -224,7 +225,8 @@ export function AppSidebar({ session }: AppSidebarProps) {
                             <span>Modul</span>
                           </Link>
                         </SidebarMenuButton>
-                      </SidebarMenuItem> */}
+                      </SidebarMenuItem>
+                      */}
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
@@ -253,8 +255,9 @@ export function AppSidebar({ session }: AppSidebarProps) {
                         </SidebarMenuButton>
                       </SidebarMenuItem>
 
-                      {/* <SidebarMenuItem>
-                      // Disembunyikan sementara karena tidak digunakan
+                      {/* [HIDE] Menu Screening disembunyikan sementara karena tidak digunakan */}
+                      {/*
+                      <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
                           className={buttonClass("/dashboard/admin/screening")}
@@ -264,10 +267,12 @@ export function AppSidebar({ session }: AppSidebarProps) {
                             <span>Screening</span>
                           </Link>
                         </SidebarMenuButton>
-                      </SidebarMenuItem> */}
+                      </SidebarMenuItem>
+                      */}
 
-                      {/* <SidebarMenuItem>
-                      // Disembunyikan sementara karena tidak digunakan
+                      {/* [HIDE] Menu Screening Skoring disembunyikan sementara karena tidak digunakan */}
+                      {/*
+                      <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
                           className={buttonClass("/dashboard/admin/screening-scoring")}
@@ -277,7 +282,8 @@ export function AppSidebar({ session }: AppSidebarProps) {
                             <span>Screening Skoring</span>
                           </Link>
                         </SidebarMenuButton>
-                      </SidebarMenuItem> */}
+                      </SidebarMenuItem>
+                      */}
 
                       <SidebarMenuItem>
                         <SidebarMenuButton

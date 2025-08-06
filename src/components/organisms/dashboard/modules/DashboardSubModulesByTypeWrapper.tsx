@@ -77,9 +77,8 @@ export default function DashboardSubModulesByTypeWrapper({
         body={typeTitleMap[type]?.body || ""}
       />
 
-     
+      {/* [HIDE] Screening untuk HT & DM disembunyikan sementara karena belum digunakan */}
       {/*
-      // Disembunyikan sementara karena belum digunakan
       {withScreening && (selectedType === "HT" || selectedType === "DM") && (
         <div className="space-y-4">
           <ScreeningWrapper type={selectedType} />

@@ -734,8 +734,8 @@ export default function MedicalDiabetesMelitusScreeningPage() {
 
             {/* Action Buttons */}
             <div className="flex justify-end gap-3">
+              {/* [HIDE] Tombol dashboard disembunyikan sementara */}
               {/*
-              // Disembunyikan sementara
               <button
                 type="button"
                 onClick={viewDashboard}
