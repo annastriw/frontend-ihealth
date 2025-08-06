@@ -20,6 +20,8 @@ const config: Config = {
         paytone: ["var(--font-paytone-one)", "sans-serif"],
       },
       colors: {
+        destructive: "oklch(var(--destructive) / <alpha-value>)",
+        "destructive-foreground": "oklch(var(--destructive-foreground) / <alpha-value>)",
         background: "oklch(var(--background) / <alpha-value>)",
         foreground: "oklch(var(--foreground) / <alpha-value>)",
         primary: "oklch(var(--primary) / <alpha-value>)",
