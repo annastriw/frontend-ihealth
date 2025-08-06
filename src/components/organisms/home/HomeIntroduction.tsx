@@ -81,8 +81,8 @@ export default function HomeIntroduction() {
       </motion.div>
 
       <div className="group relative">
-        {/* Panah Navigasi */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 left-0 z-30 flex items-center justify-between px-2">
+        {/* Navigasi tombol hanya muncul di layar md ke atas */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 left-0 z-30 hidden items-center justify-between px-2 md:flex">
           <button
             onClick={() => scroll("left")}
             className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-xl border border-green-300 bg-white opacity-0 shadow-md transition-all duration-300 group-hover:opacity-100 hover:bg-green-50 hover:shadow-lg dark:bg-neutral-900"
@@ -99,11 +99,11 @@ export default function HomeIntroduction() {
           </button>
         </div>
 
-        {/* Gradasi */}
+        {/* Gradasi sisi kiri dan kanan */}
         <div className="pointer-events-none absolute top-0 left-0 z-10 h-full w-8 bg-gradient-to-r from-white via-white to-transparent dark:from-neutral-900 dark:via-neutral-900" />
         <div className="pointer-events-none absolute top-0 right-0 z-10 h-full w-8 bg-gradient-to-l from-white via-white to-transparent dark:from-neutral-900 dark:via-neutral-900" />
 
-        {/* Konten scroll */}
+        {/* Scrollable konten */}
         <div
           {...handlers}
           ref={scrollRef}

@@ -48,8 +48,13 @@ export default function CardIntroduction({
         </p>
         <div className="mt-auto pt-3">
           <Link href={href} aria-label={`Baca lebih lanjut tentang ${title}`}>
-            <Button className="w-full rounded-lg bg-[oklch(var(--primary))] px-5 py-2 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-[oklch(var(--primary-dark))] sm:w-auto">
-              Baca Selengkapnya
+            <Button
+              variant="ghost"
+              className="w-full bg-transparent px-5 py-2 text-sm font-bold transition-all duration-300 hover:scale-105 sm:w-auto"
+            >
+              <span className="bg-gradient-to-r from-green-700 via-green-600 to-emerald-500 bg-clip-text text-transparent">
+                Baca Selengkapnya
+              </span>
             </Button>
           </Link>
         </div>
