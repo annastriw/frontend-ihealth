@@ -117,7 +117,7 @@ export function NavUser({ session }: NavUserProps) {
                   <DropdownMenuGroup>
                     <Link href="/dashboard" passHref>
                       <DropdownMenuItem className="hover:bg-accent-green-50 cursor-pointer gap-2 rounded-lg py-2 transition-colors">
-                        <Home className="text-primary" size={18} />
+                        <Home className="text-black" size={18} />
                         <span className="text-sm font-medium">
                           Halaman Beranda
                         </span>
@@ -131,7 +131,7 @@ export function NavUser({ session }: NavUserProps) {
                     onClick={() => signOut({ callbackUrl: "/" })}
                     className="text-destructive hover:bg-destructive/10 flex cursor-pointer items-center gap-2 rounded-lg py-2 transition-all"
                   >
-                    <LogOut size={18} />
+                    <LogOut size={18} className="text-black" />
                     <span className="text-sm font-medium">Log out</span>
                   </DropdownMenuItem>
                 </motion.div>
