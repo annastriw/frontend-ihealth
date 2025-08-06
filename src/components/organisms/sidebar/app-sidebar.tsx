@@ -40,6 +40,7 @@ import {
 import { NavUser } from "./NavUser";
 import { useGetCheckPersonalInformation } from "@/http/personal-information/get-check-personal-information";
 import { useGetCheckMapsUser } from "@/http/users/get-check-maps-users";
+import { motion } from "framer-motion";
 
 interface AppSidebarProps {
   session: Session;
@@ -88,26 +89,46 @@ export function AppSidebar({ session }: AppSidebarProps) {
   return (
     <Sidebar>
       {/* Header */}
-      <SidebarHeader className="h-14 cursor-default justify-center border-b bg-white dark:bg-slate-950">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <div className="ml-2 flex items-center gap-x-3">
-            <Link href="/dashboard" className="flex items-center gap-1.5 md:gap-2">
+<SidebarHeader className="h-14 cursor-default justify-center border-b bg-white dark:bg-slate-950">
+  <motion.div
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, ease: "easeOut" }}
+    className="w-full flex items-center"
+  >
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <div className="ml-2 flex items-center gap-x-3">
+          <Link href="/dashboard" className="group flex items-center gap-1.5 md:gap-2">
+            {/* Logo - pulse animation on hover */}
+            <motion.div
+              whileHover={{ scale: [1, 1.06, 1] }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="w-16 h-16"
+            >
               <Image
                 src="/images/assets/bg-about-us.png"
                 alt="iHealth Edu"
-                width={48}
-                height={48}
+                width={64}
+                height={64}
                 className="w-16 h-16 object-contain"
               />
-              <h1 className="font-semibold text-base md:text-lg lg:text-xl tracking-tight">
-                iHealth Edu
-              </h1>
-            </Link>
-            </div>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
+            </motion.div>
+
+            {/* Text with slide + fade on hover */}
+            <motion.h1
+              className="font-semibold text-base md:text-lg lg:text-xl tracking-tight text-black dark:text-white"
+              whileHover={{ x: 2, opacity: 0.9 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              iHealth Edu
+            </motion.h1>
+          </Link>
+        </div>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  </motion.div>
+</SidebarHeader>
 
       <SidebarContent className="bg-white dark:bg-slate-950">
         <SidebarGroup>
