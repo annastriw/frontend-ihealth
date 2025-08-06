@@ -1,18 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
+import { Session } from "next-auth";
 import Link from "next/link";
 
 import { ChevronsUpDown, Home, LogOut } from "lucide-react";
+
 import { motion, AnimatePresence } from "framer-motion";
 
-import {
-  Avatar,
-  AvatarFallback,
-} from "@/components/ui/avatar";
-
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,8 +22,8 @@ import {
 
 import {
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar";
 
@@ -48,27 +45,32 @@ export function NavUser({ session }: NavUserProps) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="bg-gradient-to-tr from-primary to-primary/90 text-primary-foreground hover:shadow-xl transition-all duration-200 ease-in-out rounded-xl px-3 py-2 gap-3"
+              className="from-primary to-primary/90 text-primary-foreground gap-3 rounded-xl bg-gradient-to-tr px-3 py-2 transition-all duration-200 ease-in-out hover:shadow-xl"
             >
               <div className="relative">
-                <Avatar className="h-8 w-8 rounded-lg bg-white text-primary ring-2 ring-primary">
-                  <AvatarFallback className="rounded-lg font-bold text-sm">
+                <Avatar className="text-primary ring-primary h-8 w-8 rounded-lg bg-white ring-2">
+                  <AvatarFallback className="rounded-lg text-sm font-bold">
                     {generateFallbackFromName(session?.user.name)}
                   </AvatarFallback>
                 </Avatar>
                 {isOnline && (
-                  <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-green-500 ring-2 ring-white dark:ring-black animate-pulse" />
+                  <span className="absolute right-0 bottom-0 h-2 w-2 animate-pulse rounded-full bg-green-500 ring-2 ring-white dark:ring-black" />
                 )}
               </div>
-              <div className="flex-1 text-left leading-tight text-sm">
-                <span className="block truncate font-semibold text-primary-foreground">
+              <div className="flex-1 truncate text-left text-sm leading-tight">
+                <span className="text-primary-foreground block font-semibold">
                   {session?.user.name}
                 </span>
-                <span className="block truncate text-xs text-primary-foreground/70">
+                <span className="text-primary-foreground/70 block truncate text-xs">
                   {session?.user.email}
                 </span>
               </div>
-              <ChevronsUpDown className="ml-auto h-4 w-4 text-primary-foreground/70 transition-transform duration-200 ease-in-out" />
+              <motion.div
+                animate={{ rotate: menuOpen ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ChevronsUpDown className="text-primary-foreground/70 h-4 w-4" />
+              </motion.div>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
 
@@ -76,34 +78,34 @@ export function NavUser({ session }: NavUserProps) {
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={8}
-            className="min-w-64 rounded-2xl border border-border bg-background text-foreground shadow-2xl p-2 space-y-1 overflow-hidden z-[9999] isolate"
+            className="border-border text-foreground z-[9999] min-w-64 overflow-hidden rounded-2xl border bg-white p-2 shadow-2xl"
           >
             <AnimatePresence>
               {menuOpen && (
                 <motion.div
                   key="dropdown"
-                  initial={{ opacity: 0, y: -12, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
                 >
                   <DropdownMenuLabel className="p-0 font-normal">
                     <div className="flex items-center gap-3 px-3 py-2.5">
                       <div className="relative">
-                        <Avatar className="h-9 w-9 rounded-lg bg-accent-green-100 text-accent-green-700 ring-1 ring-muted">
+                        <Avatar className="bg-accent-green-100 text-accent-green-700 ring-muted h-9 w-9 rounded-lg ring-1">
                           <AvatarFallback className="rounded-lg font-bold">
                             {generateFallbackFromName(session?.user.name)}
                           </AvatarFallback>
                         </Avatar>
                         {isOnline && (
-                          <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-green-500 ring-2 ring-white dark:ring-background animate-pulse" />
+                          <span className="dark:ring-background absolute right-0 bottom-0 h-2 w-2 animate-pulse rounded-full bg-green-500 ring-2 ring-white" />
                         )}
                       </div>
                       <div className="grid text-sm">
                         <span className="truncate font-semibold">
                           {session?.user.name}
                         </span>
-                        <span className="truncate text-xs text-muted-foreground">
+                        <span className="text-muted-foreground truncate text-xs">
                           {session?.user.email}
                         </span>
                       </div>
@@ -113,10 +115,12 @@ export function NavUser({ session }: NavUserProps) {
                   <DropdownMenuSeparator />
 
                   <DropdownMenuGroup>
-                    <Link href="/dashboard">
-                      <DropdownMenuItem className="cursor-pointer gap-2 py-2 rounded-lg hover:bg-accent-green-50 transition-colors">
+                    <Link href="/dashboard" passHref>
+                      <DropdownMenuItem className="hover:bg-accent-green-50 cursor-pointer gap-2 rounded-lg py-2 transition-colors">
                         <Home className="text-primary" size={18} />
-                        <span className="font-medium text-sm">Halaman Beranda</span>
+                        <span className="text-sm font-medium">
+                          Halaman Beranda
+                        </span>
                       </DropdownMenuItem>
                     </Link>
                   </DropdownMenuGroup>
@@ -125,10 +129,10 @@ export function NavUser({ session }: NavUserProps) {
 
                   <DropdownMenuItem
                     onClick={() => signOut({ callbackUrl: "/" })}
-                    className="cursor-pointer text-destructive hover:bg-destructive/10 py-2 rounded-lg flex items-center gap-2 transition-all"
+                    className="text-destructive hover:bg-destructive/10 flex cursor-pointer items-center gap-2 rounded-lg py-2 transition-all"
                   >
                     <LogOut size={18} />
-                    <span className="font-medium text-sm">Log out</span>
+                    <span className="text-sm font-medium">Log out</span>
                   </DropdownMenuItem>
                 </motion.div>
               )}
