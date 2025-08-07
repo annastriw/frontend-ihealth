@@ -17,6 +17,7 @@ import L from 'leaflet';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point } from '@turf/helpers';
 import { toast } from 'sonner';
+import { LocateFixed } from "lucide-react";
 
 // Atur default icon Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -67,19 +68,19 @@ function ClickHandler({
   return null;
 }
 
-function RefreshButton({ onRefresh }: { onRefresh: () => void }) {
+function RefreshLocationButton({ onRefresh }: { onRefresh: () => void }) {
   return (
-    <div className="absolute bottom-4 right-4 z-[9999]">
-      <button
-        type="button"
-        onClick={onRefresh}
-        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-      >
-        Refresh Lokasi
-      </button>
-    </div>
+    <button
+      onClick={onRefresh}
+      className="absolute bottom-4 right-4 z-[9999] flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white border border-green-700 shadow-md rounded-md px-3 py-1.5 text-xs transition-all duration-200 group"
+      title="Lokasi Saya"
+    >
+      <LocateFixed className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+      <span className="font-medium">Lokasi</span>
+    </button>
   );
 }
+
 
 export default function MapPicker({
   lat,
@@ -145,7 +146,7 @@ export default function MapPicker({
         <FlyToLocation coords={coords} />
       </MapContainer>
 
-      <RefreshButton onRefresh={handleRefreshLocation} />
+      <RefreshLocationButton onRefresh={handleRefreshLocation} />
     </div>
   );
 }

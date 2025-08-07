@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { LocateFixed } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -80,13 +81,19 @@ function MapClickHandler({
 
 function RefreshLocationButton({ onRefresh }: { onRefresh: () => void }) {
   return (
-    <div className="absolute bottom-4 right-4 z-[9999]">
-      <Button className="bg-green-600 hover:bg-green-700" onClick={onRefresh}>
-        Refresh Lokasi
-      </Button>
-    </div>
+    <button
+      onClick={onRefresh}
+      className="absolute bottom-4 right-4 z-[9999] flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white border border-green-700 shadow-md rounded-md px-3 py-1.5 text-xs transition-all duration-200 group"
+      title="Lokasi Saya"
+    >
+      <LocateFixed className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+      <span className="font-medium">Lokasi</span>
+    </button>
   );
 }
+
+
+
 
 const kelurahanOptions = {
   Pedalangan: Array.from({ length: 11 }, (_, i) => `RW ${i + 1}`),
