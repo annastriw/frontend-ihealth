@@ -64,13 +64,15 @@ export default function CardListScreeningHSMBQ() {
         onClick={() => setDialogOpen(true)}
       >
         <div className="flex flex-row gap-6">
-          <div className="relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg bg-primary group-hover:bg-secondary md:flex">
+          <div className="bg-primary group-hover:bg-secondary relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg md:flex">
             <FileSearch className="text-background m-auto h-12 w-12" />
           </div>
           <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
             <CardHeader className="flex md:flex-row md:items-center md:justify-between">
               <div className="space-y-2">
-                <Badge className="bg-secondary">Screening HSMBQ</Badge>
+                <Badge className="bg-[oklch(0.9_0.1_145)] font-semibold text-black">
+                  Screening HSMBQ
+                </Badge>
                 <CardTitle className="text-md font-bold md:text-xl">
                   Screening Hipertensi (HSMBQ)
                 </CardTitle>

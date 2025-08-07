@@ -42,7 +42,9 @@ export default function CardListPostTest({
   isLocked,
 }: CardListPostTestProps) {
   const [dialogStartPostTestOpen, setDialogStartPostTestOpen] = useState(false);
-  const [selectedPostTestId, setSelectedPostTestId] = useState<string | null>(null);
+  const [selectedPostTestId, setSelectedPostTestId] = useState<string | null>(
+    null,
+  );
 
   if (isLoading) {
     return (
@@ -70,9 +72,13 @@ export default function CardListPostTest({
         const alreadyTaken = !!historyItem;
 
         const formattedDate = historyItem
-          ? format(new Date(historyItem.created_at), "d MMMM yyyy 'pukul' HH:mm", {
-              locale: idLocale,
-            })
+          ? format(
+              new Date(historyItem.created_at),
+              "d MMMM yyyy 'pukul' HH:mm",
+              {
+                locale: idLocale,
+              },
+            )
           : null;
 
         return (
@@ -81,34 +87,42 @@ export default function CardListPostTest({
             onClick={() => handleDialogStartPostTestOpen(postTest.id)}
             className={clsx(
               "group block transition-colors duration-200 ease-in-out",
-              isLocked ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+              isLocked ? "cursor-not-allowed opacity-70" : "cursor-pointer",
             )}
           >
             <div className="flex flex-row gap-6">
               <div
                 className={clsx(
-                  "relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg md:flex transition-colors duration-200 ease-in-out",
-                  isLocked ? "bg-gray-300" : "bg-primary group-hover:bg-secondary"
+                  "relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg transition-colors duration-200 ease-in-out md:flex",
+                  isLocked
+                    ? "bg-gray-300"
+                    : "bg-primary group-hover:bg-secondary",
                 )}
               >
                 <ClipboardPen className="text-background m-auto h-12 w-12" />
               </div>
               <Card
                 className={clsx(
-                  "border-2 w-full shadow-transparent transition-colors duration-200 ease-in-out",
+                  "w-full border-2 shadow-transparent transition-colors duration-200 ease-in-out",
                   isLocked
                     ? "border-muted opacity-70"
-                    : "border-muted group-hover:bg-muted"
+                    : "border-muted group-hover:bg-muted",
                 )}
               >
                 <CardHeader className="flex md:flex-row md:items-center md:justify-between">
                   <div className="space-y-2">
-                    <Badge className="bg-secondary/20 text-secondary font-semibold">
+                    <Badge className="bg-[oklch(0.9_0.1_145)] font-semibold text-black">
                       Post Test
                     </Badge>
                     <CardTitle className="text-md font-bold md:text-xl">
                       {postTest.name}
                     </CardTitle>
+
+                    {!alreadyTaken && (
+                      <div className="text-muted-foreground text-sm font-medium">
+                        Belum pernah dikerjakan.
+                      </div>
+                    )}
 
                     {alreadyTaken && formattedDate && (
                       <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">

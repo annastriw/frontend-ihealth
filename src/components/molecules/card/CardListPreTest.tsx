@@ -39,7 +39,9 @@ export default function CardListPreTest({
   history,
 }: CardListPreTestProps) {
   const [dialogStartPreTestOpen, setDialogStartPreTestOpen] = useState(false);
-  const [selectedPreTestId, setSelectedPreTestId] = useState<string | null>(null);
+  const [selectedPreTestId, setSelectedPreTestId] = useState<string | null>(
+    null,
+  );
 
   if (isLoading) {
     return (
@@ -71,7 +73,9 @@ export default function CardListPreTest({
             <div
               key={preTest.id}
               className={`group block ${
-                alreadyTaken ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+                alreadyTaken
+                  ? "cursor-not-allowed opacity-70"
+                  : "cursor-pointer"
               }`}
               onClick={() =>
                 !alreadyTaken && handleDialogStartPretestOpen(preTest.id)
@@ -90,12 +94,19 @@ export default function CardListPreTest({
                 <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
                   <CardHeader className="flex md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">
-                      <Badge className="bg-secondary/20 text-secondary font-semibold">
+                      <Badge className="bg-[oklch(0.9_0.1_145)] font-semibold text-black">
                         Pre Test
                       </Badge>
                       <CardTitle className="text-md font-bold md:text-xl">
                         {preTest.name}
                       </CardTitle>
+
+                      {!preTestHistory && (
+                        <div className="text-muted-foreground text-sm font-medium">
+                          Silakan kerjakan pre-test terlebih dahulu untuk
+                          mengakses modul materi.
+                        </div>
+                      )}
 
                       {preTestHistory && (
                         <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
@@ -104,7 +115,7 @@ export default function CardListPreTest({
                           {format(
                             new Date(preTestHistory.created_at),
                             "d MMMM yyyy 'pukul' HH.mm",
-                            { locale: localeId }
+                            { locale: localeId },
                           )}
                         </div>
                       )}

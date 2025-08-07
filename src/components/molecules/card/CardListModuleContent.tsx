@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Book } from "lucide-react";
 import { api } from "@/lib/axios";
 import { ModuleContent } from "@/types/modules/modules";
+import { CheckCircle } from "lucide-react";
 
 interface CardListModuleContentProps {
   data?: ModuleContent[];
@@ -60,9 +61,12 @@ export default function CardListModuleContent({
               results[item.id] = res.data.last_opened_at;
             }
           } catch (err) {
-            console.error(`❌ Gagal ambil last_opened_at untuk ${item.id}`, err);
+            console.error(
+              `❌ Gagal ambil last_opened_at untuk ${item.id}`,
+              err,
+            );
           }
-        })
+        }),
       );
       setOpenedMap(results);
     };
@@ -74,11 +78,15 @@ export default function CardListModuleContent({
     if (isLocked) return; // cegah klik kalau terkunci
     try {
       if (token) {
-        await api.post(`/module-contents/${id}/opened`, {}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        await api.post(
+          `/module-contents/${id}/opened`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
       }
     } catch (err) {
       console.error("❌ Gagal mencatat waktu buka", err);
@@ -111,14 +119,16 @@ export default function CardListModuleContent({
           >
             <div className="flex flex-row gap-6">
               <div
-                className={`relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg md:flex transition-colors duration-200 ease-in-out ${
-                  isLocked ? "bg-gray-300" : "bg-primary group-hover:bg-secondary"
+                className={`relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg transition-colors duration-200 ease-in-out md:flex ${
+                  isLocked
+                    ? "bg-gray-300"
+                    : "bg-primary group-hover:bg-secondary"
                 }`}
               >
                 <Book className="text-background m-auto h-12 w-12" />
               </div>
               <Card
-                className={`border-2 w-full shadow-transparent transition-colors duration-200 ease-in-out ${
+                className={`w-full border-2 shadow-transparent transition-colors duration-200 ease-in-out ${
                   isLocked
                     ? "border-muted opacity-70"
                     : "border-muted group-hover:bg-muted"
@@ -126,7 +136,7 @@ export default function CardListModuleContent({
               >
                 <CardHeader className="flex md:flex-row md:items-center md:justify-between">
                   <div className="space-y-2">
-                    <Badge className="bg-secondary/20 text-secondary font-semibold">
+                    <Badge className="bg-[oklch(0.9_0.1_145)] font-semibold text-black">
                       Booklet Materi
                     </Badge>
                     <CardTitle className="text-md font-bold md:text-xl">
@@ -134,21 +144,24 @@ export default function CardListModuleContent({
                     </CardTitle>
 
                     {lastOpenedAt && (
-                      <p className="text-muted-foreground text-sm font-normal">
-                        Terakhir membuka materi, pada{" "}
-                        {new Intl.DateTimeFormat("id-ID", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        }).format(new Date(lastOpenedAt))}{" "}
-                        pukul{" "}
-                        {new Intl.DateTimeFormat("id-ID", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                          timeZone: "Asia/Jakarta",
-                        }).format(new Date(lastOpenedAt))}
-                      </p>
+                      <div className="text-muted-foreground flex items-center gap-2 text-sm font-normal">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span>
+                          Terakhir membuka materi, pada{" "}
+                          {new Intl.DateTimeFormat("id-ID", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }).format(new Date(lastOpenedAt))}{" "}
+                          pukul{" "}
+                          {new Intl.DateTimeFormat("id-ID", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                            timeZone: "Asia/Jakarta",
+                          }).format(new Date(lastOpenedAt))}
+                        </span>
+                      </div>
                     )}
                   </div>
                 </CardHeader>
