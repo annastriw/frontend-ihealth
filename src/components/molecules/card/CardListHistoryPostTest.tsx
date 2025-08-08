@@ -65,7 +65,9 @@ export default function CardListHistoryPostTest({
               </div>
               <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
                 <CardHeader className="space-y-1">
-                  <Badge className="bg-secondary">Post Test</Badge>
+                  <Badge className="bg-[oklch(0.9_0.1_145)] font-semibold text-black">
+                    Post-Test
+                  </Badge>
                   <CardTitle className="text-md font-bold md:text-xl">
                     {postTestHistory.post_test.name}
                   </CardTitle>

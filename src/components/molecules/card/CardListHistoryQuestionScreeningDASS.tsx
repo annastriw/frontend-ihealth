@@ -107,7 +107,7 @@ export default function CardListHistoryQuestionScreeningDASS({
       {/* Informasi dan chart */}
       <Card>
         <CardHeader>
-          <CardTitle>Hasil Screening DASS</CardTitle>
+          <CardTitle>Hasil Screening DASS-21</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-4">
           {createdAt && (

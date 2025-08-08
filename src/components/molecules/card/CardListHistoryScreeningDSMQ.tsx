@@ -70,7 +70,9 @@ export default function CardListHistoryScreeningDSMQ({
 
               <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
                 <CardHeader className="space-y-1">
-                  <Badge className="bg-secondary">Screening DSMQ</Badge>
+                  <Badge className="bg-[oklch(0.9_0.1_145)] font-semibold text-black">
+                    Screening DSMQ
+                  </Badge>
                   <CardTitle className="text-md font-bold md:text-xl">
                     Riwayat Screening DSMQ
                   </CardTitle>

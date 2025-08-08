@@ -46,7 +46,7 @@ export default function CardListHistoryScreeningDASS({
     return (
       <div className="flex flex-col items-center justify-center space-y-4 py-10 text-center">
         <FileX2 className="text-muted-foreground h-16 w-16" />
-        <p className="text-muted-foreground">Belum ada riwayat screening DASS.</p>
+        <p className="text-muted-foreground">Belum ada riwayat screening DASS-21.</p>
       </div>
     );
   }
@@ -71,9 +71,11 @@ export default function CardListHistoryScreeningDASS({
 
               <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
                 <CardHeader className="space-y-1">
-                  <Badge className="bg-secondary">Screening DASS</Badge>
+                  <Badge className="bg-[oklch(0.9_0.1_145)] font-semibold text-black">
+                    Screening DASS-21
+                  </Badge>
                   <CardTitle className="text-md font-bold md:text-xl">
-                    Riwayat Screening DASS
+                    Riwayat Screening DASS-21
                   </CardTitle>
                   <p className="text-muted-foreground text-sm">{formattedDate}</p>
                 </CardHeader>

@@ -8,8 +8,8 @@ export default function Page({ params }: any) {
   return (
     <section>
       <DashboardTitle
-        head="Detail Riwayat Screening DASS"
-        body="Menampilkan detail riwayat screening DASS"
+        head="Detail Riwayat Screening DASS-21"
+        body="Menampilkan detail riwayat screening DASS-21"
       />
       <DashboardAdminHistoryScreeningDASSDetailWrapper id={id} />
     </section>
