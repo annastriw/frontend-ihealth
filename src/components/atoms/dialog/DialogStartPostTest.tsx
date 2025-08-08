@@ -55,11 +55,11 @@ export default function DialogStartPostTest({
           </div>
         </ScrollArea>
 
-        <DialogFooter>
-          <Link href={`/work/post-test/${id}`}>
-            <Button>Kerjakan Sekarang</Button>
-          </Link>
-        </DialogFooter>
+      <DialogFooter className="flex justify-center">
+        <Link href={`/work/post-test/${id}`} className="w-full max-w-md">
+          <Button className="w-full">Kerjakan Sekarang</Button>
+        </Link>
+      </DialogFooter>
       </DialogContent>
     </Dialog>
   );

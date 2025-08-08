@@ -53,11 +53,13 @@ export default function DialogStartPreTest({
             </ol>
           </div>
         </ScrollArea>
-        <DialogFooter>
-          <Link href={`/work/pre-test/${id}`}>
-            <Button>Kerjakan Sekarang</Button>
+      <DialogFooter>
+        <div className="w-full flex justify-center">
+          <Link href={`/work/pre-test/${id}`} className="w-full">
+            <Button className="w-full">Kerjakan Sekarang</Button>
           </Link>
-        </DialogFooter>
+        </div>
+      </DialogFooter>
       </DialogContent>
     </Dialog>
   );

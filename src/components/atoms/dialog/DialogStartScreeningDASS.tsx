@@ -50,9 +50,11 @@ export default function DialogStartScreeningDASS({
             <li>Setelah klik <strong>“Kerjakan Sekarang”</strong>, Anda akan diarahkan ke halaman pertanyaan.</li>
           </ul>
         </div>
-        <DialogFooter>
-          <Button onClick={handleStart}>Kerjakan Sekarang</Button>
-        </DialogFooter>
+      <DialogFooter className="flex justify-center">
+        <Button className="w-full max-w-md" onClick={handleStart}>
+          Kerjakan Sekarang
+        </Button>
+      </DialogFooter>
       </DialogContent>
     </Dialog>
   );

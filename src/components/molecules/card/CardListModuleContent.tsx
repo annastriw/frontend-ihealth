@@ -144,7 +144,7 @@ export default function CardListModuleContent({
                     </CardTitle>
 
                     {lastOpenedAt && (
-                      <div className="text-muted-foreground flex items-center gap-2 text-sm font-normal">
+                      <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
                         <CheckCircle className="h-4 w-4 text-green-600" />
                         <span>
                           Terakhir membuka materi, pada{" "}
