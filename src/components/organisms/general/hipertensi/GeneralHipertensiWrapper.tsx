@@ -18,7 +18,6 @@ export default function GeneralHipertensiWrapper() {
     `Hipertensi bukanlah akhir dari segalanya. Dengan kesadaran, pengetahuan, dan tindakan yang tepat, penderita dapat menjalani hidup normal dan berkualitas. iHealth Edu hadir sebagai sumber edukasi terpercaya untuk mendukung masyarakat memahami pentingnya pencegahan dan pengelolaan hipertensi sejak dini. Mari jaga tekanan darah kita, demi masa depan yang lebih sehat dan bermakna.`,
   ];
 
-  // Fungsi untuk ubah kata penting menjadi bold
   const highlightKeywords = (text: string) => {
     const keywords = [
       "Hipertensi",
