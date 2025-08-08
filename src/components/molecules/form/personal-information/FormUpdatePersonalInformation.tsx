@@ -1,4 +1,3 @@
-// src/components/molecules/form/personal-information/FormUpdatePersonalInformation.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -47,45 +46,70 @@ import { toast } from "sonner";
 
 export default function FormUpdatePersonalInformation() {
   const { data: session, status } = useSession();
-  const { data } = useGetPersonalInformationUser(
+  const { data, isLoading } = useGetPersonalInformationUser(
     session?.access_token as string,
     {
       enabled: status === "authenticated" && !!session?.access_token,
     }
   );
+
   const toBinaryString = (val: any): "0" | "1" | undefined => {
-  if (val === 0 || val === "0") return "0";
-  if (val === 1 || val === "1") return "1";
-  return undefined;
-};
+    if (val === 0 || val === "0") return "0";
+    if (val === 1 || val === "1") return "1";
+    return undefined;
+  };
 
   const form = useForm<PersonalInformationType>({
     resolver: zodResolver(personalInformationSchema),
     defaultValues: {
-      name: data?.data.name ?? "",
-      place_of_birth: data?.data.place_of_birth ?? "",
-      date_of_birth: data?.data.date_of_birth
-        ? format(new Date(data.data.date_of_birth), "yyyy-MM-dd")
-        : "",
-      age: data?.data.age ?? "",
-      gender: data?.data.gender ?? "1",
-      work: data?.data.work ?? "",
-      last_education: data?.data.last_education ?? "",
-      origin_disease: data?.data.origin_disease ?? "",
-      is_married:
-        data?.data.is_married !== undefined
-          ? Boolean(Number(data.data.is_married))
-          : false,
-      disease_duration: data?.data.disease_duration ?? "",
-      history_therapy: data?.data.history_therapy ?? "",
-      smoking_history: data?.data.smoking_history ?? undefined,
-      bmi: data?.data.bmi ?? "",
-      heart_disease_history: toBinaryString(data?.data.heart_disease_history),
-      weight: data?.data.weight ?? "",
-      height: data?.data.height ?? "",
+      name: "",
+      place_of_birth: "",
+      date_of_birth: "",
+      age: "",
+      gender: "1",
+      work: "",
+      last_education: "",
+      origin_disease: "",
+      is_married: false,
+      disease_duration: "",
+      history_therapy: "",
+      smoking_history: undefined,
+      bmi: "",
+      heart_disease_history: undefined,
+      weight: "",
+      height: "",
     },
     mode: "onChange",
   });
+
+  // Reset form ketika data sudah ready
+  useEffect(() => {
+    if (data?.data) {
+      form.reset({
+        name: data.data.name ?? "",
+        place_of_birth: data.data.place_of_birth ?? "",
+        date_of_birth: data.data.date_of_birth
+          ? format(new Date(data.data.date_of_birth), "yyyy-MM-dd")
+          : "",
+        age: data.data.age ?? "",
+        gender: data.data.gender ?? "1",
+        work: data.data.work ?? "",
+        last_education: data.data.last_education ?? "",
+        origin_disease: data.data.origin_disease ?? "",
+        is_married:
+          data.data.is_married !== undefined
+            ? Boolean(Number(data.data.is_married))
+            : false,
+        disease_duration: data.data.disease_duration ?? "",
+        history_therapy: data.data.history_therapy ?? "",
+        smoking_history: data.data.smoking_history ?? undefined,
+        bmi: data.data.bmi ?? "",
+        heart_disease_history: toBinaryString(data.data.heart_disease_history),
+        weight: data.data.weight ?? "",
+        height: data.data.height ?? "",
+      });
+    }
+  }, [data, form]);
 
   const router = useRouter();
 
@@ -112,7 +136,7 @@ export default function FormUpdatePersonalInformation() {
       form.setValue("age", String(age), { shouldValidate: true });
       form.trigger("date_of_birth");
     }
-  }, [dateOfBirth]);
+  }, [dateOfBirth, form]);
 
   useEffect(() => {
     const parsedWeight = parseFloat(weight);
@@ -124,12 +148,13 @@ export default function FormUpdatePersonalInformation() {
       form.setValue("bmi", bmi.toFixed(1), { shouldValidate: true });
       form.trigger("bmi");
     }
-  }, [weight, height]);
+  }, [weight, height, form]);
 
   const onSubmit = (body: PersonalInformationType) => {
-    editPersonalInformationHandler({ ...body,
+    editPersonalInformationHandler({
+      ...body,
       heart_disease_history: body.heart_disease_history,
-     });
+    });
   };
 
   return (
@@ -243,43 +268,43 @@ export default function FormUpdatePersonalInformation() {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="is_married"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Apakah anda sudah berkeluarga?{" "}
-                      <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={(value) =>
-                          field.onChange(value === "true")
-                        }
-                        defaultValue={
-                          field.value !== undefined ? String(field.value) : ""
-                        }
-                        className="flex flex-col space-y-2"
-                      >
-                        <FormItem className="flex items-center space-y-0 space-x-3">
-                          <FormControl>
-                            <RadioGroupItem value="true" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Ya</FormLabel>
-                        </FormItem>
+                render={({ field }) => {
+                  const valueString = field.value ? "true" : "false";
 
-                        <FormItem className="flex items-center space-y-0 space-x-3">
-                          <FormControl>
-                            <RadioGroupItem value="false" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Tidak</FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                  return (
+                    <FormItem>
+                      <FormLabel>
+                        Apakah anda sudah berkeluarga? <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          value={valueString}
+                          onValueChange={(value) => field.onChange(value === "true")}
+                          className="flex flex-col space-y-2"
+                        >
+                          <FormItem className="flex items-center space-y-0 space-x-3">
+                            <FormControl>
+                              <RadioGroupItem value="true" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Ya</FormLabel>
+                          </FormItem>
+
+                          <FormItem className="flex items-center space-y-0 space-x-3">
+                            <FormControl>
+                              <RadioGroupItem value="false" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Tidak</FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
 
               <FormField
