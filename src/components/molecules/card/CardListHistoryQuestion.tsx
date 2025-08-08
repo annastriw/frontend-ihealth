@@ -4,7 +4,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { HistoryPreTestDetail } from "@/types/test/pre-test";
 import { format } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
-import { Check, Plus } from "lucide-react";
 
 interface CardListHistoryQuestionProps {
   data?: HistoryPreTestDetail;
@@ -52,25 +51,31 @@ export default function CardListHistoryQuestion({
           <CardHeader>
             <CardTitle>Informasi Tes Edukasi</CardTitle>
           </CardHeader>
-          <CardContent className="text-sm text-muted-foreground space-y-1">
+          <CardContent className="text-muted-foreground space-y-1 text-sm">
             <p>
               Dikerjakan pada:{" "}
-              <span className="font-medium text-primary">
-                {format(new Date(data.created_at), "EEEE, dd MMMM yyyy 'pukul' HH:mm", {
-                  locale: idLocale,
-                })}
+              <span className="text-primary font-medium">
+                {format(
+                  new Date(data.created_at),
+                  "EEEE, dd MMMM yyyy 'pukul' HH:mm",
+                  {
+                    locale: idLocale,
+                  },
+                )}
               </span>
             </p>
             <p>
               Total Skor:{" "}
-              <span className="font-semibold text-green-700 text-base">
+              <span className="text-base font-semibold text-green-700">
                 {data.sum_score ?? "-"}
               </span>
             </p>
-            <p className="pt-2 text-foreground">
-              Tes edukasi ini bertujuan untuk membantu Anda memahami materi kesehatan yang telah atau akan dipelajari.
-              Melalui tes ini, diharapkan Anda dapat mengukur sejauh mana pemahaman Anda sebelum dan sesudah pembelajaran.
-              Skor tidak digunakan untuk penilaian akhir, melainkan sebagai alat refleksi dan penguatan edukasi.
+            <p className="text-foreground pt-2">
+              Tes edukasi ini bertujuan untuk membantu Anda memahami materi
+              kesehatan yang telah atau akan dipelajari. Melalui tes ini,
+              diharapkan Anda dapat mengukur sejauh mana pemahaman Anda sebelum
+              dan sesudah pembelajaran. Skor tidak digunakan untuk penilaian
+              akhir, melainkan sebagai alat refleksi dan penguatan edukasi.
             </p>
           </CardContent>
         </Card>
@@ -91,22 +96,15 @@ export default function CardListHistoryQuestion({
                   return (
                     <div
                       key={option.id}
-                      className={`flex gap-2 items-center rounded-md ${
-                        isSelected ? "text-green-600 font-semibold" : ""
+                      className={`flex items-center gap-2 rounded-md ${
+                        isSelected ? "font-semibold text-green-600" : ""
                       }`}
                     >
                       <span className="font-semibold">
                         {optionLabels[idx] || String.fromCharCode(65 + idx)}.
                       </span>
                       <span>{option.text}</span>
-                      {isSelected && (
-                        <div className="flex items-center gap-2">
-                          <Check className="ml-1 h-4 w-4" />
-                          <div className="flex items-center text-sm text-green-600">
-                            <Plus className="h-4 w-4" /> {option.score ?? 0}
-                          </div>
-                        </div>
-                      )}
+                      {/* Icon centang dan poin dihapus */}
                     </div>
                   );
                 })}
