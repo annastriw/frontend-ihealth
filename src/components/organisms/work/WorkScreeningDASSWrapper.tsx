@@ -266,12 +266,12 @@ export default function WorkScreeningDASSWrapper() {
  const mutation = useSubmitScreeningDASS({
   onSuccess: (res) => {
     console.log("Submit success response:", res);
-    toast.success("Berhasil submit hasil DASS!");
+    toast.success("Berhasil mengirim jawaban kuisioner DASS-21!");
     router.replace(`/dashboard/history/screening-dass/${res.data.id}`);
   },
   onError: (error) => {
     console.error("Submit error response:", error);
-    toast.error("Gagal submit hasil DASS.");
+    toast.error("Gagal mengirim jawaban kuisioner DASS-21.");
   },
 });
 

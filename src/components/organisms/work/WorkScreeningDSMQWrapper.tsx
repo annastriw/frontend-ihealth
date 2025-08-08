@@ -190,11 +190,11 @@ export default function WorkScreeningDSMQWrapper() {
 
   const mutation = useSubmitScreeningDSMQ({
     onSuccess: (res) => {
-      toast.success("Berhasil submit hasil DSMQ!");
+      toast.success("Berhasil mengirim jawaban kuisioner DSMQ!");
       router.replace(`/dashboard/history/screening-dsmq/${res.data.id}`);
     },
     onError: () => {
-      toast.error("Gagal submit hasil DSMQ.");
+      toast.error("Gagal mengirim jawaban kuisioner DSMQ.");
     },
   });
 

@@ -1,3 +1,4 @@
+//src/components/ui/styled-tab-trigger.tsx
 import { TabsTrigger } from "@/components/ui/tabs";
 import { twMerge } from "tailwind-merge";
 import type { ComponentProps } from "react";

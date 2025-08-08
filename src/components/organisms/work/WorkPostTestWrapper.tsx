@@ -46,7 +46,7 @@ export default function WorkPostTestWrapper({ id }: WorkPostTestWrapperProps) {
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
-      event.returnValue = "Jawaban Anda akan hilang jika halaman direfresh.";
+      event.returnValue = "Jawaban Anda akan hilang jika Anda memuat ulang halaman.";
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -59,16 +59,16 @@ export default function WorkPostTestWrapper({ id }: WorkPostTestWrapperProps) {
     onSuccess: (result) => {
       const historyId = result?.data?.id || result?.history_id;
       if (!historyId) {
-        toast.error("Gagal mengambil ID hasil post-test.");
+        toast.error("Gagal mendapatkan ID hasil post-test.");
         return;
       }
 
-      toast.success("Post Test berhasil disubmit!");
+      toast.success("Post-test berhasil dikirim!");
       sessionStorage.removeItem("backToSubmoduleId");
       router.replace(`/dashboard/history/post-test/${historyId}`);
     },
     onError: () => {
-      toast.error("Gagal submit post test. Silakan coba lagi.");
+      toast.error("Gagal mengirim post-test. Silakan coba lagi.");
     },
   });
 

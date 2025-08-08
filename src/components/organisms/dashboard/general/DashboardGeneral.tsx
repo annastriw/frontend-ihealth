@@ -9,7 +9,7 @@ import TabKesehatanMental from "./TabKesehatanMental";
 
 export default function DashboardGeneral() {
   return (
-    <div className="w-full px-4 py-10 md:px-10 lg:px-24">
+    <div className="w-full px-4 pt-2 md:px-10 lg:px-24">
       <Tabs defaultValue="hipertensi" className="w-full">
         <div className="w-full overflow-x-auto">
           <TabsList className="flex w-max gap-3 px-2 md:w-full md:justify-center">

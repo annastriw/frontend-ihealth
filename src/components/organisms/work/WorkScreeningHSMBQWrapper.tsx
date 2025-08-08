@@ -471,11 +471,11 @@ export default function WorkScreeningHSMBQWrapper() {
 
   const mutation = useSubmitScreeningHSMBQ({
     onSuccess: (res) => {
-      toast.success("Berhasil submit hasil HSMBQ!");
+      toast.success("Berhasil mengirim jawaban kuisioner HSMBQ!");
       router.replace(`/dashboard/history/screening-hsmbq/${res.data.id}`);
     },
     onError: () => {
-      toast.error("Gagal submit hasil HSMBQ.");
+      toast.error("Gagal mengirim jawaban kuisioner HSMBQ.");
     },
   });
 
