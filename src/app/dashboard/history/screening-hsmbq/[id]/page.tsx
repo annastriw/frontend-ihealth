@@ -8,7 +8,7 @@ export default function Page({ params }: any) {
     <section>
       <DashboardTitle
         head="Detail Riwayat Screening HSMBQ"
-        body="Menampilkan detail riwayat screening HSMBQ (Hipertensi)"
+        body="Menampilkan informasi lengkap mengenai riwayat screening HSMBQ yang telah dilakukan pasien hipertensi. Paragraf ini memuat detail hasil evaluasi kebiasaan kesehatan dan manajemen tekanan darah secara menyeluruh untuk membantu pemantauan kondisi pasien."
       />
       <DashboardHistoryScreeningHSMBQDetailWrapper id={id} />
     </section>

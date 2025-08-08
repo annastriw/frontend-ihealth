@@ -178,8 +178,10 @@ export default function CardListHistoryQuestionScreeningDASS({
           </div>
 
           <p className="pt-2 text-foreground">
-            Tes ini bertujuan memberikan gambaran awal terkait kondisi psikologis Anda.
-            Namun, hasil ini tidak menggantikan diagnosis profesional medis. Jika merasa terbebani, konsultasikan dengan tenaga kesehatan.
+            Tes DASS-21 ini bertujuan memberikan gambaran awal tentang kondisi psikologis Anda,  
+            termasuk tingkat stres, kecemasan, dan depresi.  
+            Hasil tes ini bukan pengganti diagnosis dari tenaga medis profesional.  
+            Jika Anda merasa terbebani, segera konsultasikan dengan tenaga kesehatan.
           </p>
         </CardContent>
       </Card>

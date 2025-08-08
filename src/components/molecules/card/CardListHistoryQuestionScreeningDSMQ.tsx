@@ -159,8 +159,9 @@ export default function CardListHistoryQuestionScreeningDSMQ({
           <p className={`text-sm ${color.text}`}>{description}</p>
 
           <p className="pt-2 text-foreground">
-            Hasil ini memberikan gambaran manajemen diri Anda terhadap diabetes.
-            Konsultasikan hasil ini dengan tenaga kesehatan untuk tindak lanjut.
+            Hasil screening DSMQ ini memberikan gambaran tentang pengelolaan mandiri diabetes Anda,  
+            meliputi pola makan, aktivitas, dan pengobatan.  
+            Diskusikan hasil ini dengan tenaga kesehatan untuk perbaikan pengelolaan yang lebih baik.
           </p>
         </CardContent>
       </Card>

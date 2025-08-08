@@ -140,9 +140,9 @@ export default function CardListHistoryQuestionScreeningHSMBQ({
           <p className={`text-sm ${color.text}`}>{description}</p>
 
           <p className="pt-2 text-foreground">
-            Hasil ini memberikan gambaran kepatuhan Anda terhadap manajemen diri
-            hipertensi. Konsultasikan hasil ini dengan tenaga kesehatan untuk
-            tindak lanjut.
+            Hasil screening HSMBQ ini menggambarkan tingkat kepatuhan Anda dalam manajemen diri hipertensi,  
+            termasuk pengaturan pola hidup dan pengobatan.  
+            Gunakan hasil ini untuk berdiskusi dengan tenaga kesehatan guna langkah penanganan lebih lanjut.
           </p>
         </CardContent>
       </Card>
