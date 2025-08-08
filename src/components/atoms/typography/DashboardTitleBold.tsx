@@ -9,10 +9,23 @@ interface DashboardTitleBoldProps {
 
 export default function DashboardTitleBold({ head }: DashboardTitleBoldProps) {
   const [showUnderline, setShowUnderline] = useState(false);
+  const [isShimmering, setIsShimmering] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowUnderline(true), 300);
-    return () => clearTimeout(timer);
+    const timer1 = setTimeout(() => {
+      setShowUnderline(true);
+      setIsShimmering(true);
+    }, 300);
+
+    // Stop shimmer after 2.5 seconds
+    const timer2 = setTimeout(() => {
+      setIsShimmering(false);
+    }, 2800);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
   }, []);
 
   return (
@@ -34,7 +47,11 @@ export default function DashboardTitleBold({ head }: DashboardTitleBoldProps) {
           transition={{ duration: 1.1, ease: "easeOut" }}
           className="absolute top-full left-1/2 mt-3 h-[4px] -translate-x-1/2 overflow-hidden rounded-full lg:left-0 lg:translate-x-0"
         >
-          <span className="shimmer-line relative block h-full w-full bg-gradient-to-r from-black via-neutral-500 to-black" />
+          <span
+            className={`relative block h-full w-full bg-gradient-to-r from-black via-neutral-500 to-black bg-[length:200%_100%] ${
+              isShimmering ? "animate-shimmer" : ""
+            }`}
+          />
         </motion.div>
       )}
     </motion.div>

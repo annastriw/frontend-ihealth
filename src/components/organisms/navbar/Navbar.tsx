@@ -29,14 +29,14 @@ export default function Navbar() {
         active: pathname === "/about-us",
       },
       {
-        href: "/dashboard/modules",
+        href: "/dashboard",
         label: "Materi",
-        active: pathname.startsWith("/dashboard/modules"),
+        active: pathname.startsWith("/dashboard"),
       },
       {
-        href: "/dashboard/screening",
+        href: "/dashboard",
         label: "Screening",
-        active: pathname.startsWith("/dashboard/screening"),
+        active: pathname.startsWith("/dashboard"),
       },
     ],
     [pathname],

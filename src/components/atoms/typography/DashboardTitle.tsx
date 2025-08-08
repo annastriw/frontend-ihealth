@@ -10,10 +10,18 @@ interface DashboardTitleProps {
 
 export default function DashboardTitle({ head, body }: DashboardTitleProps) {
   const [showUnderline, setShowUnderline] = useState(false);
+  const [shimmerActive, setShimmerActive] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowUnderline(true), 500);
-    return () => clearTimeout(timer);
+    const timerUnderline = setTimeout(() => setShowUnderline(true), 500);
+
+    // Stop shimmer after 4 seconds
+    const timerShimmer = setTimeout(() => setShimmerActive(false), 4000);
+
+    return () => {
+      clearTimeout(timerUnderline);
+      clearTimeout(timerShimmer);
+    };
   }, []);
 
   return (
@@ -29,14 +37,20 @@ export default function DashboardTitle({ head, body }: DashboardTitleProps) {
         {head}
       </h1>
 
-      {/* Underline Animation */}
+      {/* Underline Animation with shimmer */}
       {showUnderline && (
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: "5.5rem" }}
           transition={{ duration: 1.2, ease: "easeInOut" }}
-          className="absolute top-full left-1/2 mt-3 h-[3px] -translate-x-1/2 rounded-full bg-black md:left-0 md:translate-x-0"
-        />
+          className="absolute top-full left-1/2 mt-3 h-[3px] -translate-x-1/2 overflow-hidden rounded-full md:left-0 md:translate-x-0"
+        >
+          <span
+            className={`relative block h-full w-full bg-gradient-to-r from-black via-neutral-500 to-black bg-[length:200%_100%] ${
+              shimmerActive ? "animate-shimmer" : ""
+            }`}
+          />
+        </motion.div>
       )}
 
       {/* Body Text */}
