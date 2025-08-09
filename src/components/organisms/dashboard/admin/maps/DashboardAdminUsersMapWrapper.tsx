@@ -70,6 +70,7 @@ export default function DashboardAdminUsersMapsWrapper() {
 
   if (isPending) return <div className="p-6">Loading data pengguna...</div>;
 
+  // Inisialisasi grouped, hanya hitung DM, HT, ALL masing-masing tanpa double count
   const grouped: Record<KelurahanType, Record<string, { DM: number; HT: number; ALL: number }>> = {
     Pedalangan: {},
     Padangsari: {},
@@ -81,16 +82,13 @@ export default function DashboardAdminUsersMapsWrapper() {
     });
   });
 
+  // Hitung statistik per diagnosa, "ALL" hanya hitung di ALL saja
   userMapData?.data?.forEach((user: any) => {
     const kel = user.kelurahan;
     const rw = user.rw;
     const disease = user.disease_type?.toUpperCase();
 
-    if (
-      !kel || !rw ||
-      !(kel === "Pedalangan" || kel === "Padangsari") ||
-      disease === "GENERAL"
-    ) return;
+    if (!kel || !rw || !(kel === "Pedalangan" || kel === "Padangsari") || disease === "GENERAL") return;
 
     const kelKey = kel as KelurahanType;
 
@@ -98,11 +96,7 @@ export default function DashboardAdminUsersMapsWrapper() {
 
     if (disease === "DM") grouped[kelKey][rw].DM++;
     else if (disease === "HT") grouped[kelKey][rw].HT++;
-    else if (disease === "ALL") {
-      grouped[kelKey][rw].DM++;
-      grouped[kelKey][rw].HT++;
-      grouped[kelKey][rw].ALL++;
-    }
+    else if (disease === "ALL") grouped[kelKey][rw].ALL++;
   });
 
   return (
