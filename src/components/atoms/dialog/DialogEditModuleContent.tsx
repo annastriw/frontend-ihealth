@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,11 +27,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -66,6 +67,8 @@ export default function DialogEditModuleContent({
     mode: "onChange",
   });
 
+  const [isNoVideo, setIsNoVideo] = useState(false);
+
   const { data: session } = useSession();
   const queryClient = useQueryClient();
 
@@ -100,6 +103,11 @@ export default function DialogEditModuleContent({
       video_url: data.video_url,
       file_path: null,
     });
+  }, [data, form]);
+
+  useEffect(() => {
+    const videoUrl = form.getValues("video_url");
+    setIsNoVideo(videoUrl === "-" || videoUrl === "");
   }, [data, form]);
 
   const onSubmit = (values: ModuleContentType) => {
@@ -205,6 +213,7 @@ export default function DialogEditModuleContent({
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="video_url"
@@ -218,15 +227,39 @@ export default function DialogEditModuleContent({
                         type="text"
                         placeholder="Masukkan URL video dari YouTube (contoh: QdU7Ztdd-sw)"
                         {...field}
+                        value={isNoVideo ? "-" : field.value}
+                        disabled={isNoVideo}
                       />
                     </FormControl>
                     <FormMessage />
                     <FormDescription>
-                      * Contoh URL: https://www.youtube.com/watch?v=QdU7Ztdd-sw — yang dimasukkan adalah: <code>QdU7Ztdd-sw</code>
+                      * Contoh URL: https://www.youtube.com/watch?v=y55Wupx2ZDU — yang
+                      dimasukkan adalah: <code>y55Wupx2ZDU</code>
                     </FormDescription>
+                    <div className="mt-2 flex items-center space-x-2">
+                      <Checkbox
+                        id="no-video"
+                        checked={isNoVideo}
+                        onCheckedChange={(checked) => {
+                          setIsNoVideo(!!checked);
+                          if (checked) {
+                            form.setValue("video_url", "-");
+                          } else {
+                            form.setValue("video_url", "");
+                          }
+                        }}
+                      />
+                      <label
+                        htmlFor="no-video"
+                        className="text-sm font-medium leading-none cursor-pointer"
+                      >
+                        Centang jika konten tanpa menggunakan video Youtube
+                      </label>
+                    </div>
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="file_path"
