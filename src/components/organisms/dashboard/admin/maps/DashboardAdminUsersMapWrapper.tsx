@@ -173,14 +173,38 @@ export default function DashboardAdminUsersMapsWrapper() {
               {rwByKelurahan[kelurahan].map(rw => {
                 const count = grouped[kelurahan][rw];
                 return (
-                  <div key={rw} className="text-sm flex justify-between border-b pb-1">
-                    <span>{rw}</span>
-                    <span className="flex flex-col text-right">
-                      <span className="text-red-600">Hipertensi: {count.HT} orang</span>
-                      <span className="text-yellow-600">Diabetes Melitus: {count.DM} orang</span>
-                      <span className="text-orange-600">DM + HT: {count.ALL} orang</span>
-                    </span>
-                  </div>
+<div
+  key={rw}
+  className="text-sm border-b pb-3 mb-3 last:border-none last:pb-0 last:mb-0"
+>
+  <div className="font-medium mb-2 text-gray-700">{rw}</div>
+
+  <div className="space-y-1.5"> {/* gap dikurangi dari 2 ke 1.5 */}
+    {/* Hipertensi */}
+    <div className="flex justify-between items-center">
+      <span className="font-semibold text-red-700">Hipertensi</span>
+      <span className="bg-red-100 text-red-800 rounded-lg px-3 py-1 text-xs font-medium min-w-[70px] text-center">
+        {count.HT} orang
+      </span>
+    </div>
+
+    {/* Diabetes Melitus */}
+    <div className="flex justify-between items-center">
+      <span className="font-semibold text-yellow-700">Diabetes Melitus</span>
+      <span className="bg-yellow-100 text-yellow-900 rounded-lg px-3 py-1 text-xs font-medium min-w-[70px] text-center">
+        {count.DM} orang
+      </span>
+    </div>
+
+    {/* DM + HT */}
+    <div className="flex justify-between items-center">
+      <span className="font-semibold text-orange-700">DM + HT</span>
+      <span className="bg-orange-100 text-orange-900 rounded-lg px-3 py-1 text-xs font-medium min-w-[70px] text-center">
+        {count.ALL} orang
+      </span>
+    </div>
+  </div>
+</div>
                 );
               })}
             </div>
