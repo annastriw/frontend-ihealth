@@ -21,9 +21,17 @@ export async function getScreeningDSMQDetail(
   return {
     id: data.id,
     created_at: data.created_at,
+    user: {
+      id: data.user.id,
+      name: data.user.name,
+    },
     score: data.score,
     interpretation: data.interpretation,
     description: data.description,
-    answers: data.answers,
+    answers: data.answers.map((answer: any) => ({
+      question_id: answer.question_id,
+      score: answer.score,
+      question_text: answer.question_text ?? "",
+    })),
   };
 }
