@@ -79,7 +79,7 @@ export default function FormUpdatePersonalInformation() {
       weight: "",
       height: "",
     },
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   // Reset form ketika data sudah ready

@@ -49,7 +49,7 @@ export default function CardListReportHistoryPreTest({
             <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
               <CardHeader className="flex md:flex-row md:items-center md:justify-between">
                 <div className="space-y-2">
-                  <Badge className="text-white uppercase" variant={"secondary"}>
+                  <Badge className="bg-[oklch(0.9_0.1_145)] font-semibold text-black">
                     {preTest.sub_module?.module?.type}
                   </Badge>
                   <CardTitle className="text-md font-bold md:text-xl">
