@@ -21,6 +21,10 @@ export async function getScreeningHSMBQDetail(
   return {
     id: data.id,
     created_at: data.created_at,
+    user: {
+      id: data.user.id,
+      name: data.user.name,
+    },
     score: data.score,
     interpretation: data.interpretation,
     description: data.description,

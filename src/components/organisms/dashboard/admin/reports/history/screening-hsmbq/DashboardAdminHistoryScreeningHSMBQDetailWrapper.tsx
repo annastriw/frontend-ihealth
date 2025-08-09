@@ -3,6 +3,7 @@
 
 import { useSession } from "next-auth/react";
 import { useGetScreeningHSMBQDetail } from "@/http/admin/screening-hsmbq/admin-get-screening-hsmbq-detail";
+import CardDetailNameOnTest from "@/components/molecules/card/CardDetailNameOnTest";
 import CardListHistoryQuestionScreeningHSMBQ from "@/components/molecules/card/CardListHistoryQuestionScreeningHSMBQ";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertTriangle } from "lucide-react";
@@ -50,7 +51,9 @@ export default function DashboardAdminHistoryScreeningHSMBQDetailWrapper({
 
   const history = data.data;
 
-  return (
+return (
+  <div className="space-y-6">
+    <CardDetailNameOnTest name={history.user?.name ?? ""} />
     <CardListHistoryQuestionScreeningHSMBQ
       createdAt={history.created_at}
       score={history.score}
@@ -59,5 +62,6 @@ export default function DashboardAdminHistoryScreeningHSMBQDetailWrapper({
       answers={history.answers}
       isLoading={false}
     />
-  );
+  </div>
+);
 }

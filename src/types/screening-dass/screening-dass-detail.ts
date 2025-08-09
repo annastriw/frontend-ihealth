@@ -1,9 +1,13 @@
-// src/types/screening-dass/screening-dass-detail.ts
 export type Level = "Normal" | "Ringan" | "Sedang" | "Parah" | "Sangat Parah";
 
 export interface ScreeningDASSDetail {
   id: string;
   created_at: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
   scores: {
     depression: number;
     anxiety: number;

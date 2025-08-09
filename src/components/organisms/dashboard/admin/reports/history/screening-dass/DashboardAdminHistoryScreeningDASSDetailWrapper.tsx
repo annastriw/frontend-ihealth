@@ -3,6 +3,7 @@
 
 import { useSession } from "next-auth/react";
 import { useGetScreeningDASSDetail } from "@/http/admin/screening-dass/admin-get-screening-dass-detail";
+import CardDetailNameOnTest from "@/components/molecules/card/CardDetailNameOnTest";
 import CardListHistoryQuestionScreeningDASS from "@/components/molecules/card/CardListHistoryQuestionScreeningDASS";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertTriangle } from "lucide-react";
@@ -16,13 +17,13 @@ export default function DashboardAdminHistoryScreeningDASSDetailWrapper({
 }: DashboardAdminHistoryScreeningDASSDetailWrapperProps) {
   const { data: session, status } = useSession();
 
-  const {
-    data,
-    isPending,
-    isError,
-  } = useGetScreeningDASSDetail(id, session?.access_token as string, {
-    enabled: status === "authenticated" && !!session?.access_token,
-  });
+  const { data, isPending, isError } = useGetScreeningDASSDetail(
+    id,
+    session?.access_token as string,
+    {
+      enabled: status === "authenticated" && !!session?.access_token,
+    }
+  );
 
   if (isPending) {
     return (
@@ -51,13 +52,16 @@ export default function DashboardAdminHistoryScreeningDASSDetailWrapper({
   const history = data.data;
 
   return (
-    <CardListHistoryQuestionScreeningDASS
-      createdAt={history.created_at}
-      scores={history.scores}
-      interpretations={history.interpretations}
-      descriptions={history.descriptions}
-      answers={history.answers}
-      isLoading={false}
-    />
+    <div className="space-y-6">
+      <CardDetailNameOnTest name={history.user?.name ?? ""} />
+      <CardListHistoryQuestionScreeningDASS
+        createdAt={history.created_at}
+        scores={history.scores}
+        interpretations={history.interpretations}
+        descriptions={history.descriptions}
+        answers={history.answers}
+        isLoading={false}
+      />
+    </div>
   );
 }
