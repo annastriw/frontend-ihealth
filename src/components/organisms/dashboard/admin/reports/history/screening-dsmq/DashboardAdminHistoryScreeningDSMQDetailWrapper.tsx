@@ -4,6 +4,7 @@
 
 import { useSession } from "next-auth/react";
 import { useGetScreeningDSMQDetail } from "@/http/admin/screening-dsmq/admin-get-screening-dsmq-detail";
+import CardDetailNameOnTest from "@/components/molecules/card/CardDetailNameOnTest";
 import CardListHistoryQuestionScreeningDSMQ from "@/components/molecules/card/CardListHistoryQuestionScreeningDSMQ";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertTriangle } from "lucide-react";
@@ -51,7 +52,9 @@ export default function DashboardAdminHistoryScreeningDSMQDetailWrapper({
 
   const history = data.data;
 
-  return (
+return (
+  <div className="space-y-6">
+    <CardDetailNameOnTest name={history.user?.name ?? ""} />
     <CardListHistoryQuestionScreeningDSMQ
       createdAt={history.created_at}
       score={history.score}
@@ -60,5 +63,6 @@ export default function DashboardAdminHistoryScreeningDSMQDetailWrapper({
       answers={history.answers}
       isLoading={false}
     />
-  );
+  </div>
+);
 }

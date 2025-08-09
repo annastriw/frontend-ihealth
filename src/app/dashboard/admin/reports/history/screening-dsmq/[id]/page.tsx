@@ -10,7 +10,7 @@ export default function Page({ params }: any) {
     <section>
       <DashboardTitle
         head="Detail Riwayat Screening DSMQ"
-        body="Menampilkan informasi lengkap mengenai riwayat screening DSMQ yang telah dilakukan oleh pasien diabetes. Paragraf ini berisi detail hasil evaluasi manajemen diabetes secara menyeluruh untuk membantu pemantauan dan pengendalian kondisi kesehatan pasien."
+        body="Menampilkan informasi lengkap mengenai riwayat screening DSMQ yang telah dilakukan oleh pasien diabetes. Halaman ini berisi detail hasil evaluasi manajemen diabetes secara menyeluruh untuk membantu pemantauan dan pengendalian kondisi kesehatan pasien."
       />
       <DashboardAdminHistoryScreeningDSMQDetailWrapper id={id} />
     </section>
