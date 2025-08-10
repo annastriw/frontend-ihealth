@@ -491,9 +491,9 @@ export function AppSidebar({ session }: AppSidebarProps) {
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
-                          className={buttonClass("/dashboard/admin/users")}
+                          className={buttonClass("/dashboard/medical/users")}
                         >
-                          <Link href="/dashboard/admin/users">
+                          <Link href="/dashboard/medical/users">
                             <User />
                             <span>Pengguna</span>
                           </Link>
