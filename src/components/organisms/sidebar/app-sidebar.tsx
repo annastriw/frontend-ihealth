@@ -462,6 +462,57 @@ export function AppSidebar({ session }: AppSidebarProps) {
                     </SidebarMenu>
                   </SidebarGroupContent>
                 </SidebarGroup>
+
+                {/* Laporan */}
+                <SidebarGroup>
+                  <SidebarGroupLabel>Laporan</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          className={buttonClass("/dashboard/admin/reports")}
+                        >
+                          <Link href="/dashboard/admin/reports">
+                            <ClipboardList />
+                            <span>Laporan Keseluruhan</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+
+                {/* Pengguna */}
+                <SidebarGroup>
+                  <SidebarGroupLabel>Manajemen Pengguna</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          className={buttonClass("/dashboard/admin/users")}
+                        >
+                          <Link href="/dashboard/admin/users">
+                            <User />
+                            <span>Pengguna</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          className={buttonClass("/dashboard/admin/maps")}
+                        >
+                          <Link href="/dashboard/admin/maps">
+                            <Map />
+                            <span>Lokasi Persebaran</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
               </>
             )}
 
