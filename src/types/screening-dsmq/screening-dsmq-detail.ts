@@ -14,7 +14,7 @@ export interface Answer {
 export interface ScreeningDSMQDetail {
   id: string;
   created_at: string;
-  user: User;
+  user: User | null;
   score: number;
   interpretation: LevelDSMQ;
   description: string;

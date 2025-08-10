@@ -14,7 +14,7 @@ export interface Answer {
 export interface ScreeningHSMBQDetail {
   id: string;
   created_at: string;
-  user: User;
+  user: User | null;
   score: number;
   interpretation: LevelHSMBQ;
   description: string;

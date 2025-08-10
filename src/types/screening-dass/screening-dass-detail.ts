@@ -7,7 +7,7 @@ export interface ScreeningDASSDetail {
     id: string;
     name: string;
     email: string;
-  };
+  } | null;
   scores: {
     depression: number;
     anxiety: number;

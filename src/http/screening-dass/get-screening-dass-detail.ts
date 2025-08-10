@@ -21,11 +21,7 @@ export async function getScreeningDASSDetail(
   return {
     id: data.id,
     created_at: data.created_at,
-    user: {
-      id: data.user.id,
-      name: data.user.name,
-      email: data.user.email,
-    },
+    user: null,
     scores: {
       depression: data.scores.Depresi,
       anxiety: data.scores.Kecemasan,
