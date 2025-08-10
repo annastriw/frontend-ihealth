@@ -415,7 +415,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
                         >
                           <Link href="/dashboard/medical/screening/diabetes-melitus">
                             <Stethoscope />
-                            <span>Diabetes Melitus</span>
+                            <span>Input Cek Kesehatan</span>
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>

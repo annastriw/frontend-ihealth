@@ -318,15 +318,15 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     <div className="p-6">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">
-          Screening Diabetes Melitus
+          Input Cek Kesehatan
         </h1>
         <p className="mt-2 text-gray-600">
-          Panel screening diabetes untuk tenaga medis
+          Panel screening input cek kesehatan untuk tenaga medis
         </p>
       </div>
 
       <div className="rounded-lg bg-white p-6 shadow-md">
-        <h2 className="mb-4 text-xl font-semibold">Form Screening Diabetes</h2>
+        <h2 className="mb-4 text-xl font-semibold">Form Input Cek Kesehatan</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Patient Search */}
