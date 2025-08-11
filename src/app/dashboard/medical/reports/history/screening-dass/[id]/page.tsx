@@ -2,11 +2,11 @@ import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardMedicalHistoryScreeningDASSDetailWrapper from "@/components/organisms/dashboard/medical/reports/history/screening-dass/DashboardMedicalHistoryScreeningDASSDetailWrapper";
 
 interface PageProps {
-  params: { id: string }
+  params: Promise<{id: string}>
 }
 
-export default function Page({ params }: PageProps) {
-  const { id } = params;
+export default async function Page({ params }: PageProps) {
+  const { id } =  await params;
 
   return (
     <section>
