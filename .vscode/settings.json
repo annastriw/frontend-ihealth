@@ -1,0 +1,51 @@
+{
+  // Jangan watch folder besar untuk performa
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    ".next/**": true,
+    "build/**": true,
+    "out/**": true
+  },
+
+  // Jangan index folder besar saat search
+  "search.exclude": {
+    "**/node_modules": true,
+    ".next": true,
+    "build": true,
+    "out": true
+  },
+
+  // Matikan auto format (jika ingin lebih ringan, bisa pakai manual via script)
+  "editor.formatOnSave": false,
+
+  // Format file secara manual pakai script "prettier"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Konfigurasi Prettier
+  "prettier.useEditorConfig": true,
+  "prettier.requireConfig": true,
+
+  // Format TailwindCSS plugin (karena kamu pakai prettier-plugin-tailwindcss)
+  "tailwindCSS.experimental.classRegex": [
+    "clsx\\(([^)]*)\\)",
+    "cn\\(([^)]*)\\)"
+  ],
+
+  // Maksimalkan performa TypeScript server (biar nggak lemot)
+  "typescript.tsserver.maxTsServerMemory": 3072,
+  "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+
+  // Tab size standar untuk JS/TS
+  "editor.tabSize": 2,
+
+  // Gunakan UTF-8 dan line ending Unix (LF)
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+
+  // Matikan autosave (opsional, tergantung preferensi)
+  "files.autoSave": "off",
+
+  // Batasi file JS/TS yang di-index oleh eslint
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "eslint.validate": ["javascript", "typescript", "typescriptreact", "javascriptreact"]
+}
