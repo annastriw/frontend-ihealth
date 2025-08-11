@@ -1,6 +1,5 @@
-// src/http/admin/screening-hsmbq/admin-get-screening-hsmbq-detail.ts
 import { useQuery } from "@tanstack/react-query";
-import { getScreeningHSMBQDetail } from "@/http/admin/screening-hsmbq/endpoint-screening-hsmbq-detail";
+import { getScreeningHSMBQDetail } from "@/http/medical/screening-hsmbq/endpoint-screening-hsmbq-detail";
 import { ScreeningHSMBQDetail } from "@/types/screening-hsmbq/screening-hsmbq-detail";
 
 export function useGetScreeningHSMBQDetail(
