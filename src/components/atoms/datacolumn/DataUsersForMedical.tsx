@@ -17,15 +17,17 @@ export const usersColumns = (props: UserColumnProps): ColumnDef<User>[] => [
   {
     accessorKey: "index",
     header: "No",
-    cell: ({ row }) => (
-      <p suppressHydrationWarning>{row.index + 1}</p>
-    ),
+    cell: ({ row }) => {
+      console.log("Rendering index cell:", row.index);
+      return <p suppressHydrationWarning>{row.index + 1}</p>;
+    },
   },
   {
     accessorKey: "title",
     header: "Nama",
     cell: ({ row }) => {
       const data = row.original;
+      console.log("Rendering name cell for user:", data);
       return (
         <p suppressHydrationWarning className="line-clamp-1 md:line-clamp-2">
           {data.name}
@@ -43,6 +45,7 @@ export const usersColumns = (props: UserColumnProps): ColumnDef<User>[] => [
         medical_personal: "Tenaga Medis",
         admin: "Admin",
       };
+      console.log("Rendering role cell for user:", data.role);
       return (
         <p suppressHydrationWarning className="line-clamp-1 md:line-clamp-2">
           {roleLabels[data.role] || data.role}
@@ -55,6 +58,7 @@ export const usersColumns = (props: UserColumnProps): ColumnDef<User>[] => [
     header: "Tanggal Bergabung",
     cell: ({ row }) => {
       const data = row.original;
+      console.log("Rendering created_at cell for user:", data.created_at);
       return (
         <p suppressHydrationWarning>
           {format(new Date(data.created_at), "EEEE, d MMMM yyyy, HH:mm", {
@@ -69,6 +73,8 @@ export const usersColumns = (props: UserColumnProps): ColumnDef<User>[] => [
     cell: ({ row }) => {
       const data = row.original;
 
+      console.log("Rendering actions cell for user:", data);
+
       return (
         <ActionButton>
           {/* Tombol detail */}
@@ -80,18 +86,24 @@ export const usersColumns = (props: UserColumnProps): ColumnDef<User>[] => [
             <span className="ml-2">Detail</span>
           </Link>
 
-          {/* [HIDE] Tombol reset password disembunyikan sementara */}
+          {/* Uncomment ini jika ingin pakai reset password */}
           {/* <div
-            onClick={() => props.resetPasswordUserHandler(data)}
+            onClick={() => {
+              console.log("Reset password clicked for user:", data);
+              props.resetPasswordUserHandler(data);
+            }}
             className="flex cursor-pointer items-center text-yellow-600 hover:text-yellow-800 hover:underline"
           >
             <KeyRound className="h-4 w-4" />
             <span className="ml-2">Reset Password</span>
           </div> */}
 
-          {/* [HIDE] Tombol hapus disembunyikan sementara */}
+          {/* Uncomment ini jika ingin pakai hapus user */}
           {/* <div
-            onClick={() => props.deleteUserHandler(data)}
+            onClick={() => {
+              console.log("Delete clicked for user:", data);
+              props.deleteUserHandler(data);
+            }}
             className="flex cursor-pointer items-center text-red-600 hover:text-red-800 hover:underline"
           >
             <Trash2 className="h-4 w-4" />
