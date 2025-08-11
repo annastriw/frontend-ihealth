@@ -32,7 +32,9 @@ interface ScreeningData {
   heart_disease: number;
   smoking_history: string; // String langsung untuk ML API
   bmi: number;
-  hypertension: number;
+  sistolic_pressure: number;    // TAMBAH INI
+  diastolic_pressure: number;   // TAMBAH INI
+  hypertension_classification: string; // TAMBAH INI
   blood_glucose_level: number;
 }
 
@@ -67,9 +69,31 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     heart_disease: 0,
     smoking_history: "tidak pernah merokok", // Default string value
     bmi: 0,
-    hypertension: 0,
+    sistolic_pressure: 0,        // TAMBAH INI
+    diastolic_pressure: 0,       // TAMBAH INI
+    hypertension_classification: "", // TAMBAH INI
     blood_glucose_level: 0,
   });
+
+  // TAMBAH: Fungsi untuk mengklasifikasi hipertensi
+  const classifyHypertension = (sistolic: number, diastolic: number): string => {
+    if (sistolic < 120 && diastolic < 80) {
+      return "Optimal";
+    } else if (sistolic >= 120 && sistolic <= 129 && diastolic >= 80 && diastolic <= 84) {
+      return "Normal";
+    } else if (sistolic >= 130 && sistolic <= 139 && diastolic >= 85 && diastolic <= 89) {
+      return "Normal Tinggi (Pra Hipertensi)";
+    } else if (sistolic >= 140 && sistolic <= 159 && diastolic >= 90 && diastolic <= 99) {
+      return "Hipertensi Derajat 1";
+    } else if (sistolic >= 160 && sistolic <= 179 && diastolic >= 100 && diastolic <= 109) {
+      return "Hipertensi Derajat 2";
+    } else if (sistolic >= 180 && diastolic >= 110) {
+      return "Hipertensi Derajat 3";
+    } else if (sistolic >= 140 && diastolic < 90) {
+      return "Hipertensi Sistolik Terisolasi";
+    }
+    return "Normal";
+  };
 
   // Search patients dengan debounce
   useEffect(() => {
@@ -143,7 +167,9 @@ export default function MedicalDiabetesMelitusScreeningPage() {
             patientData.smoking_history || "tidak pernah merokok", // String langsung
           bmi: patientData.bmi || 0,
           // Keep manual input fields
-          hypertension: prev.hypertension,
+          sistolic_pressure: prev.sistolic_pressure,        // TAMBAH INI
+          diastolic_pressure: prev.diastolic_pressure,      // TAMBAH INI
+          hypertension_classification: prev.hypertension_classification, // TAMBAH INI
           blood_glucose_level: prev.blood_glucose_level,
         }));
 
@@ -186,7 +212,9 @@ export default function MedicalDiabetesMelitusScreeningPage() {
       heart_disease: 0,
       smoking_history: "tidak pernah merokok",
       bmi: 0,
-      hypertension: 0,
+      sistolic_pressure: 0,        // TAMBAH INI
+      diastolic_pressure: 0,       // TAMBAH INI
+      hypertension_classification: "", // TAMBAH INI
       blood_glucose_level: 0,
     });
   };
@@ -200,6 +228,24 @@ export default function MedicalDiabetesMelitusScreeningPage() {
       [field]: value,
     }));
   };
+
+  // TAMBAH: Handle input change untuk sistol/diastol dengan auto-klasifikasi
+  const handleBloodPressureChange = (field: 'sistolic_pressure' | 'diastolic_pressure', value: number) => {
+    setFormData((prev) => {
+      const updated = { ...prev, [field]: value };
+      
+      // Auto-classify hypertension ketika kedua nilai ada
+      if (updated.sistolic_pressure > 0 && updated.diastolic_pressure > 0) {
+        updated.hypertension_classification = classifyHypertension(
+          updated.sistolic_pressure, 
+          updated.diastolic_pressure
+        );
+      }
+      
+      return updated;
+    });
+  };
+
 
   const getDefaultRecommendation = (prediction: number): string => {
     if (prediction === 1) {
@@ -238,7 +284,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
       return;
     }
 
-    // Validasi form data
+   // UPDATED: Validasi form data dengan field baru
     if (!formData.age || formData.age <= 0) {
       alert("Umur harus diisi dengan benar");
       return;
@@ -246,6 +292,16 @@ export default function MedicalDiabetesMelitusScreeningPage() {
 
     if (!formData.bmi || formData.bmi <= 0) {
       alert("BMI harus diisi dengan benar");
+      return;
+    }
+
+    if (!formData.sistolic_pressure || formData.sistolic_pressure <= 0) {
+      alert("Tekanan darah sistol harus diisi dengan benar");
+      return;
+    }
+
+    if (!formData.diastolic_pressure || formData.diastolic_pressure <= 0) {
+      alert("Tekanan darah diastol harus diisi dengan benar");
       return;
     }
 
@@ -277,6 +333,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
       console.log("Response:", result); // Debug log
 
       if (response.ok) {
+
         // Simpan hasil prediksi ke state
         setPredictionResult({
           prediction: result.data.prediction,
@@ -498,27 +555,64 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               </p>
             </div>
 
-            {/* Hypertension - Manual Input */}
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Tekanan Darah
-                <span className="ml-1 text-red-500">*</span>
-                <span className="ml-1 text-xs text-gray-500">
-                  (Input Manual)
-                </span>
-              </label>
-              <select
-                value={formData.hypertension}
-                onChange={(e) =>
-                  handleInputChange("hypertension", parseInt(e.target.value))
-                }
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                required
-              >
-                <option value="0">Rendah</option>
-                <option value="1">Tinggi</option>
-              </select>
+            {/* UPDATED: Blood Pressure - Sistol dan Diastol - GANTI BAGIAN INI */}
+            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Tekanan Darah Sistol (mmHg)
+                  <span className="ml-1 text-red-500">*</span>
+                  <span className="ml-1 text-xs text-gray-500">(Input Manual)</span>
+                </label>
+                <input
+                  type="number"
+                  min="60"
+                  max="250"
+                  value={formData.sistolic_pressure || ""}
+                  onChange={(e) => handleBloodPressureChange("sistolic_pressure", parseInt(e.target.value))}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  placeholder="Contoh: 120"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Tekanan Darah Diastol (mmHg)
+                  <span className="ml-1 text-red-500">*</span>
+                  <span className="ml-1 text-xs text-gray-500">(Input Manual)</span>
+                </label>
+                <input
+                  type="number"
+                  min="40"
+                  max="150"
+                  value={formData.diastolic_pressure || ""}
+                  onChange={(e) => handleBloodPressureChange("diastolic_pressure", parseInt(e.target.value))}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  placeholder="Contoh: 80"
+                  required
+                />
+              </div>
             </div>
+
+             {/* TAMBAH: Klasifikasi Hipertensi - Auto-generated */}
+            {formData.hypertension_classification && (
+              <div className="md:col-span-2">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Klasifikasi Hipertensi
+                  <span className="ml-1 text-green-600">✓</span>
+                  <span className="ml-1 text-xs text-gray-500">(Auto-generated)</span>
+                </label>
+                <div className={`w-full rounded-md border px-3 py-2 ${
+                  formData.hypertension_classification === "Optimal" || formData.hypertension_classification === "Normal" 
+                    ? "bg-green-50 border-green-300 text-green-700"
+                    : formData.hypertension_classification === "Normal Tinggi (Pra Hipertensi)"
+                    ? "bg-yellow-50 border-yellow-300 text-yellow-700"  
+                    : "bg-red-50 border-red-300 text-red-700"
+                }`}>
+                  {formData.hypertension_classification}
+                </div>
+              </div>
+            )}
 
             {/* Heart Disease */}
             <div>
@@ -686,7 +780,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               </div>
             </div>
 
-            {/* Data Pasien yang di-screening */}
+             {/* UPDATED: Data Pasien yang di-screening dengan field baru */}
             <div className="mb-4 rounded-md border bg-white p-4">
               <h5 className="mb-2 font-medium text-gray-900">
                 Data Screening:
@@ -709,6 +803,17 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                   <p className="font-medium">
                     {formData.blood_glucose_level} mg/dL
                   </p>
+                </div>
+                {/* TAMBAH: Tampilkan data tekanan darah */}
+                <div>
+                  <span className="text-gray-600">Tekanan Darah:</span>
+                  <p className="font-medium">
+                    {formData.sistolic_pressure}/{formData.diastolic_pressure} mmHg
+                  </p>
+                </div>
+                <div>
+                  <span className="text-gray-600">Klasifikasi:</span>
+                  <p className="font-medium">{formData.hypertension_classification}</p>
                 </div>
               </div>
             </div>
