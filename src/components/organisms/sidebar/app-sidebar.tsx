@@ -502,9 +502,9 @@ export function AppSidebar({ session }: AppSidebarProps) {
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
-                          className={buttonClass("/dashboard/admin/maps")}
+                          className={buttonClass("/dashboard/medical/maps")}
                         >
-                          <Link href="/dashboard/admin/maps">
+                          <Link href="/dashboard/medical/maps">
                             <Map />
                             <span>Lokasi Persebaran</span>
                           </Link>
