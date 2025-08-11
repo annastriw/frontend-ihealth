@@ -471,9 +471,9 @@ export function AppSidebar({ session }: AppSidebarProps) {
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
-                          className={buttonClass("/dashboard/admin/reports")}
+                          className={buttonClass("/dashboard/medical/reports")}
                         >
-                          <Link href="/dashboard/admin/reports">
+                          <Link href="/dashboard/medical/reports">
                             <ClipboardList />
                             <span>Laporan Keseluruhan</span>
                           </Link>
