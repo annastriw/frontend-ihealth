@@ -27,34 +27,34 @@ export default function DashboardWrapper() {
 
   return (
     <>
-     <DashboardTitle
-  head="iHealth Edu"
-  body="Selamat datang di Dashboard iHealth Edu. Temukan berbagai informasi dan fitur pendukung untuk menjaga kesehatan Anda, akses modul edukasi, serta tinjau riwayat skrining dan hasil tes secara mudah dan lengkap."
-/>
+      <DashboardTitle
+        head="iHealth Edu"
+        body="Selamat datang di Dashboard iHealth Edu. Akses modul edukasi kesehatan, kelola skrining dan hasil tes, serta temukan informasi lengkap untuk mendukung gaya hidup sehat Anda."
+      />
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <CardDashboardTitle
           title="Diabetes Melitus"
           icon={Syringe}
-          description="Pelajari faktor risiko, pencegahan, dan kelola diabetes Anda."
+          description="Pelajari faktor risiko, gejala, dan cara pencegahan serta pengelolaan diabetes secara efektif."
           link="diabetes-melitus"
         />
         <CardDashboardTitle
           title="Hipertensi"
           icon={HeartPulse}
-          description="Ketahui cara memantau tekanan darah dan hidup sehat."
+          description="Ketahui cara memantau tekanan darah dan langkah-langkah menjaga tekanan darah tetap normal."
           link="hipertensi"
         />
         <CardDashboardTitle
           title="Kesehatan Mental"
           icon={Brain}
-          description="Cek kondisi mental dan dapatkan informasi dukungan psikologis."
+          description="Evaluasi kondisi mental Anda dan dapatkan dukungan serta tips menjaga kesehatan psikologis."
           link="mental-health"
         />
         <CardDashboardTitle
           title="Riwayat"
           icon={History}
-          description="Lihat riwayat lengkap skrining DSMQ, HSMBQ, DASS-21, serta Pre Test dan Post Test materi Anda."
+          description="Akses riwayat lengkap skrining DSMQ, HSMBQ, DASS-21, serta hasil Pre Test dan Post Test materi yang telah Anda kerjakan."
           link="history"
         />
       </div>
