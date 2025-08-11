@@ -2,15 +2,13 @@ import DashboardTitleBold from "@/components/atoms/typography/DashboardTitleBold
 import DashboardMedicalReportDetailPreTestWrapper from "@/components/organisms/dashboard/medical/reports/pre-test/DashboardMedicalReportDetailPreTestWrapper";
 
 interface DashboardMedicalDetailReportPreTestPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function DashboardMedicalDetailReportPreTestPage({
   params,
 }: DashboardMedicalDetailReportPreTestPageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   return (
     <section>
@@ -19,3 +17,4 @@ export default async function DashboardMedicalDetailReportPreTestPage({
     </section>
   );
 }
+
