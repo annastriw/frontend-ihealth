@@ -9,6 +9,7 @@ import {
   CheckCircle,
   AlertCircle,
   TrendingUp,
+  AlertTriangle,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 
@@ -32,9 +33,7 @@ interface ScreeningData {
   heart_disease: number;
   smoking_history: string; // String langsung untuk ML API
   bmi: number;
-  sistolic_pressure: number;    // TAMBAH INI
-  diastolic_pressure: number;   // TAMBAH INI
-  hypertension_classification: string; // TAMBAH INI
+  hypertension: number; // ✅ FIX: Tambahkan field hypertension yang missing
   blood_glucose_level: number;
 }
 
@@ -44,6 +43,13 @@ interface PredictionResult {
   risk_score: number;
   recommendation: string;
   screening_id?: string;
+  is_zero_glucose?: boolean; // Flag zero glucose
+  patient_name?: string;
+  age?: number;
+  bmi?: number;
+  blood_pressure?: string;
+  blood_glucose_level?: number | null; // Support null
+  hypertension_classification?: string;
 }
 
 export default function MedicalDiabetesMelitusScreeningPage() {
@@ -56,43 +62,65 @@ export default function MedicalDiabetesMelitusScreeningPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingPatientData, setIsLoadingPatientData] = useState(false);
 
+  // State untuk zero glucose tracking
+  const [isZeroGlucose, setIsZeroGlucose] = useState(false);
+
   // State untuk hasil prediksi
   const [showResult, setShowResult] = useState(false);
   const [predictionResult, setPredictionResult] =
     useState<PredictionResult | null>(null);
 
-  // Form data dengan nilai default yang benar
+  // ✅ FIX: Form data yang diperbaiki dengan hypertension yang benar
   const [formData, setFormData] = useState<ScreeningData>({
     patient_id: "",
     gender: 0,
     age: 0,
     heart_disease: 0,
-    smoking_history: "tidak pernah merokok", // Default string value
+    smoking_history: "tidak pernah merokok",
     bmi: 0,
-    sistolic_pressure: 0,        // TAMBAH INI
-    diastolic_pressure: 0,       // TAMBAH INI
-    hypertension_classification: "", // TAMBAH INI
+    hypertension: 0, // ✅ FIX: Field hypertension yang proper
     blood_glucose_level: 0,
   });
 
-  // TAMBAH: Fungsi untuk mengklasifikasi hipertensi
-  const classifyHypertension = (sistolic: number, diastolic: number): string => {
+  // ✅ FIX: State terpisah untuk blood pressure display
+  const [bloodPressureData, setBloodPressureData] = useState({
+    sistolic_pressure: 0,
+    diastolic_pressure: 0,
+    hypertension_classification: "",
+  });
+
+  // Fungsi untuk mengklasifikasi hipertensi - SESUAI FLASK API
+  const classifyHypertension = (sistolic: number, diastolic: number): { classification: string, hypertension: number } => {
+    let classification = "";
+    let hypertension = 0;
+
     if (sistolic < 120 && diastolic < 80) {
-      return "Optimal";
-    } else if (sistolic >= 120 && sistolic <= 129 && diastolic >= 80 && diastolic <= 84) {
-      return "Normal";
-    } else if (sistolic >= 130 && sistolic <= 139 && diastolic >= 85 && diastolic <= 89) {
-      return "Normal Tinggi (Pra Hipertensi)";
-    } else if (sistolic >= 140 && sistolic <= 159 && diastolic >= 90 && diastolic <= 99) {
-      return "Hipertensi Derajat 1";
-    } else if (sistolic >= 160 && sistolic <= 179 && diastolic >= 100 && diastolic <= 109) {
-      return "Hipertensi Derajat 2";
-    } else if (sistolic >= 180 && diastolic >= 110) {
-      return "Hipertensi Derajat 3";
+      classification = "Optimal";
+      hypertension = 0;
+    } else if (sistolic <= 129 && diastolic <= 84) {
+      classification = "Normal";
+      hypertension = 0;
+    } else if (sistolic <= 139 && diastolic <= 89) {
+      classification = "Normal Tinggi (Pra Hipertensi)";
+      hypertension = 0;
+    } else if (sistolic <= 159 && diastolic <= 99) {
+      classification = "Hipertensi Derajat 1";
+      hypertension = 1;
+    } else if (sistolic <= 179 && diastolic <= 109) {
+      classification = "Hipertensi Derajat 2";
+      hypertension = 1;
+    } else if (sistolic >= 180 || diastolic >= 110) {
+      classification = "Hipertensi Derajat 3";
+      hypertension = 1;
     } else if (sistolic >= 140 && diastolic < 90) {
-      return "Hipertensi Sistolik Terisolasi";
+      classification = "Hipertensi Sistolik Terisolasi";
+      hypertension = 1;
+    } else {
+      classification = "Tidak dapat diklasifikasikan";
+      hypertension = 0;
     }
-    return "Normal";
+
+    return { classification, hypertension };
   };
 
   // Search patients dengan debounce
@@ -100,14 +128,9 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     const timeoutId = setTimeout(async () => {
       if (searchTerm.length > 2) {
         setIsSearching(true);
-        // DEBUG: Log values
         console.log("Search term:", searchTerm);
-        console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
-        console.log("Session:", session);
-        console.log("Access token:", session?.access_token);
         
         const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/patients/search?q=${searchTerm}`;
-        console.log("Full API URL:", apiUrl);
         
         try {
           const response = await fetch(apiUrl, {
@@ -133,7 +156,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
         setFilteredPatients([]);
         setShowSuggestions(false);
       }
-    }, 300); // Debounce 300ms
+    }, 300);
 
     return () => clearTimeout(timeoutId);
   }, [searchTerm, session?.access_token]);
@@ -156,20 +179,17 @@ export default function MedicalDiabetesMelitusScreeningPage() {
         const data = await response.json();
         const patientData = data.data;
 
-        // Auto-fill form data dengan semua field
+        // ✅ FIX: Auto-fill form data dengan field yang benar
         setFormData((prev) => ({
           ...prev,
           patient_id: patientData.id,
           gender: patientData.gender || 0,
           age: patientData.age || 0,
           heart_disease: patientData.heart_disease || 0,
-          smoking_history:
-            patientData.smoking_history || "tidak pernah merokok", // String langsung
+          smoking_history: patientData.smoking_history || "tidak pernah merokok",
           bmi: patientData.bmi || 0,
-          // Keep manual input fields
-          sistolic_pressure: prev.sistolic_pressure,        // TAMBAH INI
-          diastolic_pressure: prev.diastolic_pressure,      // TAMBAH INI
-          hypertension_classification: prev.hypertension_classification, // TAMBAH INI
+          // hypertension akan diset berdasarkan blood pressure
+          hypertension: prev.hypertension,
           blood_glucose_level: prev.blood_glucose_level,
         }));
 
@@ -190,7 +210,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     setSelectedPatient(patient);
     setSearchTerm(patient.name);
     setShowSuggestions(false);
-    setShowResult(false); // Hide previous results
+    setShowResult(false);
 
     // Fetch detailed patient data and auto-fill form
     const detailedPatient = await fetchPatientDetails(patient.id);
@@ -205,6 +225,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     setShowSuggestions(false);
     setShowResult(false);
     setPredictionResult(null);
+    setIsZeroGlucose(false);
     setFormData({
       patient_id: "",
       gender: 0,
@@ -212,10 +233,13 @@ export default function MedicalDiabetesMelitusScreeningPage() {
       heart_disease: 0,
       smoking_history: "tidak pernah merokok",
       bmi: 0,
-      sistolic_pressure: 0,        // TAMBAH INI
-      diastolic_pressure: 0,       // TAMBAH INI
-      hypertension_classification: "", // TAMBAH INI
+      hypertension: 0, // ✅ FIX: Reset hypertension
       blood_glucose_level: 0,
+    });
+    setBloodPressureData({
+      sistolic_pressure: 0,
+      diastolic_pressure: 0,
+      hypertension_classification: "",
     });
   };
 
@@ -227,25 +251,34 @@ export default function MedicalDiabetesMelitusScreeningPage() {
       ...prev,
       [field]: value,
     }));
+
+    // Track zero glucose
+    if (field === 'blood_glucose_level') {
+      const glucoseValue = typeof value === 'string' ? parseFloat(value) : value;
+      setIsZeroGlucose(glucoseValue === 0);
+    }
   };
 
-  // TAMBAH: Handle input change untuk sistol/diastol dengan auto-klasifikasi
+  // ✅ FIX: Handle blood pressure change dengan update hypertension yang benar
   const handleBloodPressureChange = (field: 'sistolic_pressure' | 'diastolic_pressure', value: number) => {
-    setFormData((prev) => {
+    setBloodPressureData((prev) => {
       const updated = { ...prev, [field]: value };
       
       // Auto-classify hypertension ketika kedua nilai ada
       if (updated.sistolic_pressure > 0 && updated.diastolic_pressure > 0) {
-        updated.hypertension_classification = classifyHypertension(
-          updated.sistolic_pressure, 
-          updated.diastolic_pressure
-        );
+        const result = classifyHypertension(updated.sistolic_pressure, updated.diastolic_pressure);
+        updated.hypertension_classification = result.classification;
+        
+        // ✅ FIX: Update hypertension field di formData
+        setFormData(prevForm => ({
+          ...prevForm,
+          hypertension: result.hypertension
+        }));
       }
       
       return updated;
     });
   };
-
 
   const getDefaultRecommendation = (prediction: number): string => {
     if (prediction === 1) {
@@ -255,7 +288,12 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     }
   };
 
-  const getRiskColor = (prediction: number, riskLevel: string) => {
+  // Risk color dengan zero glucose support
+  const getRiskColor = (prediction: number, riskLevel: string, isZeroGlucose?: boolean) => {
+    if (isZeroGlucose) {
+      return "bg-yellow-100 border-yellow-200 text-yellow-800";
+    }
+    
     if (prediction === 1 || riskLevel?.toLowerCase() === "tinggi") {
       return "bg-red-100 border-red-200 text-red-800";
     } else {
@@ -263,7 +301,12 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     }
   };
 
-  const getRiskIcon = (prediction: number, riskLevel: string) => {
+  // Risk icon dengan zero glucose support
+  const getRiskIcon = (prediction: number, riskLevel: string, isZeroGlucose?: boolean) => {
+    if (isZeroGlucose) {
+      return <AlertTriangle className="h-6 w-6 text-yellow-600" />;
+    }
+    
     if (prediction === 1 || riskLevel?.toLowerCase() === "tinggi") {
       return <AlertCircle className="h-6 w-6 text-red-600" />;
     } else {
@@ -272,7 +315,6 @@ export default function MedicalDiabetesMelitusScreeningPage() {
   };
 
   const viewDashboard = () => {
-    // Redirect ke dashboard atau buka di tab baru
     window.open("/dashboard/diabetes-melitus", "_blank");
   };
 
@@ -284,7 +326,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
       return;
     }
 
-   // UPDATED: Validasi form data dengan field baru
+    // ✅ FIX: Validasi yang diperbaiki
     if (!formData.age || formData.age <= 0) {
       alert("Umur harus diisi dengan benar");
       return;
@@ -295,26 +337,62 @@ export default function MedicalDiabetesMelitusScreeningPage() {
       return;
     }
 
-    if (!formData.sistolic_pressure || formData.sistolic_pressure <= 0) {
+    if (!bloodPressureData.sistolic_pressure || bloodPressureData.sistolic_pressure <= 0) {
       alert("Tekanan darah sistol harus diisi dengan benar");
       return;
     }
 
-    if (!formData.diastolic_pressure || formData.diastolic_pressure <= 0) {
+    if (!bloodPressureData.diastolic_pressure || bloodPressureData.diastolic_pressure <= 0) {
       alert("Tekanan darah diastol harus diisi dengan benar");
       return;
     }
 
-    if (!formData.blood_glucose_level || formData.blood_glucose_level <= 0) {
-      alert("Kadar glukosa darah harus diisi dengan benar");
+    // ✅ FIX: Validasi yang tidak memblokir zero glucose
+    if (formData.blood_glucose_level < 0) {
+      alert("Kadar glukosa darah tidak boleh negatif");
       return;
+    }
+
+    // ✅ FIX: Validasi sistolic/diastolic (yang wajib diisi > 0)
+    if (!bloodPressureData.sistolic_pressure || bloodPressureData.sistolic_pressure <= 0) {
+      alert("Tekanan darah sistol harus diisi dengan benar");
+      return;
+    }
+
+    if (!bloodPressureData.diastolic_pressure || bloodPressureData.diastolic_pressure <= 0) {
+      alert("Tekanan darah diastol harus diisi dengan benar");
+      return;
+    }
+
+    // Konfirmasi untuk zero glucose
+    if (isZeroGlucose) {
+      const confirmProceed = window.confirm(
+        "Gula darah diisi 0. Hasil screening akan menampilkan data terbatas (tanpa nilai gula darah). Lanjutkan?"
+      );
+      if (!confirmProceed) {
+        return;
+      }
     }
 
     setIsSubmitting(true);
     setShowResult(false);
 
     try {
-      console.log("Sending data:", formData); // Debug log
+      // ✅ FIX: Data yang dikirim harus sesuai dengan backend validation
+      const submissionData = {
+        patient_id: formData.patient_id,
+        gender: Number(formData.gender),
+        age: Number(formData.age),
+        heart_disease: Number(formData.heart_disease),
+        bmi: Number(formData.bmi),
+        smoking_history: formData.smoking_history,
+        hypertension: Number(formData.hypertension), // ✅ FIX: Field yang dibutuhkan
+        sistolic_pressure: Number(bloodPressureData.sistolic_pressure), // ✅ FIX: Field yang dibutuhkan
+        diastolic_pressure: Number(bloodPressureData.diastolic_pressure), // ✅ FIX: Field yang dibutuhkan
+        blood_glucose_level: Number(formData.blood_glucose_level),
+      };
+
+      console.log("Sending data:", submissionData);
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/screening/diabetes`,
@@ -325,30 +403,34 @@ export default function MedicalDiabetesMelitusScreeningPage() {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(submissionData),
         },
       );
 
       const result = await response.json();
-      console.log("Response:", result); // Debug log
+      console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
+      console.log("Response data:", result);
 
       if (response.ok) {
-
-        // Simpan hasil prediksi ke state
+        // ✅ FIX: Handle response dengan zero glucose support yang benar
+        const isZeroGluc = formData.blood_glucose_level === 0;
+        
         setPredictionResult({
-          prediction: result.data.prediction,
-          risk_level:
-            result.data.risk_level ||
-            (result.data.prediction === 1 ? "Tinggi" : "Rendah"),
-          risk_score:
-            result.data.risk_score || (result.data.prediction === 1 ? 75 : 25),
-          recommendation:
-            result.data.recommendation ||
-            getDefaultRecommendation(result.data.prediction),
+          prediction: result.data.prediction || 0,
+          risk_level: result.data.risk_level || (result.data.prediction === 1 ? "Tinggi" : "Rendah"),
+          risk_score: result.data.risk_score || (result.data.prediction === 1 ? 75 : 25),
+          recommendation: result.data.recommendation || getDefaultRecommendation(result.data.prediction),
           screening_id: result.data.screening_id || result.data.id,
+          is_zero_glucose: isZeroGluc, // ✅ FIX: Set berdasarkan input aktual
+          patient_name: result.data.patient_name || selectedPatient.name,
+          age: result.data.age || formData.age,
+          bmi: result.data.bmi || formData.bmi,
+          blood_pressure: result.data.blood_pressure || `${bloodPressureData.sistolic_pressure}/${bloodPressureData.diastolic_pressure}`,
+          blood_glucose_level: isZeroGluc ? null : formData.blood_glucose_level, // ✅ FIX: Null jika zero
+          hypertension_classification: result.data.hypertension_classification || bloodPressureData.hypertension_classification,
         });
 
-        // Tampilkan hasil
         setShowResult(true);
 
         // Scroll ke hasil
@@ -359,9 +441,19 @@ export default function MedicalDiabetesMelitusScreeningPage() {
           }
         }, 100);
       } else {
-        alert(
-          `Error: ${result.meta?.message || result.message || "Gagal melakukan screening"}`,
-        );
+        console.error("API Error:", {
+          status: response.status,
+          statusText: response.statusText,
+          data: result
+        });
+        
+        const errorMessage = result.meta?.message || result.message || `HTTP ${response.status}: Gagal melakukan screening`;
+        alert(`Error: ${errorMessage}`);
+        
+        // Log validation errors jika ada
+        if (result.meta?.errors) {
+          console.error("Validation errors:", result.meta.errors);
+        }
       }
     } catch (error) {
       console.error("Error submitting screening:", error);
@@ -375,15 +467,15 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     <div className="p-6">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">
-          Input Cek Kesehatan
+          Screening Diabetes Melitus
         </h1>
         <p className="mt-2 text-gray-600">
-          Panel screening input cek kesehatan untuk tenaga medis
+          Panel screening diabetes untuk tenaga medis
         </p>
       </div>
 
       <div className="rounded-lg bg-white p-6 shadow-md">
-        <h2 className="mb-4 text-xl font-semibold">Form Input Cek Kesehatan</h2>
+        <h2 className="mb-4 text-xl font-semibold">Form Screening Diabetes</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Patient Search */}
@@ -494,6 +586,18 @@ export default function MedicalDiabetesMelitusScreeningPage() {
             </div>
           )}
 
+          {/* Zero Glucose Warning */}
+          {isZeroGlucose && (
+            <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4">
+              <div className="flex items-center">
+                <AlertTriangle className="mr-2 h-5 w-5 text-yellow-600" />
+                <span className="text-yellow-800 font-medium">
+                  ⚠️ Gula darah diisi 0 - Hasil screening akan terbatas (tanpa data gula darah)
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* Loading indicator for patient data */}
           {isLoadingPatientData && (
             <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4">
@@ -555,7 +659,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               </p>
             </div>
 
-            {/* UPDATED: Blood Pressure - Sistol dan Diastol - GANTI BAGIAN INI */}
+            {/* Blood Pressure - Sistol dan Diastol */}
             <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -567,7 +671,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                   type="number"
                   min="60"
                   max="250"
-                  value={formData.sistolic_pressure || ""}
+                  value={bloodPressureData.sistolic_pressure || ""}
                   onChange={(e) => handleBloodPressureChange("sistolic_pressure", parseInt(e.target.value))}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   placeholder="Contoh: 120"
@@ -585,7 +689,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                   type="number"
                   min="40"
                   max="150"
-                  value={formData.diastolic_pressure || ""}
+                  value={bloodPressureData.diastolic_pressure || ""}
                   onChange={(e) => handleBloodPressureChange("diastolic_pressure", parseInt(e.target.value))}
                   className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   placeholder="Contoh: 80"
@@ -594,8 +698,8 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               </div>
             </div>
 
-             {/* TAMBAH: Klasifikasi Hipertensi - Auto-generated */}
-            {formData.hypertension_classification && (
+            {/* Klasifikasi Hipertensi - Auto-generated */}
+            {bloodPressureData.hypertension_classification && (
               <div className="md:col-span-2">
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Klasifikasi Hipertensi
@@ -603,13 +707,13 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                   <span className="ml-1 text-xs text-gray-500">(Auto-generated)</span>
                 </label>
                 <div className={`w-full rounded-md border px-3 py-2 ${
-                  formData.hypertension_classification === "Optimal" || formData.hypertension_classification === "Normal" 
+                  bloodPressureData.hypertension_classification === "Optimal" || bloodPressureData.hypertension_classification === "Normal" 
                     ? "bg-green-50 border-green-300 text-green-700"
-                    : formData.hypertension_classification === "Normal Tinggi (Pra Hipertensi)"
+                    : bloodPressureData.hypertension_classification === "Normal Tinggi (Pra Hipertensi)"
                     ? "bg-yellow-50 border-yellow-300 text-yellow-700"  
                     : "bg-red-50 border-red-300 text-red-700"
                 }`}>
-                  {formData.hypertension_classification}
+                  {bloodPressureData.hypertension_classification}
                 </div>
               </div>
             )}
@@ -689,32 +793,53 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               </p>
             </div>
 
-            {/* Blood Glucose Level - Manual Input */}
+            {/* Blood Glucose Level dengan zero support */}
             <div className="md:col-span-2">
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Gula Darah Sewaktu (mg/dL)
                 <span className="ml-1 text-red-500">*</span>
                 <span className="ml-1 text-xs text-gray-500">
-                  (Input Manual)
+                  (Input Manual - Boleh 0 jika tidak tersedia)
                 </span>
               </label>
-              <input
-                type="number"
-                min="50"
-                max="400"
-                value={formData.blood_glucose_level || ""}
-                onChange={(e) =>
-                  handleInputChange(
-                    "blood_glucose_level",
-                    parseFloat(e.target.value),
-                  )
-                }
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Contoh: 116"
-                required
-              />
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  min="0"
+                  max="400"
+                  step="1"
+                  value={formData.blood_glucose_level === 0 ? "" : formData.blood_glucose_level || ""}
+                  onChange={(e) => {
+                    const value = e.target.value === "" ? 0 : parseFloat(e.target.value);
+                    if (!isNaN(value) && value >= 0) {
+                      handleInputChange("blood_glucose_level", value);
+                    }
+                  }}
+                  onBlur={(e) => {
+                    // Jika field kosong saat blur, set ke 0
+                    if (e.target.value === "") {
+                      handleInputChange("blood_glucose_level", 0);
+                    }
+                  }}
+                  className={`flex-1 rounded-md border px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                    isZeroGlucose ? 'border-yellow-300 bg-yellow-50' : 'border-gray-300'
+                  }`}
+                  placeholder="Contoh: 116 (atau kosongkan jika tidak tersedia)"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleInputChange("blood_glucose_level", 0)}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isZeroGlucose 
+                      ? 'bg-yellow-500 text-white' 
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  Set 0
+                </button>
+              </div>
               <p className="mt-1 text-xs text-gray-500">
-                Contoh: 116, 220, 178
+                Contoh: 116, 220, 178 atau klik "Set 0" jika data tidak tersedia
               </p>
             </div>
           </div>
@@ -740,37 +865,46 @@ export default function MedicalDiabetesMelitusScreeningPage() {
           </div>
         </form>
 
-        {/* Hasil Prediksi */}
+        {/* Hasil Prediksi dengan Zero Glucose Support */}
         {showResult && predictionResult && (
           <div
             id="prediction-result"
             className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-6"
           >
-            <h3 className="mb-4 text-xl font-semibold text-gray-900">
-              🏥 Hasil Screening Diabetes
+            <h3 className="mb-4 text-xl font-semibold text-gray-900 flex items-center">
+              🏥 Hasil Screening Hipertensi
+              
             </h3>
 
-            {/* Hasil Utama */}
+            {/* Hasil Utama dengan Zero Glucose Support */}
             <div
-              className={`mb-4 rounded-md border p-4 ${getRiskColor(predictionResult.prediction, predictionResult.risk_level)}`}
+              className={`mb-4 rounded-md border p-4 ${getRiskColor(
+                predictionResult.prediction, 
+                predictionResult.risk_level,
+                predictionResult.is_zero_glucose
+              )}`}
             >
               <div className="flex items-center">
                 {getRiskIcon(
                   predictionResult.prediction,
                   predictionResult.risk_level,
+                  predictionResult.is_zero_glucose
                 )}
                 <div className="ml-3">
                   <h4 className="text-lg font-medium">
-                    {predictionResult.prediction === 1
-                      ? "Berisiko Diabetes"
-                      : "Tidak Berisiko Diabetes"}
+                    {predictionResult.is_zero_glucose 
+                      ? "Data Screening Hipertensi"
+                      : predictionResult.prediction === 1
+                        ? "Berisiko Diabetes"
+                        : "Tidak Berisiko Diabetes"
+                    }
                   </h4>
                   <p className="text-sm">
                     Tingkat Risiko:{" "}
                     <span className="font-semibold">
                       {predictionResult.risk_level}
                     </span>
-                    {predictionResult.risk_score && (
+                    {!predictionResult.is_zero_glucose && predictionResult.risk_score && (
                       <span className="ml-2">
                         ({predictionResult.risk_score}%)
                       </span>
@@ -780,50 +914,86 @@ export default function MedicalDiabetesMelitusScreeningPage() {
               </div>
             </div>
 
-             {/* UPDATED: Data Pasien yang di-screening dengan field baru */}
+            {/* Data Screening dengan Kondisional Display */}
             <div className="mb-4 rounded-md border bg-white p-4">
               <h5 className="mb-2 font-medium text-gray-900">
                 Data Screening:
               </h5>
               <div className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
+                {/* Pasien - Selalu tampil */}
                 <div>
                   <span className="text-gray-600">Pasien:</span>
-                  <p className="font-medium">{selectedPatient?.name}</p>
-                </div>
-                <div>
-                  <span className="text-gray-600">Usia:</span>
-                  <p className="font-medium">{formData.age} tahun</p>
-                </div>
-                <div>
-                  <span className="text-gray-600">BMI:</span>
-                  <p className="font-medium">{formData.bmi}</p>
-                </div>
-                <div>
-                  <span className="text-gray-600">Gula Darah:</span>
                   <p className="font-medium">
-                    {formData.blood_glucose_level} mg/dL
+                    {predictionResult.patient_name || selectedPatient?.name}
                   </p>
                 </div>
-                {/* TAMBAH: Tampilkan data tekanan darah */}
+                
+                {/* Usia - Selalu tampil */}
+                <div>
+                  <span className="text-gray-600">Usia:</span>
+                  <p className="font-medium">
+                    {predictionResult.age || formData.age} tahun
+                  </p>
+                </div>
+                
+                {/* BMI - Selalu tampil */}
+                <div>
+                  <span className="text-gray-600">BMI:</span>
+                  <p className="font-medium">
+                    {predictionResult.bmi || formData.bmi}
+                  </p>
+                </div>
+                
+                {/* Tekanan Darah - Selalu tampil */}
                 <div>
                   <span className="text-gray-600">Tekanan Darah:</span>
                   <p className="font-medium">
-                    {formData.sistolic_pressure}/{formData.diastolic_pressure} mmHg
+                    {predictionResult.blood_pressure || 
+                     `${bloodPressureData.sistolic_pressure}/${bloodPressureData.diastolic_pressure} mmHg`}
                   </p>
                 </div>
+                
+                {/* Klasifikasi Hipertensi - Selalu tampil */}
                 <div>
-                  <span className="text-gray-600">Klasifikasi:</span>
-                  <p className="font-medium">{formData.hypertension_classification}</p>
+                  <span className="text-gray-600">Klasifikasi Hipertensi:</span>
+                  <p className="font-medium">
+                    {predictionResult.hypertension_classification || 
+                     bloodPressureData.hypertension_classification}
+                  </p>
+                </div>
+                
+                {/* Gula Darah hanya tampil jika BUKAN zero glucose */}
+                {!predictionResult.is_zero_glucose && (
+                  <div>
+                    <span className="text-gray-600">Gula Darah:</span>
+                    <p className="font-medium">
+                      {predictionResult.blood_glucose_level || formData.blood_glucose_level} mg/dL
+                    </p>
+                  </div>
+                )}
+                
+                {/* Klasifikasi Diabetes - Selalu tampil */}
+                <div className={predictionResult.is_zero_glucose ? 'col-span-2 md:col-span-1' : ''}>
+                  <span className="text-gray-600">Klasifikasi Diabetes:</span>
+                  <p className="font-medium">{predictionResult.risk_level}</p>
                 </div>
               </div>
             </div>
 
-            {/* Rekomendasi */}
-            <div className="mb-4 rounded-md border border-blue-200 bg-blue-50 p-4">
-              <h5 className="mb-2 font-medium text-blue-900">
-                💡 Rekomendasi:
+            {/* Rekomendasi dengan styling kondisional */}
+            <div className={`mb-4 rounded-md border p-4 ${
+              predictionResult.is_zero_glucose 
+                ? 'border-blue-200 bg-blue-50'
+                : 'border-blue-200 bg-blue-50'
+            }`}>
+              <h5 className={`mb-2 font-medium ${
+                predictionResult.is_zero_glucose ? 'text-yellow-900' : 'text-blue-900'
+              }`}>
+                {predictionResult.is_zero_glucose ? '⚠️ Catatan:' : '💡 Rekomendasi:'}
               </h5>
-              <p className="text-sm text-blue-800">
+              <p className={`text-sm ${
+                predictionResult.is_zero_glucose ? 'text-yellow-800' : 'text-blue-800'
+              }`}>
                 {predictionResult.recommendation}
               </p>
             </div>
@@ -831,25 +1001,16 @@ export default function MedicalDiabetesMelitusScreeningPage() {
             {/* Disclaimer */}
             <div className="mb-4 rounded-md border border-yellow-200 bg-yellow-50 p-3">
               <p className="text-xs text-yellow-800">
-                ⚠ <strong>Disclaimer:</strong> Hasil ini hanya prediksi dan
-                tidak menggantikan diagnosis medis profesional. Konsultasikan
-                dengan dokter untuk pemeriksaan lebih lanjut.
+                ⚠ <strong>Disclaimer:</strong> 
+                {predictionResult.is_zero_glucose 
+                  ? " Hasil ini hanya prediksi konsultasikan dengan dokter untuk pemeriksaan lebih lanjut"
+                  : " Hasil ini hanya prediksi konsultasikan dengan dokter untuk pemeriksaan lebih lanjut."
+                }
               </p>
             </div>
 
             {/* Action Buttons */}
             <div className="flex justify-end gap-3">
-              {/* [HIDE] Tombol dashboard disembunyikan sementara */}
-              {/*
-              <button
-                type="button"
-                onClick={viewDashboard}
-                className="flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:outline-none"
-              >
-                <TrendingUp className="h-4 w-4" />
-                Lihat Dashboard
-              </button>
-              */}
               <button
                 type="button"
                 onClick={clearPatient}
@@ -870,6 +1031,11 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                   </span>
                 )}
               </p>
+              {predictionResult.is_zero_glucose && (
+                <p className="text-xs text-yellow-600 mt-1">
+                  📝 Catatan: Data disimpan sebagai screening parsial (tanpa gula darah)
+                </p>
+              )}
             </div>
           </div>
         )}
