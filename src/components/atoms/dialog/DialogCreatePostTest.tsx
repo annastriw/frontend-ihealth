@@ -94,7 +94,7 @@ export default function DialogCreatePostTest({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Tambah Pre Test</DialogTitle>
+          <DialogTitle>Tambah Post Test</DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[80vh]">
           <Form {...form}>

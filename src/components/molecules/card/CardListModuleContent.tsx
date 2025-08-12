@@ -1,3 +1,4 @@
+// src/components/molecules/card/CardListModuleContent.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,9 +7,10 @@ import { useSession } from "next-auth/react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Book, Lock } from "lucide-react";
+import { Book } from "lucide-react";
 import { api } from "@/lib/axios";
 import { ModuleContent } from "@/types/modules/modules";
+import { CheckCircle } from "lucide-react";
 
 interface CardListModuleContentProps {
   data?: ModuleContent[];
@@ -35,7 +37,7 @@ function SubModuleSkeleton() {
 export default function CardListModuleContent({
   data,
   isLoading,
-  isLocked = false,
+  isLocked,
 }: CardListModuleContentProps) {
   const router = useRouter();
   const { data: session } = useSession();
@@ -59,9 +61,12 @@ export default function CardListModuleContent({
               results[item.id] = res.data.last_opened_at;
             }
           } catch (err) {
-            console.error(`❌ Gagal ambil last_opened_at untuk ${item.id}`, err);
+            console.error(
+              `❌ Gagal ambil last_opened_at untuk ${item.id}`,
+              err,
+            );
           }
-        })
+        }),
       );
       setOpenedMap(results);
     };
@@ -70,13 +75,18 @@ export default function CardListModuleContent({
   }, [data, token]);
 
   const handleClick = async (id: string) => {
+    if (isLocked) return; // cegah klik kalau terkunci
     try {
       if (token) {
-        await api.post(`/module-contents/${id}/opened`, {}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        await api.post(
+          `/module-contents/${id}/opened`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
       }
     } catch (err) {
       console.error("❌ Gagal mencatat waktu buka", err);
@@ -99,70 +109,65 @@ export default function CardListModuleContent({
       {data?.map((moduleContent) => {
         const lastOpenedAt = openedMap[moduleContent.id];
 
-        const content = (
-          <div className="flex flex-row gap-6">
-            <div
-              className={`${
-                isLocked ? "bg-gray-300" : "group-hover:bg-secondary bg-primary"
-              } relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg md:flex`}
-            >
-              <Book className="text-background m-auto h-12 w-12" />
-            </div>
-            <Card className="border-muted group-hover:bg-muted w-full border-2 shadow-transparent">
-              <CardHeader className="flex md:flex-row md:items-center md:justify-between">
-                <div className="space-y-2">
-                  <Badge className="bg-secondary/20 text-secondary font-semibold">
-                    Booklet Materi
-                  </Badge>
-                  <CardTitle className="text-md font-bold md:text-xl">
-                    {moduleContent.name}
-                  </CardTitle>
-
-                  {lastOpenedAt && (
-                    <p className="text-muted-foreground text-sm font-normal">
-                      Terakhir membuka materi, pada{" "}
-                      {new Intl.DateTimeFormat("id-ID", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      }).format(new Date(lastOpenedAt))}{" "}
-                      pukul{" "}
-                      {new Intl.DateTimeFormat("id-ID", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: false,
-                        timeZone: "Asia/Jakarta",
-                      }).format(new Date(lastOpenedAt))}
-                    </p>
-                  )}
-
-                  {isLocked && (
-                    <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
-                      <Lock className="text-muted-foreground h-4 w-4" />
-                      Kerjakan Pre Test terlebih dahulu
-                    </div>
-                  )}
-                </div>
-              </CardHeader>
-            </Card>
-          </div>
-        );
-
-        return isLocked ? (
+        return (
           <div
             key={moduleContent.id}
-            className="group block cursor-not-allowed opacity-70"
-          >
-            {content}
-          </div>
-        ) : (
-          <button
-            key={moduleContent.id}
             onClick={() => handleClick(moduleContent.id)}
-            className="group block w-full text-left"
+            className={`group block ${
+              isLocked ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+            }`}
           >
-            {content}
-          </button>
+            <div className="flex flex-row gap-6">
+              <div
+                className={`relative hidden aspect-video h-36 w-36 items-center justify-center rounded-lg transition-colors duration-200 ease-in-out md:flex ${
+                  isLocked
+                    ? "bg-gray-300"
+                    : "bg-primary group-hover:bg-secondary"
+                }`}
+              >
+                <Book className="text-background m-auto h-12 w-12" />
+              </div>
+              <Card
+                className={`w-full border-2 shadow-transparent transition-colors duration-200 ease-in-out ${
+                  isLocked
+                    ? "border-muted opacity-70"
+                    : "border-muted group-hover:bg-muted"
+                }`}
+              >
+                <CardHeader className="flex md:flex-row md:items-center md:justify-between">
+                  <div className="space-y-2">
+                    <Badge className="bg-[oklch(0.9_0.1_145)] font-semibold text-black">
+                      Booklet Materi
+                    </Badge>
+                    <CardTitle className="text-md font-bold md:text-xl">
+                      {moduleContent.name}
+                    </CardTitle>
+
+                    {lastOpenedAt && (
+                      <div className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span>
+                          Terakhir membuka materi, pada{" "}
+                          {new Intl.DateTimeFormat("id-ID", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }).format(new Date(lastOpenedAt))}{" "}
+                          pukul{" "}
+                          {new Intl.DateTimeFormat("id-ID", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                            timeZone: "Asia/Jakarta",
+                          }).format(new Date(lastOpenedAt))}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </CardHeader>
+              </Card>
+            </div>
+          </div>
         );
       })}
     </div>

@@ -40,6 +40,7 @@ import {
 import { NavUser } from "./NavUser";
 import { useGetCheckPersonalInformation } from "@/http/personal-information/get-check-personal-information";
 import { useGetCheckMapsUser } from "@/http/users/get-check-maps-users";
+import { motion } from "framer-motion";
 
 interface AppSidebarProps {
   session: Session;
@@ -88,23 +89,46 @@ export function AppSidebar({ session }: AppSidebarProps) {
   return (
     <Sidebar>
       {/* Header */}
-      <SidebarHeader className="h-14 cursor-default justify-center border-b bg-white dark:bg-slate-950">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <div className="ml-2 flex items-center gap-x-3">
-              <Link href="/dashboard" className="flex items-center gap-2">
-                <Image
-                  src={"/images/assets/bg-about-us.png"}
-                  alt="iHealth Edu"
-                  width={37}
-                  height={37}
-                />
-                <h1 className="font-semibold tracking-tight">iHealth Edu</h1>
-              </Link>
-            </div>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
+<SidebarHeader className="h-14 cursor-default justify-center border-b bg-white dark:bg-slate-950">
+  <motion.div
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, ease: "easeOut" }}
+    className="w-full flex items-center"
+  >
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <div className="ml-2 flex items-center gap-x-3">
+          <Link href="/dashboard" className="group flex items-center gap-1.5 md:gap-2">
+            {/* Logo - pulse animation on hover */}
+            <motion.div
+              whileHover={{ scale: [1, 1.06, 1] }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="w-16 h-16"
+            >
+              <Image
+                src="/images/assets/bg-about-us.png"
+                alt="iHealth Edu"
+                width={64}
+                height={64}
+                className="w-16 h-16 object-contain"
+              />
+            </motion.div>
+
+            {/* Text with slide + fade on hover */}
+            <motion.h1
+              className="font-semibold text-base md:text-lg lg:text-xl tracking-tight text-black dark:text-white"
+              whileHover={{ x: 2, opacity: 0.9 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              iHealth Edu
+            </motion.h1>
+          </Link>
+        </div>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  </motion.div>
+</SidebarHeader>
 
       <SidebarContent className="bg-white dark:bg-slate-950">
         <SidebarGroup>
@@ -210,8 +234,9 @@ export function AppSidebar({ session }: AppSidebarProps) {
                     <SidebarMenu>
                       
                       
-                      {/* <SidebarMenuItem>
-                      // Disembunyikan sementara karena tidak digunakan, hanya fokus pada HT, DM, dan KM
+                      {/* [HIDE] Menu Modul disembunyikan sementara karena tidak digunakan, hanya fokus pada HT, DM, dan KM */}
+                      {/*
+                      <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
                           className={buttonClass("/dashboard/admin/modules")}
@@ -221,7 +246,8 @@ export function AppSidebar({ session }: AppSidebarProps) {
                             <span>Modul</span>
                           </Link>
                         </SidebarMenuButton>
-                      </SidebarMenuItem> */}
+                      </SidebarMenuItem>
+                      */}
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
@@ -250,6 +276,8 @@ export function AppSidebar({ session }: AppSidebarProps) {
                         </SidebarMenuButton>
                       </SidebarMenuItem>
 
+                      {/* [HIDE] Menu Screening disembunyikan sementara karena tidak digunakan */}
+                      {/*
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
@@ -261,7 +289,10 @@ export function AppSidebar({ session }: AppSidebarProps) {
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
+                      */}
 
+                      {/* [HIDE] Menu Screening Skoring disembunyikan sementara karena tidak digunakan */}
+                      {/*
                       <SidebarMenuItem>
                         <SidebarMenuButton
                           asChild
@@ -273,6 +304,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
+                      */}
 
                       <SidebarMenuItem>
                         <SidebarMenuButton
@@ -383,7 +415,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
                         >
                           <Link href="/dashboard/medical/screening/diabetes-melitus">
                             <Stethoscope />
-                            <span>Diabetes Melitus</span>
+                            <span>Input Cek Kesehatan</span>
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
@@ -424,6 +456,57 @@ export function AppSidebar({ session }: AppSidebarProps) {
                           <Link href="/dashboard/medical/discussions/private">
                             <UserRoundSearch />
                             <span>Pertanyaan Private</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+
+                {/* Laporan */}
+                <SidebarGroup>
+                  <SidebarGroupLabel>Laporan</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          className={buttonClass("/dashboard/medical/reports")}
+                        >
+                          <Link href="/dashboard/medical/reports">
+                            <ClipboardList />
+                            <span>Laporan Keseluruhan</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+
+                {/* Pengguna */}
+                <SidebarGroup>
+                  <SidebarGroupLabel>Manajemen Pengguna</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          className={buttonClass("/dashboard/medical/users")}
+                        >
+                          <Link href="/dashboard/medical/users">
+                            <User />
+                            <span>Pengguna</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          className={buttonClass("/dashboard/medical/maps")}
+                        >
+                          <Link href="/dashboard/medical/maps">
+                            <Map />
+                            <span>Lokasi Persebaran</span>
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>

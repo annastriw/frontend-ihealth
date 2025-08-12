@@ -1,3 +1,4 @@
+// src/components/organisms/work/WorkPreTestWrapper.tsx
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -46,7 +47,7 @@ export default function WorkPreTestWrapper({ id }: WorkPreTestWrapperProps) {
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
-      event.returnValue = "Jawaban Anda akan hilang jika halaman direfresh.";
+      event.returnValue = "Jawaban Anda akan hilang jika Anda memuat ulang halaman.";
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -60,17 +61,17 @@ export default function WorkPreTestWrapper({ id }: WorkPreTestWrapperProps) {
 
       const historyId = result?.history_id;
       if (!historyId) {
-        toast.error("Gagal mengambil ID hasil pre-test.");
+        toast.error("Gagal mendapatkan ID hasil pre-test.");
         console.error("❌ ID tidak ditemukan dalam result:", result);
         return;
       }
 
-      toast.success("Pre Test berhasil disubmit!");
+      toast.success("Pre-test berhasil dikirim!");
       sessionStorage.removeItem("backToSubmoduleId");
       router.replace(`/dashboard/history/pre-test/${historyId}`);
     },
     onError: () => {
-      toast.error("Gagal submit pre-test. Silakan coba lagi.");
+      toast.error("Gagal mengirim pre-test. Silakan coba lagi.");
     },
   });
 
@@ -87,7 +88,8 @@ export default function WorkPreTestWrapper({ id }: WorkPreTestWrapperProps) {
               onBack={() => {
                 if (selectedQuestionIndex > 0) {
                   setSelectedQuestionIndex((prev) => prev - 1);
-                }
+                } else {
+                  router.back();}
               }}
               currentIndex={selectedQuestionIndex}
               totalQuestions={questions.length}

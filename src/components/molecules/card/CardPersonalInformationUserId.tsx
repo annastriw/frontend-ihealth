@@ -25,11 +25,12 @@ const getGenderLabel = (gender?: "0" | "1") => {
   return "-";
 };
 
-const getHeartDiseaseLabel = (value?: "0" | "1") => {
-  if (value === "1") return "Ada Riwayat";
-  if (value === "0") return "Tidak Ada";
+const getHeartDiseaseLabel = (value?: string | number | null) => {
+  if (value === "1" || value === 1) return "Ya";
+  if (value === "0" || value === 0) return "Tidak";
   return "-";
 };
+
 
 const getDiseaseTypeLabel = (type?: string) => {
   switch (type) {

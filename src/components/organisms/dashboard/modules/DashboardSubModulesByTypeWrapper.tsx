@@ -1,3 +1,4 @@
+// src/components/organisms/dashboard/modules/DashboardSubModulesByTypeWrapper.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,6 +10,9 @@ import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import ScreeningWrapper from "@/components/organisms/dashboard/screening/ScreeningWrapper";
 import ScreeningScoringWrapper from "@/components/organisms/dashboard/screening-scoring/ScreeningScoringWrapper";
 import DashboardSubModulesWrapper from "@/components/organisms/dashboard/sub-modules/DashboardSubModulesWrapper";
+import CardListScreeningDASS from "@/components/molecules/card/CardListScreeningDASS";
+import CardListScreeningHSMBQ from "@/components/molecules/card/CardListScreeningHSMBQ";
+import CardListScreeningDSMQ from "@/components/molecules/card/CardListScreeningDSMQ";
 
 const typeMap: Record<string, string> = {
   "hipertensi": "HT",
@@ -73,11 +77,33 @@ export default function DashboardSubModulesByTypeWrapper({
         body={typeTitleMap[type]?.body || ""}
       />
 
-      {/* Screening (jika HT atau DM) */}
+      {/* [HIDE] Screening untuk HT & DM disembunyikan sementara karena belum digunakan */}
+      {/*
       {withScreening && (selectedType === "HT" || selectedType === "DM") && (
         <div className="space-y-4">
           <ScreeningWrapper type={selectedType} />
           <ScreeningScoringWrapper type={selectedType} />
+        </div>
+      )} */}
+
+      {/* ✅ Screening DASS (khusus Kesehatan Mental) */}
+      {type === "mental-health" && (
+        <div className="space-y-4">
+          <CardListScreeningDASS />
+        </div>
+      )}
+
+      {/* ✅ Screening HSMBQ (khusus Hipertensi) */}
+      {type === "hipertensi" && (
+        <div className="space-y-4">
+          <CardListScreeningHSMBQ />
+        </div>
+      )}
+
+      {/* ✅ Screening DSMQ (khusus Diabetes Melitus) */}
+      {type === "diabetes-melitus" && (
+        <div className="space-y-4">
+          <CardListScreeningDSMQ />
         </div>
       )}
 

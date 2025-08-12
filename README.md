@@ -14,7 +14,7 @@ NEXT_PUBLIC_APP_URL=http://127.0.0.1:8000
 
 # Authentication
 NEXTAUTH_URL=http://localhost:3000
-AUTH_SECRET=CHANGETHISPLEASE
+AUTH_SECRET=La5JApG9/MSS8sIfwPWgbpxClPNWVk9DsDxpvXO9POo=
 AUTH_TRUST_HOST=http://localhost:3000
 ```
 Jika perlu generate secret key untuk AUTH_SECRET, jalankan:

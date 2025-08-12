@@ -6,7 +6,7 @@ import HomeScreeningInvitation from "./HomeScreeningInvitation";
 
 export default function HomeWrapper() {
   return (
-    <div className="pad-x-xl space-y-12 md:space-y-0">
+    <div className="pad-x-xl space-y-1 md:space-y-2">
       <HomeJumbotron />
       <HomeIntroduction />
       <HomeScreeningInvitation />

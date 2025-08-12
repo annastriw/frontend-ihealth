@@ -1,97 +1,124 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { Link as NavbarLink } from "@/components/organisms/navbar/Navbar";
 import NavLink from "./NavLink";
+import NavLogo from "./NavLogo";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
+import { motion } from "framer-motion";
 
 interface NavHeaderProps {
-  links: NavbarLink[];
+  links: { href: string; label: string; active?: boolean }[];
 }
 
 export default function NavButton({ links }: NavHeaderProps) {
   const { data: session } = useSession();
 
+  const MotionButton = motion(Button);
+
   return (
     <>
+      {/* Tombol untuk desktop */}
       <div className="hidden items-center gap-4 md:flex">
         {session ? (
-          <div>
-            <Link href={"/dashboard"}>
-              <Button>Dashboard</Button>
-            </Link>
-          </div>
+          <Link href="/dashboard">
+            <MotionButton
+              size="sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Dashboard
+            </MotionButton>
+          </Link>
         ) : (
-          <div className="flex items-center gap-4">
+          <>
             <Link href="/login">
-              <Button variant={"outline"} size={"lg"} className="font-semibold">
+              <MotionButton
+                variant="outline"
+                size="sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 Masuk
-              </Button>
+              </MotionButton>
             </Link>
             <Link href="/register">
-              <Button variant={"default"} size={"lg"} className="font-semibold">
+              <MotionButton
+                size="sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 Daftar
-              </Button>
+              </MotionButton>
             </Link>
-          </div>
+          </>
         )}
       </div>
 
-      <div className="flex items-center md:hidden">
+      {/* Hamburger menu untuk mobile */}
+      <div className="md:hidden">
         <Sheet>
-          {/* Hamburger */}
           <SheetTrigger asChild>
             <Button
               variant="outline"
               size="icon"
-              className="w-full shrink-0 border-0 bg-white text-black shadow-none md:hidden"
+              className="border-0 bg-white shadow-none"
             >
-              <Menu
-                style={{ height: "20px", width: "20px" }}
-                className="h-24 w-24"
-              />
+              <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
 
-          <SheetContent className="flex flex-col">
-            <div className="mx-auto my-8">
-              <Link href={"/"} className="flex items-center gap-2">
-                <Image
-                  src={"/images/assets/bg-about-us.png"}
-                  alt="iHealth Edu"
-                  width={37}
-                  height={37}
-                />
-                <h1 className="font-bold">iHealth Edu</h1>
-              </Link>
+          <SheetContent className="flex flex-col space-y-6 pt-6">
+            {/* Logo */}
+            <div className="px-4">
+              <NavLogo />
             </div>
-            {session ? (
-              <div className="w-full gap-2 px-4">
-                <Link href={"/dashboard"}>
-                  <Button className="w-full">Dashboard</Button>
-                </Link>
-              </div>
-            ) : (
-              <div className="flex w-full gap-2 px-4">
-                <Link href="/login" className="w-full">
-                  <Button variant={"outline"} className="w-full">
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/register" className="w-full">
-                  <Button variant={"default"} className="w-full">
-                    Register
-                  </Button>
-                </Link>
-              </div>
-            )}
-            <nav className="grid-gap-2 space-y-4 px-4">
+
+            {/* Navigasi link */}
+            <nav className="flex flex-col space-y-3 px-4 text-base font-medium">
               {links.map((link) => (
-                <NavLink key={link.label} {...link} />
+                <NavLink key={link.href} {...link} />
               ))}
             </nav>
+
+            {/* Tombol login atau dashboard */}
+            <div className="px-4">
+              {session ? (
+                <Link href="/dashboard">
+                  <MotionButton
+                    className="w-full"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Dashboard
+                  </MotionButton>
+                </Link>
+              ) : (
+                <div className="flex gap-2">
+                  <Link href="/login" className="w-full">
+                    <MotionButton
+                      variant="outline"
+                      className="w-full"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Masuk
+                    </MotionButton>
+                  </Link>
+                  <Link href="/register" className="w-full">
+                    <MotionButton
+                      className="w-full"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Daftar
+                    </MotionButton>
+                  </Link>
+                </div>
+              )}
+            </div>
           </SheetContent>
         </Sheet>
       </div>

@@ -1,3 +1,4 @@
+// src/components/atoms/video/VideoYoutubeEmbed.tsx
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface VideoYoutubeEmbedProps {
@@ -10,8 +11,8 @@ export default function VideoYoutubeEmbed({
   isLoading,
 }: VideoYoutubeEmbedProps) {
   if (isLoading) {
-    <Skeleton className="h-full w-full rounded-3xl" />;
-  }
+  return <Skeleton className="h-full w-full rounded-3xl" />;
+}
 
   return (
     <div className="relative w-full md:h-[600px]">

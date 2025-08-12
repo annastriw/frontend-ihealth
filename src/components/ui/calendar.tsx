@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { motion } from "framer-motion";
 import { buttonVariants } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -23,87 +24,98 @@ function Calendar({
   ...props
 }: CalendarProps) {
   return (
-    <DayPicker
-      showOutsideDays={showOutsideDays}
-      className={cn("p-3", className)}
-      classNames={{
-        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-        month: "space-y-4",
-        caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-sm font-medium",
-        caption_dropdowns: "flex justify-center gap-1",
-        nav: "space-x-1 flex items-center",
-        nav_button: cn(
-          buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
-        ),
-        nav_button_previous: "absolute left-1",
-        nav_button_next: "absolute right-1",
-        table: "w-full border-collapse space-y-1",
-        head_row: "flex",
-        head_cell:
-          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
-        row: "flex w-full mt-2",
-        cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-        day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
-        ),
-        day_selected:
-          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-        day_today: "bg-accent text-accent-foreground",
-        day_outside: "text-muted-foreground opacity-50",
-        day_disabled: "text-muted-foreground opacity-50",
-        day_range_middle:
-          "aria-selected:bg-accent aria-selected:text-accent-foreground",
-        day_hidden: "invisible",
-        ...classNames,
-      }}
-      components={{
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        Dropdown: ({ value, onChange, children, ...props }: DropdownProps) => {
-          const options = React.Children.toArray(
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="rounded-xl border shadow-md p-4 bg-white dark:bg-zinc-900"
+    >
+      <DayPicker
+        showOutsideDays={showOutsideDays}
+        className={cn("p-2", className)}
+        classNames={{
+          months: "flex flex-col sm:flex-row gap-4",
+          month: "space-y-4 w-full",
+          caption:
+            "flex flex-col md:flex-row md:items-center md:justify-between gap-3 px-2 relative z-10",
+          caption_label:
+            "text-base font-semibold tracking-tight text-primary transition-all duration-300",
+          caption_dropdowns: "flex items-center justify-center gap-2 w-full md:w-auto",
+          nav: "flex gap-2 items-center md:ml-auto",
+          nav_button: cn(
+            buttonVariants({ variant: "ghost" }),
+            "h-8 w-8 text-muted-foreground hover:text-primary p-0 border rounded-lg transition-all duration-200"
+          ),
+          table: "w-full border-collapse space-y-1",
+          head_row: "flex",
+          head_cell:
+            "text-muted-foreground w-9 font-medium text-xs text-center",
+          row: "flex w-full mt-1",
+          cell: "text-center text-sm p-0 relative focus-within:z-20",
+          day: cn(
+            buttonVariants({ variant: "ghost" }),
+            "h-9 w-9 p-0 font-normal rounded-full transition-all duration-300 ease-in-out hover:bg-muted/50 focus-visible:ring-2"
+          ),
+          day_selected:
+            "bg-primary text-white font-medium hover:bg-primary/90 ring-2 ring-offset-2 ring-primary rounded-full",
+          day_today:
+            "bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white border border-green-600 font-bold",
+          day_outside: "text-muted-foreground opacity-40",
+          day_disabled: "text-muted-foreground opacity-30",
+          day_range_middle:
+            "bg-accent text-accent-foreground",
+          day_hidden: "invisible",
+          ...classNames,
+        }}
+        components={{
+          Dropdown: ({
+            value,
+            onChange,
             children,
-          ) as React.ReactElement<React.HTMLProps<HTMLOptionElement>>[];
-          const selected = options.find((child) => child.props.value === value);
-          const handleChange = (value: string) => {
-            const changeEvent = {
-              target: { value },
-            } as React.ChangeEvent<HTMLSelectElement>;
-            onChange?.(changeEvent);
-          };
-          return (
-            <Select
-              value={value?.toString()}
-              onValueChange={(value) => {
-                handleChange(value);
-              }}
-            >
-              <SelectTrigger className="pr-1.5 focus:ring-0">
-                <SelectValue>{selected?.props?.children}</SelectValue>
-              </SelectTrigger>
-              <SelectContent position="popper">
-                <ScrollArea className="h-80">
-                  {options.map((option, id: number) => (
-                    <SelectItem
-                      key={`${option.props.value}-${id}`}
-                      value={option.props.value?.toString() ?? ""}
-                    >
-                      {option.props.children}
-                    </SelectItem>
-                  ))}
-                </ScrollArea>
-              </SelectContent>
-            </Select>
-          );
-        },
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
-      }}
-      {...props}
-    />
+            ...props
+          }: DropdownProps) => {
+            const options = React.Children.toArray(
+              children
+            ) as React.ReactElement<React.HTMLProps<HTMLOptionElement>>[];
+            const selected = options.find(
+              (child) => child.props.value === value
+            );
+            const handleChange = (value: string) => {
+              const changeEvent = {
+                target: { value },
+              } as React.ChangeEvent<HTMLSelectElement>;
+              onChange?.(changeEvent);
+            };
+            return (
+              <Select
+                value={value?.toString()}
+                onValueChange={(value) => handleChange(value)}
+              >
+                <SelectTrigger className="pr-2 rounded-lg border focus:ring-0 bg-background hover:bg-muted/50 text-xs font-medium h-8 min-w-[5rem]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent position="popper" className="z-50">
+                  <ScrollArea className="h-64">
+                    {options.map((option, id: number) => (
+                      <SelectItem
+                        key={`${option.props.value}-${id}`}
+                        value={option.props.value?.toString() ?? ""}
+                        className="text-xs"
+                      >
+                        {option.props.children}
+                      </SelectItem>
+                    ))}
+                  </ScrollArea>
+                </SelectContent>
+              </Select>
+            );
+          },
+          IconLeft: () => <ChevronLeft className="h-4 w-4" />,
+          IconRight: () => <ChevronRight className="h-4 w-4" />,
+        }}
+        {...props}
+      />
+    </motion.div>
   );
 }
 Calendar.displayName = "Calendar";

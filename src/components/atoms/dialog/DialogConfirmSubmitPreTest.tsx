@@ -25,7 +25,7 @@ export default function DialogConfirmSubmit({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Yakin ingin submit jawaban?</DialogTitle>
+          <DialogTitle>Yakin ingin mengirim jawaban?</DialogTitle>
         </DialogHeader>
         <div className="text-muted-foreground text-sm">
           {unansweredNumbers.length > 0 ? (
@@ -41,7 +41,7 @@ export default function DialogConfirmSubmit({
           <Button variant="outline" onClick={onClose}>
             Batal
           </Button>
-          <Button onClick={onConfirm}>Ya, Submit</Button>
+          <Button onClick={onConfirm}>Ya, Kirim</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

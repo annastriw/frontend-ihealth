@@ -1,20 +1,24 @@
+"use client";
+
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-
 import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
 
+// Variants class untuk alert box
 const alertVariants = cva(
-  "relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
+  "relative w-full rounded-xl border px-4 md:px-6 py-4 md:py-5 shadow-sm grid grid-cols-[auto_1fr] gap-x-4 items-start transition-all duration-300 ease-in-out",
   {
     variants: {
       variant: {
-        default: "bg-card text-card-foreground",
+        default:
+          "bg-card text-card-foreground border-border [&>svg]:text-foreground",
         destructive:
-          "text-destructive bg-card [&>svg]:text-current *:data-[slot=alert-description]:text-destructive/90",
+          "bg-red-50 text-red-800 border-red-300 [&>svg]:text-red-600",
         warning:
-          "border-yellow-600 text-black bg-yellow-600/10 [&>svg]:text-current *:data-[slot=alert-description]:text-black",
+          "bg-yellow-50 text-yellow-900 border-yellow-300 [&>svg]:text-yellow-600",
         success:
-          "border-green-600 text-black bg-green-600/10 [&>svg]:text-current *:data-[slot=alert-description]:text-black",
+          "bg-green-50 text-green-900 border-green-300 [&>svg]:text-green-600",
       },
     },
     defaultVariants: {
@@ -26,24 +30,54 @@ const alertVariants = cva(
 function Alert({
   className,
   variant,
+  children,
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
+}: React.ComponentProps<"div"> &
+  VariantProps<typeof alertVariants> & {
+    dismissible?: boolean;
+  }) {
+  const [visible, setVisible] = React.useState(true);
+  const [isClosing, setIsClosing] = React.useState(false);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setVisible(false);
+    }, 400); // durasi animasi fade-out harus sama dengan CSS
+  };
+
+  if (!visible) return null;
+
   return (
     <div
-      data-slot="alert"
       role="alert"
-      className={cn(alertVariants({ variant }), className)}
+      data-slot="alert"
+      className={cn(
+        isClosing ? "animate-fade-out" : "animate-fade-in",
+        alertVariants({ variant }),
+        className,
+      )}
       {...props}
-    />
+    >
+      {children}
+      <button
+        onClick={handleClose}
+        className="text-muted-foreground hover:text-foreground absolute top-2.5 right-3 transition-colors"
+        aria-label="Close alert"
+      >
+        <X className="h-4 w-4" />
+      </button>
+    </div>
   );
 }
 
+// Komponen judul Alert
 function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="alert-title"
       className={cn(
-        "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight",
+        "col-start-2 text-sm leading-snug font-semibold sm:text-base md:text-lg",
         className,
       )}
       {...props}
@@ -51,6 +85,7 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+// Komponen deskripsi Alert
 function AlertDescription({
   className,
   ...props
@@ -59,7 +94,7 @@ function AlertDescription({
     <div
       data-slot="alert-description"
       className={cn(
-        "text-muted-foreground col-start-2 grid justify-items-start gap-1 text-sm [&_p]:leading-relaxed",
+        "text-muted-foreground col-start-2 mt-1 text-sm leading-relaxed md:text-base",
         className,
       )}
       {...props}

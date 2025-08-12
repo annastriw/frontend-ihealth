@@ -39,12 +39,12 @@ export default function BreadcrumbNavWork({
 
             <div className="flex items-center gap-2">
               <Image
-                src="/images/assets/bg-about-us.png"
-                alt="Sistem Informasi Kesehatan Ginjal"
-                width={37}
-                height={37}
-                className="hidden md:block"
-              />
+              src="/images/assets/bg-about-us.png"
+              alt="Screening"
+              width={48}
+              height={48}
+              className="hidden md:block w-12 h-12 object-contain"
+            />
               <h1 className="line-clamp-2 font-semibold uppercase">
                 {data?.name}
               </h1>

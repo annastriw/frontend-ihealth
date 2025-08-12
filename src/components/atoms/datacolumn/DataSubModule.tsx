@@ -89,8 +89,9 @@ export const subModuleColumns = (
             <Eye className="h-4 w-4" />
             <span className="ml-2">Detail</span>
           </Link>
-          {/* 
-          // Disembunyikan sementara karena belum digunakan
+
+          {/* [HIDE] Tombol edit & hapus disembunyikan sementara karena belum digunakan */}
+          {/*
           <div
             onClick={() => props.onEditHandler(data)}
             className="flex cursor-pointer items-center text-yellow-600 hover:text-yellow-800 hover:underline"
@@ -104,7 +105,8 @@ export const subModuleColumns = (
           >
             <Trash2 className="h-4 w-4" />
             <span className="ml-2">Hapus</span>
-          </div> */}
+          </div>
+          */}
         </ActionButton>
       );
     },

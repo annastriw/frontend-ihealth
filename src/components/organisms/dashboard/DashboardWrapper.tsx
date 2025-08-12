@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
-import CardCAPDMaterialCount from "@/components/molecules/card/CardDashboardTitle";
+import CardDashboardTitle from "@/components/molecules/card/CardDashboardTitle";
 import { History, HeartPulse, Syringe, Brain } from "lucide-react";
 
 export default function DashboardWrapper() {
@@ -28,32 +28,35 @@ export default function DashboardWrapper() {
   return (
     <>
       <DashboardTitle
-        head="Beranda"
-        body="Selamat datang di halaman beranda iHealth Edu"
+        head="iHealth Edu"
+        body="Selamat datang di Dashboard iHealth Edu. Akses modul edukasi kesehatan, kelola skrining dan hasil tes, serta temukan informasi lengkap untuk mendukung gaya hidup sehat Anda."
       />
-      <div className="mt-6 space-y-4">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          <CardCAPDMaterialCount
-            title="Diabetes Melitus"
-            icon={Syringe}
-            link="diabetes-melitus"
-          />
-          <CardCAPDMaterialCount
-            title="Hipertensi"
-            icon={HeartPulse}
-            link="hipertensi"
-          />
-                    <CardCAPDMaterialCount
-            title="Kesehatan Mental"
-            icon={Brain}
-            link="mental-health"
-          />
-          <CardCAPDMaterialCount
-            title="Riwayat"
-            icon={History}
-            link="history"
-          />
-        </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <CardDashboardTitle
+          title="Diabetes Melitus"
+          icon={Syringe}
+          description="Pelajari faktor risiko, gejala, dan cara pencegahan serta pengelolaan diabetes secara efektif."
+          link="diabetes-melitus"
+        />
+        <CardDashboardTitle
+          title="Hipertensi"
+          icon={HeartPulse}
+          description="Ketahui cara memantau tekanan darah dan langkah-langkah menjaga tekanan darah tetap normal."
+          link="hipertensi"
+        />
+        <CardDashboardTitle
+          title="Kesehatan Mental"
+          icon={Brain}
+          description="Evaluasi kondisi mental Anda dan dapatkan dukungan serta tips menjaga kesehatan psikologis."
+          link="mental-health"
+        />
+        <CardDashboardTitle
+          title="Riwayat"
+          icon={History}
+          description="Akses riwayat lengkap skrining DSMQ, HSMBQ, DASS-21, serta hasil Pre Test dan Post Test materi yang telah Anda kerjakan."
+          link="history"
+        />
       </div>
     </>
   );

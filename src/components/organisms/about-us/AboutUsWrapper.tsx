@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -124,10 +126,6 @@ export default function AboutUsWrapper() {
         transition={{ duration: 0.6 }}
         className="flex flex-col items-center gap-6"
       >
-        <h2 className="relative text-2xl font-bold text-black md:text-3xl">
-          Tentang Kami
-          <span className="mx-auto mt-1 block h-[3px] w-12 bg-black"></span>
-        </h2>
       </motion.div>
 
       {/* Banner */}

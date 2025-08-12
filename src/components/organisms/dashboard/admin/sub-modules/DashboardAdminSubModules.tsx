@@ -77,10 +77,13 @@ export default function DashboardAdminSubModulesWrapper() {
       <div className="space-y-4">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <AlertInformationCreateModuleContent />
-          {/* <Button onClick={handleDialogSubModuleOpen}>
-          // Disembunyikan sementara karena belum digunakan
+          
+          {/* [HIDE] Tombol "Tambah Materi" disembunyikan sementara karena belum digunakan */}
+          {/*
+          <Button onClick={handleDialogSubModuleOpen}>
             <Plus /> Tambah Materi
-          </Button> */}
+          </Button>
+          */}
         </div>
         <DataTable
           columns={subModuleColumns({

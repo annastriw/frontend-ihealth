@@ -6,7 +6,7 @@ export default function HistoryPage() {
     <section>
       <DashboardTitle
         head="Riwayat"
-        body="Menampilkan riwayat screening, pre test dan post test"
+        body="Lihat catatan lengkap hasil tes dan screening Anda, termasuk DSMQ, HSMBQ, DASS-21, Pre Test, dan Post Test, untuk memantau perkembangan kesehatan dan pembelajaran Anda."
       />
       <DashboardHistoryWrapper />
     </section>

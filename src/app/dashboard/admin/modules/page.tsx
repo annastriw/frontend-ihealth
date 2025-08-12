@@ -6,23 +6,22 @@ import Link from "next/link";
 
 export default function DashboardAdminModulesPage() {
   return (
-    <section>
-      <div className="flex items-center justify-between">
-        <DashboardTitle
-          head="Modul"
-          body="Menampilkan semua daftar modul yang tersedia"
-        />
-        <div>
-          <Link href={`/dashboard/admin/modules/create`}>
-            <Button>
-              <Plus />
-              Tambah Modul
-            </Button>
-          </Link>
-        </div>
+    <section className="space-y-4">
+      <DashboardTitle
+        head="Modul"
+        body="Menampilkan semua daftar modul yang tersedia"
+      />
+
+      <div className="flex justify-end">
+        <Link href="/dashboard/admin/modules/create">
+          <Button>
+            <Plus className="w-4 h-4 mr-2" />
+            Tambah Modul
+          </Button>
+        </Link>
       </div>
+
       <DashboardAdminModulesWrapper />
     </section>
   );
 }
-
