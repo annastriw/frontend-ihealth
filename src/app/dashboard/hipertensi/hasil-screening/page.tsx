@@ -17,6 +17,7 @@ interface ScreeningData {
   hypertension_classification?: string;
   blood_glucose_level?: number;
   smoking_history?: string;
+  heart_disease_history?: string;
   prediction_result?: string;
   prediction_score?: number;
   recommendation?: string;
@@ -61,23 +62,19 @@ export default function HasilScreeningHipertensiPage() {
     }
   };
 
-  // ✅ Filter hanya screening hipertensi (yang TIDAK ada blood_glucose_level atau prediction_score)
+  // ✅ PERBAIKAN: Tampilkan semua data screening yang memiliki data tekanan darah
   const getScreeningType = (screening: ScreeningData) => {
-    const isDiabetesScreening = screening.blood_glucose_level !== null && 
-                               screening.blood_glucose_level !== undefined && 
-                               screening.prediction_score !== null && 
-                               screening.prediction_score !== undefined;
+    // Cek apakah ada data tekanan darah (sistol atau diastol)
+    const hasBloodPressure = (screening.sistolic_pressure && screening.sistolic_pressure > 0) || 
+                            (screening.diastolic_pressure && screening.diastolic_pressure > 0);
     
-    const isHypertensionOnly = !isDiabetesScreening && 
-                              (screening.sistolic_pressure || screening.diastolic_pressure);
-    
-    return { isDiabetesScreening, isHypertensionOnly };
+    return { hasBloodPressure };
   };
 
-  // ✅ Filter data untuk hipertensi saja
+  // ✅ Filter: Tampilkan semua screening yang memiliki data tekanan darah
   const hypertensionScreenings = screeningData.filter(screening => {
-    const { isHypertensionOnly } = getScreeningType(screening);
-    return isHypertensionOnly;
+    const { hasBloodPressure } = getScreeningType(screening);
+    return hasBloodPressure;
   });
 
   const getRiskInfo = (screening: ScreeningData) => {
@@ -110,7 +107,7 @@ export default function HasilScreeningHipertensiPage() {
     return {
       text: 'Data Screening Hipertensi',
       subtitle: `Tingkat Risiko: ${hypertensionStatus}`,
-      emoji: hypertensionStatus === 'Tinggi' ? '🚨' : hypertensionStatus === 'Normal' ? '✅' : '⚠️',
+      emoji: hypertensionStatus === 'Tinggi' ? '🚨' : hypertensionStatus === 'Normal' ? '✅' : '⚠',
       bgColor,
       textColor,
       borderColor,
@@ -275,6 +272,11 @@ export default function HasilScreeningHipertensiPage() {
                   <p className="text-sm font-semibold text-gray-900">{latestScreening.age || "27"} tahun</p>
                 </div>
                 <div className="bg-white rounded-lg p-3 border border-gray-200">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Jenis Kelamin</p>
+                  <p className="text-sm font-semibold text-gray-900">{latestScreening.gender}
+                  </p>
+                </div>
+                <div className="bg-white rounded-lg p-3 border border-gray-200">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">BMI</p>
                   <p className="text-sm font-semibold text-gray-900">{latestScreening.bmi || "20.10"}</p>
                 </div>
@@ -286,12 +288,11 @@ export default function HasilScreeningHipertensiPage() {
                       : "120/127"}
                   </p>
                 </div>
-              </div>
-            </div>
-
-            {/* Classification Row */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white rounded-lg p-3 border border-gray-200">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Riwayat Merokok</p>
+                  <p className="text-sm font-semibold text-gray-900">{latestScreening.smoking_history}
+                  </p>
+                </div>
                 <div className="bg-white rounded-lg p-3 border border-gray-200">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
                     Klasifikasi Hipertensi
@@ -301,8 +302,9 @@ export default function HasilScreeningHipertensiPage() {
                   </p>
                 </div>
                 <div className="bg-white rounded-lg p-3 border border-gray-200">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Klasifikasi Diabetes</p>
-                  <p className="text-sm font-semibold text-gray-900">Tidak Dapat Ditentukan</p>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Riwayat Jantung</p>
+                  <p className="text-sm font-semibold text-gray-900">{latestScreening.heart_disease_history}
+                  </p>
                 </div>
               </div>
             </div>
@@ -319,7 +321,7 @@ export default function HasilScreeningHipertensiPage() {
           {/* Disclaimer */}
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
             <p className="text-sm text-amber-700">
-              <strong>⚠️ Disclaimer:</strong> Hasil ini hanya prediksi konsultasikan dengan dokter untuk pemeriksaan lebih lanjut.
+              <strong>⚠ Disclaimer:</strong> Hasil ini hanya prediksi konsultasikan dengan dokter untuk pemeriksaan lebih lanjut.
             </p>
           </div>
         </div>
@@ -334,10 +336,8 @@ export default function HasilScreeningHipertensiPage() {
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">BMI</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Gula Darah</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tekanan Darah</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Hasil</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Skor</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -351,9 +351,6 @@ export default function HasilScreeningHipertensiPage() {
                         </td>
                         <td className="px-4 py-4 text-sm text-gray-900">
                           {screening.bmi || 'N/A'}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-gray-900">
-                          Data tidak tersedia
                         </td>
                         <td className="px-4 py-4 text-sm text-gray-900">
                           {screening.sistolic_pressure && screening.diastolic_pressure 
@@ -372,9 +369,6 @@ export default function HasilScreeningHipertensiPage() {
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${risk.bgColor} ${risk.textColor}`}>
                             {risk.emoji} {screening.hypertension_classification?.includes('Hipertensi') ? 'Tinggi' : 'Normal'}
                           </span>
-                        </td>
-                        <td className="px-4 py-4 text-sm text-gray-900">
-                          N/A
                         </td>
                       </tr>
                     );

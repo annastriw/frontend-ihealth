@@ -364,15 +364,15 @@ export default function MedicalDiabetesMelitusScreeningPage() {
       return;
     }
 
-    // Konfirmasi untuk zero glucose
-    if (isZeroGlucose) {
-      const confirmProceed = window.confirm(
-        "Gula darah diisi 0. Hasil screening akan menampilkan data terbatas (tanpa nilai gula darah). Lanjutkan?"
-      );
-      if (!confirmProceed) {
-        return;
-      }
-    }
+    // // Konfirmasi untuk zero glucose
+    // if (isZeroGlucose) {
+    //   const confirmProceed = window.confirm(
+    //     "Gula darah diisi 0. Hasil screening akan menampilkan data terbatas (tanpa nilai gula darah). Lanjutkan?"
+    //   );
+    //   if (!confirmProceed) {
+    //     return;
+    //   }
+    // }
 
     setIsSubmitting(true);
     setShowResult(false);
@@ -467,15 +467,15 @@ export default function MedicalDiabetesMelitusScreeningPage() {
     <div className="p-6">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">
-          Screening Diabetes Melitus
+          Input Cek Kesehatan
         </h1>
         <p className="mt-2 text-gray-600">
-          Panel screening diabetes untuk tenaga medis
+          Panel screening input cek kesehatan untuk tenaga medis
         </p>
       </div>
 
       <div className="rounded-lg bg-white p-6 shadow-md">
-        <h2 className="mb-4 text-xl font-semibold">Form Screening Diabetes</h2>
+        <h2 className="mb-4 text-xl font-semibold">Form Input Cek Kesehatan</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Patient Search */}
@@ -865,53 +865,86 @@ export default function MedicalDiabetesMelitusScreeningPage() {
           </div>
         </form>
 
-        {/* Hasil Prediksi dengan Zero Glucose Support */}
+        {/* Hasil Prediksi dengan Smart Card System */}
         {showResult && predictionResult && (
           <div
             id="prediction-result"
             className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-6"
           >
             <h3 className="mb-4 text-xl font-semibold text-gray-900 flex items-center">
-              🏥 Hasil Screening Hipertensi
-              
+              🏥 Hasil Screening Kesehatan
             </h3>
 
-            {/* Hasil Utama dengan Zero Glucose Support */}
-            <div
-              className={`mb-4 rounded-md border p-4 ${getRiskColor(
-                predictionResult.prediction, 
-                predictionResult.risk_level,
-                predictionResult.is_zero_glucose
-              )}`}
-            >
-              <div className="flex items-center">
-                {getRiskIcon(
-                  predictionResult.prediction,
-                  predictionResult.risk_level,
-                  predictionResult.is_zero_glucose
-                )}
-                <div className="ml-3">
-                  <h4 className="text-lg font-medium">
-                    {predictionResult.is_zero_glucose 
-                      ? "Data Screening Hipertensi"
-                      : predictionResult.prediction === 1
-                        ? "Berisiko Diabetes"
-                        : "Tidak Berisiko Diabetes"
-                    }
-                  </h4>
-                  <p className="text-sm">
-                    Tingkat Risiko:{" "}
-                    <span className="font-semibold">
-                      {predictionResult.risk_level}
-                    </span>
-                    {!predictionResult.is_zero_glucose && predictionResult.risk_score && (
-                      <span className="ml-2">
-                        ({predictionResult.risk_score}%)
-                      </span>
-                    )}
-                  </p>
+            {/* Smart Risk Cards */}
+            <div className="mb-6 space-y-4">
+              {/* Hipertensi Risk Card - Selalu tampil */}
+              <div className={`border rounded-lg p-4 ${
+                predictionResult.hypertension_classification?.includes('Hipertensi')
+                  ? 'bg-red-50 border-red-200'
+                  : predictionResult.hypertension_classification?.includes('Normal Tinggi')
+                  ? 'bg-yellow-50 border-yellow-200'
+                  : 'bg-green-50 border-green-200'
+              }`}>
+                <div className="flex items-center">
+                  <span className="text-2xl mr-3">
+                    {predictionResult.hypertension_classification?.includes('Hipertensi') ? '🚨' :
+                     predictionResult.hypertension_classification?.includes('Normal Tinggi') ? '⚠' : '✅'}
+                  </span>
+                  <div>
+                    <h3 className={`text-lg font-medium ${
+                      predictionResult.hypertension_classification?.includes('Hipertensi')
+                        ? 'text-red-600'
+                        : predictionResult.hypertension_classification?.includes('Normal Tinggi')
+                        ? 'text-yellow-600'
+                        : 'text-green-600'
+                    }`}>
+                      Data Screening Hipertensi
+                    </h3>
+                    <p className={`text-sm ${
+                      predictionResult.hypertension_classification?.includes('Hipertensi')
+                        ? 'text-red-600'
+                        : predictionResult.hypertension_classification?.includes('Normal Tinggi')
+                        ? 'text-yellow-600'
+                        : 'text-green-600'
+                    }`}>
+                      Tingkat Risiko: {
+                        predictionResult.hypertension_classification?.includes('Hipertensi') ? 'Tinggi' :
+                        predictionResult.hypertension_classification?.includes('Normal Tinggi') ? 'Sedang' : 'Normal'
+                      }
+                    </p>
+                  </div>
                 </div>
               </div>
+
+              {/* Diabetes Risk Card - Hanya tampil jika ada data gula darah */}
+              {!predictionResult.is_zero_glucose && predictionResult.blood_glucose_level && (
+                <div className={`border rounded-lg p-4 ${
+                  predictionResult.prediction === 1
+                    ? 'bg-red-50 border-red-200'
+                    : 'bg-green-50 border-green-200'
+                }`}>
+                  <div className="flex items-center">
+                    <span className="text-2xl mr-3">
+                      {predictionResult.prediction === 1 ? '🚨' : '✅'}
+                    </span>
+                    <div>
+                      <h3 className={`text-lg font-medium ${
+                        predictionResult.prediction === 1 ? 'text-red-600' : 'text-green-600'
+                      }`}>
+                        Data Screening Diabetes
+                      </h3>
+                      <p className={`text-sm ${
+                        predictionResult.prediction === 1 ? 'text-red-600' : 'text-green-600'
+                      }`}>
+                        Tingkat Risiko: {predictionResult.risk_level}
+                        {predictionResult.risk_score && (
+                          <span className="ml-2">({predictionResult.risk_score}%)</span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Data Screening dengan Kondisional Display */}
@@ -949,12 +982,12 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                   <span className="text-gray-600">Tekanan Darah:</span>
                   <p className="font-medium">
                     {predictionResult.blood_pressure || 
-                     `${bloodPressureData.sistolic_pressure}/${bloodPressureData.diastolic_pressure} mmHg`}
+                     `${bloodPressureData.sistolic_pressure}/${bloodPressureData.diastolic_pressure}`}
                   </p>
                 </div>
                 
                 {/* Klasifikasi Hipertensi - Selalu tampil */}
-                <div>
+                <div className={!predictionResult.is_zero_glucose ? 'col-span-1' : 'col-span-2'}>
                   <span className="text-gray-600">Klasifikasi Hipertensi:</span>
                   <p className="font-medium">
                     {predictionResult.hypertension_classification || 
@@ -972,18 +1005,20 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                   </div>
                 )}
                 
-                {/* Klasifikasi Diabetes - Selalu tampil */}
-                <div className={predictionResult.is_zero_glucose ? 'col-span-2 md:col-span-1' : ''}>
-                  <span className="text-gray-600">Klasifikasi Diabetes:</span>
-                  <p className="font-medium">{predictionResult.risk_level}</p>
-                </div>
+                {/* Klasifikasi Diabetes hanya tampil jika ada data gula darah */}
+                {!predictionResult.is_zero_glucose && (
+                  <div>
+                    <span className="text-gray-600">Klasifikasi Diabetes:</span>
+                    <p className="font-medium">{predictionResult.risk_level}</p>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Rekomendasi dengan styling kondisional */}
             <div className={`mb-4 rounded-md border p-4 ${
               predictionResult.is_zero_glucose 
-                ? 'border-blue-200 bg-blue-50'
+                ? 'border-yellow-200 bg-yellow-50'
                 : 'border-blue-200 bg-blue-50'
             }`}>
               <h5 className={`mb-2 font-medium ${
@@ -1004,7 +1039,7 @@ export default function MedicalDiabetesMelitusScreeningPage() {
                 ⚠ <strong>Disclaimer:</strong> 
                 {predictionResult.is_zero_glucose 
                   ? " Hasil ini hanya prediksi konsultasikan dengan dokter untuk pemeriksaan lebih lanjut"
-                  : " Hasil ini hanya prediksi konsultasikan dengan dokter untuk pemeriksaan lebih lanjut."
+                  : " Hasil ini hanya prediksi dan tidak menggantikan diagnosis medis profesional."
                 }
               </p>
             </div>
