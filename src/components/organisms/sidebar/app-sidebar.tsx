@@ -221,6 +221,25 @@ export function AppSidebar({ session }: AppSidebarProps) {
                     </SidebarMenu>
                   </SidebarGroupContent>
                 </SidebarGroup>
+
+              <SidebarGroup>
+                <SidebarGroupLabel>Ulasan</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        asChild
+                        className={buttonClass("/dashboard/ulasan")}
+                      >
+                        <Link href="/dashboard/ulasan">
+                          <CircleHelp />
+                          <span>Ulasan Website</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
               </>
             )}
 
