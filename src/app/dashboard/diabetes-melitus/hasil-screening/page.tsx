@@ -355,11 +355,11 @@ export default function HasilScreeningPage() {
                   <p className="text-sm font-semibold text-gray-900">{latestScreening.smoking_history}
                   </p>
                 </div>
-                <div className="bg-white rounded-lg p-3 border border-gray-200">
+                {/* <div className="bg-white rounded-lg p-3 border border-gray-200">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Riwayat Jantung</p>
                   <p className="text-sm font-semibold text-gray-900">{latestScreening.heart_disease_history}
                   </p>
-                </div>
+                </div> */}
               </div>
             </div>
 
