@@ -39,9 +39,7 @@ export default function HomeScreeningInvitation() {
                   </span>
                 </h2>
                 <p className="text-muted-foreground mx-auto max-w-xl text-sm leading-relaxed sm:text-base md:mx-0 md:text-lg">
-                  Cukup dengan beberapa klik, kamu bisa mengenali kondisi
-                  kesehatanmu. Jawab pertanyaan ringan dan dapatkan gambaran
-                  awal tentang kesejahteraan tubuhmu.
+                  Cukup dengan beberapa klik, Anda dapat meninjau kondisi kesehatan dan mendapatkan gambaran awal untuk lebih peduli pada kesehatan Anda.
                 </p>
 
                 <div className="mt-4 flex justify-center md:justify-start">
