@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -86,11 +84,11 @@ function CardItem({
 
 export default function AboutUsWrapper() {
   const paragraphText = [
-    `iHealth Edu adalah platform edukasi digital yang bertujuan untuk meningkatkan literasi masyarakat dalam bidang kesehatan, khususnya mengenai **Hipertensi**, **Diabetes Melitus**, dan **Kesehatan Mental**. Website ini menyediakan informasi yang akurat, mudah dipahami, dan berbasis ilmu **keperawatan** serta **psikologi**.`,
-    `Melalui artikel, video, dan modul interaktif, iHealth Edu hadir sebagai sarana **pembelajaran** dan **pemberdayaan** bagi pasien, keluarga, maupun masyarakat umum agar lebih peduli terhadap kondisi kesehatan diri dan lingkungan sekitar.`,
-    `Website ini dikembangkan oleh **Tim KKN IDBU-26 Universitas Diponegoro** sebagai bentuk kontribusi nyata dalam mendukung edukasi kesehatan berbasis komunitas. Dengan pendekatan **interdisipliner** dan **kolaboratif**, tim kami berkomitmen untuk menyajikan konten yang informatif, relevan, dan berdampak positif bagi masyarakat.`,
+    `**iHealth Edu** adalah platform edukasi digital yang bertujuan untuk meningkatkan literasi masyarakat dalam bidang kesehatan, khususnya mengenai **Hipertensi**, **Diabetes Melitus**, dan **Kesehatan Mental**. Website ini menyajikan informasi yang akurat, mudah dipahami, dan berbasis ilmu **keperawatan** serta **psikologi**.`,
+    `Website ini dikembangkan oleh **Tim IT iHealth Edu** untuk keperluan **KKNT IDBU-26 Universitas Diponegoro**, bekerja sama dengan **Puskesmas Padangsari**. Program ini ditujukan bagi masyarakat sekitar, khususnya **Kelurahan Padangsari** dan **Kelurahan Pedalangan**, Kecamatan Banyumanik, Kota Semarang.`,
+    `Melalui artikel, video, dan modul interaktif, iHealth Edu hadir sebagai sarana **pembelajaran** sekaligus **pemberdayaan** bagi pasien, keluarga, maupun masyarakat umum agar lebih peduli terhadap kondisi kesehatan diri dan lingkungan. Dengan pendekatan **interdisipliner** dan **kolaboratif**, tim kami berkomitmen menyajikan konten yang informatif, relevan, dan berdampak positif bagi masyarakat.`,
     `Kami percaya bahwa **edukasi** adalah langkah awal menuju kehidupan yang lebih sehat, seimbang, dan bermakna. Bersama iHealth Edu, mari wujudkan masyarakat yang lebih sadar, peduli, dan tangguh dalam menghadapi tantangan kesehatan modern.`,
-    `Kami belajar, kami berbagi, kami peduli.`,
+    `**Kami belajar, kami berbagi, kami peduli.**`,
   ];
 
   const kelompokData = [
@@ -106,28 +104,18 @@ export default function AboutUsWrapper() {
     },
     {
       title: "Kelompok 3",
-      desc: "Bertugas di Kelurahan Padangsari, RT 1–13 RW 07. Fokus mereka adalah memberikan edukasi kesehatan mental terutama dalam hal mindfullness, pelatihan gaya hidup aktif, dan program monitoring kesehatan lansia.",
+      desc: "Bertugas di Kelurahan Padangsari, RT 1–13 RW 07. Fokus mereka adalah memberikan edukasi kesehatan mental terutama dalam hal mindfulness, pelatihan gaya hidup aktif, dan program monitoring kesehatan lansia.",
       image: "/images/assets/kelompok3.png",
     },
     {
       title: "Kelompok 4",
-      desc: "Bertugas di Kelurahan Padangsari, RT 1–5, RW 06. Kelompok ini menginisiasi program cek kesehatan rutin, sowan kader kesehatan, hingga seminar regulasi emosi. Selain itu kelompok ini turut menyumbang program kerja seperti pembuatan website peminjaman balai, kerja bakti, dan membantu lomba 17an .",
+      desc: "Bertugas di Kelurahan Padangsari, RT 1–5 RW 06. Kelompok ini menginisiasi program cek kesehatan rutin, sowan kader kesehatan, hingga seminar regulasi emosi. Selain itu kelompok ini turut menyumbang program kerja seperti pembuatan website peminjaman balai, kerja bakti, dan membantu lomba 17an.",
       image: "/images/assets/kelompok4.png",
     },
   ];
 
   return (
     <div className="text-muted-foreground mx-auto max-w-6xl space-y-6 px-4 text-justify font-sans text-sm leading-relaxed sm:px-6 sm:text-base md:px-8 md:text-[17px]">
-      {/* Title Section */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: false }}
-        transition={{ duration: 0.6 }}
-        className="flex flex-col items-center gap-6"
-      >
-      </motion.div>
-
       {/* Banner */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
