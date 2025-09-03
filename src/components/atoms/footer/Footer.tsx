@@ -2,6 +2,7 @@
 
 import { Instagram, Music2 } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -80,9 +81,7 @@ export default function Footer() {
           <div className="space-y-2">
             <h2 className="text-lg font-semibold sm:text-xl">Hak Cipta</h2>
             <p className="text-sm leading-relaxed text-white/90 sm:text-base">
-              © {new Date().getFullYear()} KKN Tim 26 Universitas Diponegoro.
-              <br />
-              Seluruh hak cipta dilindungi undang-undang.
+              © 2025 iHealth Edu. All rights reserved.
             </p>
           </div>
         </div>
@@ -95,7 +94,14 @@ export default function Footer() {
           className="mt-10 border-t border-white/30 pt-5 text-center text-xs text-white/70 sm:text-sm"
         >
           Dibuat oleh{" "}
-          <span className="text-white">Tim IT KKN-T IBDU 26 UNDIP 💻</span>
+          <Link href="/about-us">
+            <motion.span
+              whileHover={{ scale: 1.05, color: "#00FFAA" }}
+              className="cursor-pointer text-white font-semibold transition-colors duration-300"
+            >
+              Tim IT Platform iHealth Edu 💻
+            </motion.span>
+          </Link>
         </motion.div>
       </motion.div>
     </footer>
