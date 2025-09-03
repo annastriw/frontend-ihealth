@@ -83,7 +83,7 @@ export default function CardListDiscussionComment({
                   <div className="space-y-4">
                     {comment.image_path && (
                       <Image
-                        src={`${BASE_URL}/storage/${comment.image_path}`}
+                        src={`${BASE_URL}/public/storage/${comment.image_path}`}
                         alt="Foto"
                         width={1000}
                         height={1000}

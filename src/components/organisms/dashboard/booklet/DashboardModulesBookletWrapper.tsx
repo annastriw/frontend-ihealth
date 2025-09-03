@@ -36,7 +36,7 @@ export default function DashboardModulesBookletWrapper({
   });
 
   const filePath = data?.data.file_path
-    ? `${BASE_URL}/storage/${data.data.file_path}`
+    ? `${BASE_URL}/public/storage/${data.data.file_path}`
     : "";
 
   return (
