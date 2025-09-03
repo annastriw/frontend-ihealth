@@ -26,10 +26,8 @@ export default function HomeJumbotron() {
             iHealth Edu
           </h1>
           <p className="mt-4 max-w-md text-base text-gray-600 sm:text-lg md:text-xl lg:max-w-xl dark:text-gray-300">
-            iHealth Edu adalah platform edukasi kesehatan yang menyajikan
-            informasi terpercaya seputar Hipertensi, Diabetes Melitus, dan
-            Kesehatan Mental. Disusun berdasarkan ilmu keperawatan dan psikologi
-            untuk masyarakat luas.
+            <strong>iHealth Edu</strong> adalah platform edukasi kesehatan yang menyajikan informasi terpercaya tentang <strong>Hipertensi</strong>, <strong>Diabetes Melitus</strong>, dan <strong>Kesehatan Mental</strong>, berbasis ilmu <strong>keperawatan</strong> dan <strong>psikologi</strong>.  
+            Bekerja sama dengan <strong>Puskesmas Padangsari</strong>, platform ini bertujuan memberdayakan masyarakat <strong>Padangsari</strong> dan <strong>Pedalangan</strong> agar lebih peduli terhadap kesehatan diri dan lingkungan.
           </p>
 
           <div className="mt-6">
