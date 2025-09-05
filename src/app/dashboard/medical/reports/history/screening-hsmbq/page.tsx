@@ -5,8 +5,8 @@ export default function DashboardMedicalReportHistoryScreeningHSMBQPage() {
   return (
     <section>
       <DashboardTitle
-        head="Laporan Screening HSMBQ Medis"
-        body="Menampilkan daftar hasil screening HSMBQ (Hipertensi) yang telah dikerjakan oleh tenaga medis"
+        head="Laporan Screening HSMBQ"
+        body="Menampilkan daftar hasil screening HSMBQ (Hipertensi) yang telah dikerjakan oleh pengguna"
       />
       <DashboardMedicalReportHistoryScreeningHSMBQWrapper />
     </section>

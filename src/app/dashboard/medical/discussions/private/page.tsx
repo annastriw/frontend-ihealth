@@ -6,7 +6,7 @@ export default function DashboardMedicalDiscussionPrivatePage() {
     <section>
       <DashboardTitle
         head="Pertanyaan Private Forum Komunitas"
-        body="Menampilkan pertanyaan private dari Forum Komunitas"
+        body="Menampilkan pertanyaan private dari pengguna kepada Anda"
       />
       <DashboardMedicalDiscussionPrivateWrapper />
     </section>

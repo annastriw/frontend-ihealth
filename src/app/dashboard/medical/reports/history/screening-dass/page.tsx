@@ -5,8 +5,8 @@ export default function DashboardMedicalReportHistoryScreeningDASSPage() {
   return (
     <section>
       <DashboardTitle
-        head="Laporan Screening DASS-21 Medis"
-        body="Menampilkan daftar hasil screening DASS-21 yang telah dikerjakan oleh tenaga medis"
+        head="Laporan Screening DASS-21"
+        body="Menampilkan daftar hasil screening DASS-21 yang telah dikerjakan oleh pengguna"
       />
       <DashboardMedicalReportHistoryScreeningDASSWrapper />
     </section>

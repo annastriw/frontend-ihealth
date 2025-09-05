@@ -421,7 +421,8 @@ export function AppSidebar({ session }: AppSidebarProps) {
             {session?.user.role === "medical_personal" && (
               <>
                 {/* Screening untuk Medical Personal */}
-                <SidebarGroup>
+                {/* [HIDE] disembunyikan sementara karena belum digunakan */}
+                {/* <SidebarGroup>
                   <SidebarGroupLabel>Screening</SidebarGroupLabel>
                   <SidebarGroupContent>
                     <SidebarMenu>
@@ -440,7 +441,7 @@ export function AppSidebar({ session }: AppSidebarProps) {
                       </SidebarMenuItem>
                     </SidebarMenu>
                   </SidebarGroupContent>
-                </SidebarGroup>
+                </SidebarGroup> */}
 
                 <SidebarGroup>
                   <SidebarGroupLabel>Diskusi</SidebarGroupLabel>

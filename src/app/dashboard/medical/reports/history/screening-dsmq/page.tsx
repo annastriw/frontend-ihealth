@@ -5,7 +5,7 @@ export default function DashboardMedicalReportHistoryScreeningDSMQPage() {
   return (
     <section>
       <DashboardTitle
-        head="Laporan Screening DSMQ Medis"
+        head="Laporan Screening DSMQ"
         body="Menampilkan daftar hasil screening DSMQ (Manajemen Diabetes) yang telah dikerjakan oleh pasien."
       />
       <DashboardMedicalReportHistoryScreeningDSMQWrapper />

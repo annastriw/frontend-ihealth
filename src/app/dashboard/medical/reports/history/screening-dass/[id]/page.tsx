@@ -11,8 +11,8 @@ export default async function Page({ params }: PageProps) {
   return (
     <section>
       <DashboardTitle
-        head="Detail Riwayat Screening DASS-21 Medis"
-        body="Menampilkan informasi lengkap mengenai riwayat screening DASS-21 yang telah dilakukan oleh tenaga medis. Halaman ini berisi detail hasil evaluasi yang membantu memahami kondisi psikologis berdasarkan tes DASS-21 secara menyeluruh dan terperinci."
+        head="Detail Riwayat Screening DASS-21"
+        body="Menampilkan informasi lengkap mengenai riwayat screening DASS-21 yang telah dilakukan oleh pengguna. Halaman ini berisi detail hasil evaluasi yang membantu memahami kondisi psikologis berdasarkan tes DASS-21 secara menyeluruh dan terperinci."
       />
       <DashboardMedicalHistoryScreeningDASSDetailWrapper id={id} />
     </section>

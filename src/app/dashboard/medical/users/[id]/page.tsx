@@ -14,8 +14,8 @@ export default async function DashboardMedicalDetailUserPage({
   return (
     <section>
       <DashboardTitle
-        head="Detail Pengguna Tenaga Medis"
-        body="Menampilkan detail informasi akun dan pribadi dari tenaga medis"
+        head="Detail Pengguna"
+        body="Menampilkan detail informasi akun dan pribadi"
       />
       <DashboardMedicalDetailUserWrapper id={id} />
     </section>

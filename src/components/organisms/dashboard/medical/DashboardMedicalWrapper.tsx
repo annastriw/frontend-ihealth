@@ -1,16 +1,10 @@
-import { Users, Stethoscope, NotepadText, User, UserRoundSearch, Map } from "lucide-react";
+import { Users, NotepadText, User, UserRoundSearch, Map } from "lucide-react";
 import CardCAPDMaterialCount from "@/components/molecules/card/CardDashboardTitle";
 
 export default function DashboardMedicalWrapper() {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <CardCAPDMaterialCount
-          title="Input Cek Kesehatan"
-          icon={Stethoscope}
-          link="medical/screening/diabetes-melitus"
-          description="Masukkan data hasil cek kesehatan pasien Hipertensi dan Diabetes Melitus."
-        />
         <CardCAPDMaterialCount
           title="Forum Komunitas"
           icon={Users}

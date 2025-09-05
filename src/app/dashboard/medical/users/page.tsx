@@ -6,7 +6,7 @@ export default function DashboardMedicalUsersPage() {
     <section>
       <DashboardTitle
         head="Pengguna"
-        body="Menampilkan daftar pengguna tenaga kesehatan"
+        body="Menampilkan daftar pengguna iHealth Edu"
       />
       <DashboardMedicalUsersWrapper />
     </section>
