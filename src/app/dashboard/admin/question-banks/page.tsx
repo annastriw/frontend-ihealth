@@ -8,7 +8,7 @@ export default function DashboardAdminQuestionBankPage() {
   return (
     <section>
       <div className="flex items-center justify-between">
-        <DashboardTitle head="Bank Soal" body="Menampilkan daftar bank soal" />
+        <DashboardTitle head="Bank Soal" body="Menampilkan daftar bank soal untuk pre-test dan post-test" />
         <div>
           <Link href={`/dashboard/admin/question-banks/create`}>
             <Button>

@@ -6,7 +6,7 @@ export default function DashboardAdminTestsPage() {
     <section>
       <DashboardTitle
         head="Daftar Tes"
-        body="Menampilkan daftar pre-test dan post-test"
+        body="Menampilkan daftar pre-test dan post-test untuk pengguna"
       />
       <DashboardAdminTestWrapper />
     </section>

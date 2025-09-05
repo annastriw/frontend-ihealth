@@ -6,7 +6,7 @@ export default function DashboardAdminSubModulesPage() {
     <section>
       <DashboardTitle
         head="Materi"
-        body="Menampilkan daftar materi dari modul yang tersedia"
+        body="Menampilkan daftar materi dari modul yang tersedia untuk ditampilkan kepada pengguna"
       />
       <DashboardAdminSubModulesWrapper />
     </section>

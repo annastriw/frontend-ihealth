@@ -6,7 +6,7 @@ export default function DashboardAdminCreateQuestionBank() {
     <section>
       <DashboardTitle
         head="Tambah Bank Soal"
-        body="Lengkapi form berikut untuk menambahkan bank soal"
+        body="Lengkapi form berikut untuk menambahkan bank soal untuk pre-test dan post-test"
       />
       <DashboardAdminCreateQuestionBankWrapper />
     </section>
