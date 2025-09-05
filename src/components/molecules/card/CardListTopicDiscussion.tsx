@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -7,6 +9,7 @@ import { generateFallbackFromName } from "@/utils/generate-name";
 import { formatRelativeTime } from "@/utils/time-relative";
 import { MessagesSquare } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 interface CardListTopicDiscussionProps {
   data: Discussion[];
@@ -52,58 +55,72 @@ export default function CardListTopicDiscussion({
           </p>
         </div>
       ) : (
-        data.map((discussion) => (
+        data.map((discussion, index) => (
           <Link
             key={discussion.id}
             href={`/dashboard/discussions/${discussion.id}`}
           >
-            <Card className="shadow-none">
-              <CardContent>
-                <div className="space-y-4">
-                  <h1 className="max-w-xl font-medium break-words whitespace-normal">
-                    {discussion.title}
-                  </h1>
-                  <div className="flex flex-col gap-2 md:flex-row md:items-center">
-                    {discussion.comments.length > 0 && (
-                      <div className="flex items-center gap-1">
-                        {[
-                          ...new Map(
-                            discussion.comments.map((comment) => [
-                              comment.user.id,
-                              comment,
-                            ]),
-                          ).values(),
-                        ].map((comment) => (
-                          <div key={comment.user.id}>
-                            <Avatar className="h-8 w-8 rounded-full">
-                              <AvatarFallback
-                                className={`rounded-full text-xs font-semibold text-white ${getAvatarColor(comment.user.id)}`}
-                              >
-                                {generateFallbackFromName(comment.user.name)}
-                              </AvatarFallback>
-                            </Avatar>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <p className="text-muted-foreground text-sm">
-                      {discussion.comments.length} Balasan
-                    </p>
-                    {discussion.comments.length > 0 && (
-                      <span className="text-muted-foreground hidden text-xs md:flex">
-                        •
-                      </span>
-                    )}
-                    {discussion.comments.length > 0 && (
-                      <p className="text-muted-foreground hidden text-sm md:flex">
-                        Balasan terakhir{" "}
-                        {formatRelativeTime(discussion.comments[0].created_at)}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.4,
+                delay: index * 0.1,
+                ease: "easeOut",
+              }}
+            >
+              <Card
+                className="shadow-none transition-all duration-200 hover:shadow-md hover:scale-[1.02] cursor-pointer"
+              >
+                <CardContent>
+                  <div className="space-y-4">
+                    <h1 className="max-w-xl font-medium break-words whitespace-normal">
+                      {discussion.title}
+                    </h1>
+                    <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                      {discussion.comments.length > 0 && (
+                        <div className="flex items-center gap-1">
+                          {[
+                            ...new Map(
+                              discussion.comments.map((comment) => [
+                                comment.user.id,
+                                comment,
+                              ]),
+                            ).values(),
+                          ].map((comment) => (
+                            <div key={comment.user.id}>
+                              <Avatar className="h-8 w-8 rounded-full">
+                                <AvatarFallback
+                                  className={`rounded-full text-xs font-semibold text-white ${getAvatarColor(
+                                    comment.user.id,
+                                  )}`}
+                                >
+                                  {generateFallbackFromName(comment.user.name)}
+                                </AvatarFallback>
+                              </Avatar>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <p className="text-muted-foreground text-sm">
+                        {discussion.comments.length} Pertanyaan
                       </p>
-                    )}
+                      {discussion.comments.length > 0 && (
+                        <span className="text-muted-foreground hidden text-xs md:flex">
+                          •
+                        </span>
+                      )}
+                      {discussion.comments.length > 0 && (
+                        <p className="text-muted-foreground hidden text-sm md:flex">
+                          Pertanyaan terakhir{" "}
+                          {formatRelativeTime(discussion.comments[0].created_at)}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </motion.div>
           </Link>
         ))
       )}
