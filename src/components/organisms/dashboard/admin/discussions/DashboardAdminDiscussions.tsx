@@ -4,6 +4,7 @@ import { discussionColumns } from "@/components/atoms/datacolumn/DataDiscussion"
 import DialogCreateDiscussion from "@/components/atoms/dialog/DialogCreateDiscussion";
 import { DataTable } from "@/components/molecules/datatable/DataTable";
 import { Button } from "@/components/ui/button";
+import AlertInformationSelectDiscussionAdmin from "@/components/atoms/alert/AlertInformationSelectDiscussionAdmin";
 import { useGetAllDiscussion } from "@/http/discussions/get-all-discussions";
 import { Plus } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -36,6 +37,10 @@ export default function DashboardAdminDiscussionWrapper() {
           </Button>
           */}
         </div>
+
+        {/* 🔔 Tambahkan alert info */}
+        <AlertInformationSelectDiscussionAdmin />
+
         <DataTable
           data={data?.data ?? []}
           columns={discussionColumns}

@@ -4,7 +4,7 @@ import DashboardAdminUsersMapsWrapper from "@/components/organisms/dashboard/adm
 export default function DashboardAdminMapPage(){
     return(
         <>
-        <DashboardTitle head="Lokasi Persebaran" body="Menampilkan lokasi persebaran"/>
+        <DashboardTitle head="Lokasi Persebaran" body="Menampilkan lokasi persebaran terdiagnosa Hipertensi dan Diabetes Melitus di Kelurahan Padangsari dan Pedalangan"/>
         <DashboardAdminUsersMapsWrapper/>
         </>
     )

@@ -5,8 +5,8 @@ export default function DashboardMedicalMapPage() {
   return (
     <>
       <DashboardTitle
-        head="Lokasi Persebaran Tenaga Medis"
-        body="Menampilkan lokasi persebaran tenaga medis"
+        head="Lokasi Persebaran"
+        body="Menampilkan lokasi persebaran terdiagnosa Hipertensi dan Diabetes Melitus di Kelurahan Padangsari dan Pedalangan"
       />
       <DashboardMedicalUsersMapWrapper />
     </>

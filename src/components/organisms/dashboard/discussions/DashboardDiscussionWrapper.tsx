@@ -4,6 +4,7 @@ import DashboardTitle from "@/components/atoms/typography/DashboardTitle";
 import DashboardTitleBold from "@/components/atoms/typography/DashboardTitleBold";
 import AccordionFAQDashboard from "@/components/molecules/accordion/AccordionFAQDashboard";
 import CardListTopicDiscussion from "@/components/molecules/card/CardListTopicDiscussion";
+import AlertInformationSelectDiscussionTopic from "@/components/atoms/alert/AlertInformationSelectDiscussionTopic";
 import { Button } from "@/components/ui/button";
 import { useGetAllDiscussion } from "@/http/discussions/get-all-discussions";
 import { useGetAllFAQDiscussion } from "@/http/faq/get-all-faq";
@@ -25,6 +26,7 @@ export default function DashboardDiscussionWrapper() {
       enabled: status === "authenticated",
     },
   );
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between md:gap-0">
@@ -39,7 +41,12 @@ export default function DashboardDiscussionWrapper() {
           <Button>Kelola Pertanyaan Anda</Button>
         </Link>
       </div>
+
+      {/* 🔔 Tambahkan alert info */}
+      <AlertInformationSelectDiscussionTopic />
+
       <CardListTopicDiscussion data={data?.data || []} isLoading={isPending} />
+
       <div>
         <DashboardTitleBold head="Pertanyaan yang sering ditanyakan" />
         <AccordionFAQDashboard data={faq?.data} />
