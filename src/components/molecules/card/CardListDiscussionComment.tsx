@@ -62,9 +62,7 @@ export default function CardListDiscussionComment({
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10 rounded-full">
                     <AvatarFallback
-                      className={`${getAvatarColor(
-                        comment.user.id
-                      )} rounded-full text-xs font-semibold text-white`}
+                      className={`${getAvatarColor(comment.user.id)} rounded-full text-xs font-semibold text-white`}
                     >
                       {generateFallbackFromName(comment.user.name)}
                     </AvatarFallback>
@@ -83,7 +81,7 @@ export default function CardListDiscussionComment({
                 <div className="space-y-3 w-full">
                   {comment.image_path && (
                     <Image
-                      src={`${BASE_URL}/public/storage/${comment.image_path}`}
+                      src={`${BASE_URL}/storage/${comment.image_path}`} // <--- hapus /public
                       alt="Foto"
                       width={1000}
                       height={1000}

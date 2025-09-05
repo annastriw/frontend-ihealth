@@ -111,7 +111,7 @@ export default function CardListDiscussionCommentAnswer({
                     <div className="space-y-3">
                       {comment.image_path && (
                         <Image
-                          src={`${BASE_URL}/public/storage/${comment.image_path}`}
+                          src={`${BASE_URL}/storage/${comment.image_path}`}
                           alt="Foto"
                           width={800}
                           height={800}

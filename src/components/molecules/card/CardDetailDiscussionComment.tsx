@@ -62,7 +62,7 @@ export default function CardDetailDiscussionComment({
 
           {data.image_path && (
             <Image
-              src={`${BASE_URL}/public/storage/${data.image_path}`}
+              src={`${BASE_URL}/storage/${data.image_path}`}
               alt="Foto"
               width={800}
               height={800}
