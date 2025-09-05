@@ -12,8 +12,8 @@ export default async function DashboardDiscussionAnswerPage({
   return (
     <section>
       <DashboardTitle
-        head="Detail Diskusi"
-        body="Menampilkan detail diskusi dari topik diskusi"
+        head="Detail Pertanyaan"
+        body="Telusuri detail pertanyaan pada diskusi ini dan bagikan pandangan Anda dengan komunitas"
       />
       <DashboardDiscussionCommentDetail id={id} />
     </section>

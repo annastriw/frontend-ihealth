@@ -20,6 +20,7 @@ import {
 } from "@/validators/discussion/discussion-message-answer-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddNewDiscussionMessageAnswer } from "@/http/discussions/answer/create-discussion-message-answer";
+import { motion } from "framer-motion";
 
 interface MessageDiscussionAnswerProps {
   id: string;
@@ -52,14 +53,15 @@ export default function MessageDiscussionAnswer({
   const handleClickPaperclip = () => {
     fileInputRef.current?.click();
   };
+
   const queryClient = useQueryClient();
 
   const { mutate: addHTHandler, isPending } = useAddNewDiscussionMessageAnswer({
     onError: () => {
-      toast.error("Gagal mengirim pesan!");
+      toast.error("Gagal mengirim balasan!");
     },
     onSuccess: () => {
-      toast.success("Berhasil mengirim pesan!");
+      toast.success("Balasan berhasil dikirim!");
       queryClient.invalidateQueries({
         queryKey: ["discussion-comment-answer"],
       });
@@ -73,17 +75,22 @@ export default function MessageDiscussionAnswer({
   };
 
   return (
-    <div className="mb-6 w-full">
+    <motion.div
+      className="w-full"
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+    >
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-y-2 rounded-xl border p-4"
+          className="flex flex-col gap-y-3 rounded-xl border bg-white p-4 shadow-sm"
         >
           {fileName && (
-            <div className="bg-primary/10 flex items-center justify-between gap-x-2 rounded-md border p-2 text-sm text-gray-600">
+            <div className="flex items-center justify-between gap-x-2 rounded-md border p-2 text-sm text-gray-600 bg-primary/10">
               <div className="flex items-center gap-x-2">
                 <FileImage className="h-5 w-5" />
-                {fileName}
+                <span className="truncate max-w-[200px]">{fileName}</span>
               </div>
               <button
                 type="button"
@@ -104,9 +111,9 @@ export default function MessageDiscussionAnswer({
               <FormItem className="flex-grow">
                 <FormControl>
                   <Textarea
-                    placeholder="Tulis pesan untuk disuksi disini..."
-                    className="resize-none border-0 p-0 shadow-none"
-                    rows={1}
+                    placeholder="Tulis balasan di sini..."
+                    className="resize-none border-0 p-0 shadow-none focus-visible:ring-0 text-sm"
+                    rows={3}
                     {...field}
                   />
                 </FormControl>
@@ -115,18 +122,17 @@ export default function MessageDiscussionAnswer({
             )}
           />
 
-          <div className="flex w-full items-center justify-end gap-x-2">
+          <div className="flex w-full items-center justify-between">
             <button type="button" onClick={handleClickPaperclip}>
               <Paperclip className="text-muted-foreground h-6 w-6 cursor-pointer" />
             </button>
-
             <Button
               type="submit"
               disabled={isPending}
               className="rounded-full"
-              size={"icon"}
+              size="icon"
             >
-              <ArrowUp className="h-8 w-8" />
+              <ArrowUp className="h-5 w-5" />
             </Button>
           </div>
 
@@ -138,6 +144,6 @@ export default function MessageDiscussionAnswer({
           />
         </form>
       </Form>
-    </div>
+    </motion.div>
   );
 }

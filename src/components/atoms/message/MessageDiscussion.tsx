@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { motion } from "framer-motion";
 
 interface MessageDiscussionProps {
   id: string;
@@ -40,9 +41,7 @@ export default function MessageDiscussion({ id }: MessageDiscussionProps) {
   const { data: session, status } = useSession();
   const { data } = useGetAllMedicalPersonalUsers(
     session?.access_token as string,
-    {
-      enabled: status === "authenticated",
-    },
+    { enabled: status === "authenticated" }
   );
 
   const form = useForm<DiscussionMessageType>({
@@ -59,6 +58,17 @@ export default function MessageDiscussion({ id }: MessageDiscussionProps) {
 
   const [fileName, setFileName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+
+  const { mutate: addHTHandler, isPending } = useAddNewDiscussionMesagge({
+    onError: () => toast.error("Gagal mengirim pesan!"),
+    onSuccess: () => {
+      toast.success("Berhasil mengirim pesan!");
+      queryClient.invalidateQueries({ queryKey: ["discussion-detail"] });
+      form.reset();
+      setFileName(null);
+    },
+  });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -68,45 +78,33 @@ export default function MessageDiscussion({ id }: MessageDiscussionProps) {
     }
   };
 
-  const handleClickPaperclip = () => {
-    fileInputRef.current?.click();
-  };
-  const queryClient = useQueryClient();
-
-  const { mutate: addHTHandler, isPending } = useAddNewDiscussionMesagge({
-    onError: () => {
-      toast.error("Gagal mengirim pesan!");
-    },
-    onSuccess: () => {
-      toast.success("Berhasil mengirim pesan!");
-      queryClient.invalidateQueries({
-        queryKey: ["discussion-detail"],
-      });
-      form.reset();
-      setFileName(null);
-    },
-  });
+  const handleClickPaperclip = () => fileInputRef.current?.click();
 
   const onSubmit = (body: DiscussionMessageType) => {
     const payload = {
       ...body,
       medical_id: body.is_private ? body.medical_id : null,
     };
-
     addHTHandler(payload);
   };
 
   return (
-    <div className="mb-6 w-full">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="w-full"
+    >
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-y-2 rounded-xl border p-4"
+          className="w-full flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md md:gap-6 md:p-6"
         >
+          {/* File preview */}
           {fileName && (
-            <div className="bg-primary/10 flex items-center justify-between gap-x-2 rounded-md border p-2 text-sm text-gray-600">
-              <div className="flex items-center gap-x-2">
-                <FileImage className="h-5 w-5" />
+            <div className="flex items-center justify-between gap-2 w-full rounded-lg border bg-gray-50 px-3 py-2 text-sm text-gray-700">
+              <div className="flex items-center gap-2">
+                <FileImage className="h-5 w-5 text-primary" />
                 {fileName}
               </div>
               <button
@@ -116,21 +114,22 @@ export default function MessageDiscussion({ id }: MessageDiscussionProps) {
                   form.setValue("image", undefined);
                 }}
               >
-                <X className="text-muted-foreground h-4 w-4 cursor-pointer" />
+                <X className="h-4 w-4 text-green-600 hover:text-red-500" />
               </button>
             </div>
           )}
 
+          {/* Text input */}
           <FormField
             control={form.control}
             name="comment"
             render={({ field }) => (
-              <FormItem className="flex-grow">
+              <FormItem className="w-full">
                 <FormControl>
                   <Textarea
-                    placeholder="Tulis pesan untuk disuksi disini..."
-                    className="resize-none border-0 p-0 shadow-none"
-                    rows={1}
+                    placeholder="Tulis pesan atau pertanyaanmu di sini..."
+                    className="w-full resize-none border-0 p-0 text-base focus-visible:ring-0"
+                    rows={3}
                     {...field}
                   />
                 </FormControl>
@@ -139,8 +138,9 @@ export default function MessageDiscussion({ id }: MessageDiscussionProps) {
             )}
           />
 
-          <div className="flex items-end justify-between">
-            <div className="flex flex-col gap-y-4">
+          {/* Options + Send */}
+          <div className="flex flex-col-reverse gap-4 md:flex-row md:items-end md:justify-between w-full">
+            <div className="flex flex-col gap-3 w-full md:w-auto">
               <FormField
                 control={form.control}
                 name="is_private"
@@ -152,9 +152,9 @@ export default function MessageDiscussion({ id }: MessageDiscussionProps) {
                         onCheckedChange={(checked) => field.onChange(!!checked)}
                       />
                     </FormControl>
-                    <div className="text-muted-foreground text-sm">
-                      Private (hanya ke Dokter / Tenaga Medis)
-                    </div>
+                    <span className="text-sm text-muted-foreground">
+                      Private (hanya untuk Dokter / Tenaga Medis)
+                    </span>
                   </FormItem>
                 )}
               />
@@ -164,8 +164,10 @@ export default function MessageDiscussion({ id }: MessageDiscussionProps) {
                   control={form.control}
                   name="medical_id"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Pilih dokter / tenaga medis</FormLabel>
+                    <FormItem className="w-full md:w-64">
+                      <FormLabel className="text-sm font-medium">
+                        Pilih Dokter / Tenaga Medis
+                      </FormLabel>
                       <Select
                         value={field.value ?? ""}
                         onValueChange={(value) => field.onChange(value || null)}
@@ -190,18 +192,22 @@ export default function MessageDiscussion({ id }: MessageDiscussionProps) {
               )}
             </div>
 
-            <div className="flex w-full items-center justify-end gap-x-2">
-              <button type="button" onClick={handleClickPaperclip}>
-                <Paperclip className="text-muted-foreground h-6 w-6 cursor-pointer" />
+            {/* File + Send */}
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={handleClickPaperclip}
+                className="rounded-full p-2 hover:bg-gray-100"
+              >
+                <Paperclip className="h-6 w-6 text-gray-500 hover:text-primary" />
               </button>
-
               <Button
                 type="submit"
                 disabled={isPending}
-                className="rounded-full"
-                size={"icon"}
+                className="rounded-full p-2"
+                size="icon"
               >
-                <ArrowUp className="h-8 w-8" />
+                <ArrowUp className="h-6 w-6" />
               </Button>
             </div>
           </div>
@@ -214,6 +220,6 @@ export default function MessageDiscussion({ id }: MessageDiscussionProps) {
           />
         </form>
       </Form>
-    </div>
+    </motion.div>
   );
 }

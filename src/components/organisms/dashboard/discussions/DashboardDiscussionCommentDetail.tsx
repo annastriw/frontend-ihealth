@@ -25,9 +25,13 @@ export default function DashboardDiscussionCommentDetail({
     useGetDetailDiscussionCommentAnswer(id, session?.access_token as string, {
       enabled: status === "authenticated",
     });
+
   return (
     <div className="space-y-6">
+      {/* Detail Diskusi */}
       <CardDetaillDiscussionComment data={data?.data} isLoading={isPending} />
+
+      {/* Balasan */}
       <CardListDiscussionCommentAnswer
         id={id}
         data={answer?.data || []}
